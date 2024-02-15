@@ -65,7 +65,10 @@ export const useVirtualAI = ({
   };
 
   const initSession = async (vid: number | string) => {
-    if (!!vid) await initAccessToken(vid);
+    if (!!vid) {
+      const token = await initAccessToken(vid);
+      localStorage.setItem(`runnerToken${vid}`, token);
+    }
     await initVirtual();
   };
 
