@@ -200,6 +200,22 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               setEmotion("idle");
             }
           );
+        } else {
+          if (!!prompt.body?.url) {
+            setAnim(prompt.body.url);
+          }
+          if (!!prompt.body?.sentiment) {
+            setEmotion(prompt.body.sentiment);
+          }
+          if (!!onVirtualMessageCreated)
+            onVirtualMessageCreated({
+              prompt: prompt.prompt,
+              text: prompt.text,
+              expression: prompt.expression,
+              body: prompt.body,
+              audioUid: prompt.audioUid,
+            });
+          setLatestBotMessage(prompt);
         }
       }
     } catch (err: any) {
