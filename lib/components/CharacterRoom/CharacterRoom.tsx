@@ -32,6 +32,8 @@ type Props = {
   initAccessToken: (virtualId: number | string) => Promise<string>;
   onAudioErr?: () => void;
   validateMessageCapability?: () => boolean;
+  overrideModelUrl?: string;
+  transformModelUrl?: (modelUrl: string) => string;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -55,6 +57,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   initAccessToken,
   onAudioErr,
   validateMessageCapability,
+  overrideModelUrl,
+  transformModelUrl,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -347,7 +351,13 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           zoom={zoom}
           animation={anim}
           // modelUrl="/models/latest/no_hair.vrm"
-          modelUrl={modelUrl}
+          modelUrl={
+            !!overrideModelUrl
+              ? overrideModelUrl
+              : !!transformModelUrl
+              ? transformModelUrl(modelUrl)
+              : modelUrl
+          }
           virtualConfig={virtualConfig}
           speakCount={speakCount}
           onAudioEnd={() => {
