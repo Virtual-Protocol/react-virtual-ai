@@ -1,6 +1,6 @@
 import { defaultVirtualConfig } from "../constants/model";
 import { PromptDto } from "../types/PromptDto";
-import { getVirtualUid } from "../utils/jwt";
+import { getVirtualRunnerUrl } from "../utils/jwt";
 import { useEffect, useState } from "react";
 
 export type VirtualAIProps = {
@@ -41,16 +41,8 @@ export const useVirtualAI = ({
     setVirtualConfigUrl("");
     let cachedRunnerToken =
       localStorage.getItem(`runnerToken${virtualId}`) ?? "";
-    // initialize virtual related configuration
-    const uid = getVirtualUid(cachedRunnerToken);
-    // get virtual by virtual uid
-    // TODO: Integrate .env
-    const resp = await fetch(
-      `https://api-dev.virtuals.io/api/virtuals?filters[uid]=${uid}&populate=cores&pagination[limit]=1`
-    );
-    const respJson = await resp.json();
-    const metadata = respJson?.data?.[0]?.attributes?.metadata;
-    const url = metadata?.runner ?? "https://runner.virtuals.gg";
+    const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
+    const url = !!runnerUrl ? runnerUrl : "https://runner.virtuals.gg";
     setRunnerUrl(url);
     // initialize model url
     const modelResp = await fetch(`${url}/model`, {

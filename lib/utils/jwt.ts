@@ -16,10 +16,10 @@ export const validateJwt = (token: string) => {
   return true;
 };
 
-export const getVirtualUid = (token: string) => {
+export const getVirtualRunnerUrl = (token: string) => {
   if (!token) return "";
 
   let decodedToken = jwtDecode(token);
 
-  return (decodedToken as any)?.virtual ?? "";
+  return (decodedToken as any)?.runnerUrl ?? "";
 };
