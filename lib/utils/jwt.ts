@@ -21,5 +21,5 @@ export const getVirtualRunnerUrl = (token: string) => {
 
   let decodedToken = jwtDecode(token);
 
-  return (decodedToken as any)?.runnerUrl ?? "";
+  return (decodedToken as any)?.runner ?? "";
 };

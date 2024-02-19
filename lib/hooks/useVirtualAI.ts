@@ -18,27 +18,8 @@ export const useVirtualAI = ({
 }: VirtualAIProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
   const [virtualConfig, setVirtualConfig] = useState(defaultVirtualConfig);
-  const [virtualConfigUrl, setVirtualConfigUrl] = useState("");
-
-  const fetchVirtualConfig = async (url: string) => {
-    try {
-      const resp = await fetch(url);
-      const respJson = await resp.json();
-      if (!!respJson) {
-        setVirtualConfig(respJson);
-      }
-    } catch (err) {
-      console.log("Error loading config", err);
-    }
-  };
-
-  useEffect(() => {
-    if (!virtualConfigUrl) return;
-    fetchVirtualConfig(virtualConfigUrl);
-  }, [virtualConfigUrl]);
 
   const initVirtual = async () => {
-    setVirtualConfigUrl("");
     let cachedRunnerToken =
       localStorage.getItem(`runnerToken${virtualId}`) ?? "";
     const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
@@ -53,7 +34,7 @@ export const useVirtualAI = ({
       },
     });
     const modelRespJson = await modelResp.json();
-    setVirtualConfigUrl(`${url}/${modelRespJson.config ?? ""}`);
+    setVirtualConfig(modelRespJson?.data ?? defaultVirtualConfig);
   };
 
   const initSession = async (vid: number | string) => {

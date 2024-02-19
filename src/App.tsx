@@ -21,7 +21,7 @@ function App() {
         onInputBlurred={() => {}}
         onAudioErr={() => {}}
         initAccessToken={async () => {
-          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidmlydHVhbCI6IjU0NTFlZjM1LTM2Y2MtNGJkZS1iMjgyLTI0MzUxYmM2YzE4NCIsInVzZXJuYW1lIjoiYWJjY2MiLCJpYXQiOjE3MDc5OTY3MzIsImV4cCI6MTcwODA4MzEzMn0.edcy9JxvEbAbyBME7MCJuUX25B0O7SzFvsVOIbFVxHRgN5_HEXxyGaD7ccBJwi4c-XtP6-n7jn5KKBntZ9WW8sKbZzHgirzC_rMDvnLVjiMcde9CbXhwfGAkTgUbKAhTxypqCZHnGOumDH0mKfLj4u2EPdkAENeeU7sar0z2GETfrOEhuMKFxMzSl5Jtsp_-r-GpH3zcuRxLY-xya4l1ibjPQV9hwG8flfGDphu_NWXzRlbdtc30V9zODFFJelyN1q-3nr5jbzJGMuIsuOcjB0vnQ7z7orpR99KiOix82ycNFSQdvJEUwDC-QP9kyKubci7TUge6fb1O2JBhQB7Miw";
+          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidmlydHVhbCI6ImNhNTk2YjJmLTkzYjAtNDc3YS04MzI1LTQ3NTdlMTMyNGMyNyIsInVzZXJJZCI6MSwicnVubmVyIjoiaHR0cHM6Ly92aWNlLWN1cnJlbmNpZXMtbWktd2lyZWxlc3MudHJ5Y2xvdWRmbGFyZS5jb20iLCJpYXQiOjE3MDgzMzAxNzUsImV4cCI6MTcwODQxNjU3NX0.e2ZXl_iKsKvtD9IZPKq56qoOC7tLyuj6aadHz8LKbVnBY5UHqHS_NINyhqnmy6CnmuWKsZSPPjKKMMkAgUcgLXagKPELoUJGNSybfUhPvTQvKFuPKSN6dXOtAjIJwpNvlcQDDOtjPg_Vxj3xwDpJzvxFXOZwIW6jWb_jv456m-y9AZdWIV4X4B9bFJqEbcd2WgA8jfuCB3AdHiAjSlV9RRArQsn-Arf2DQacy3XWCbMkQH16FiIMfo8EMsyJRUh38rlApKtAHkFwMk59wvXjwl-RXmzS6s_aDhiZ3C1PaTYVtvHRukA-6tZXK2cYO_jUXns7moRFX9gX0XB69H0rZg";
         }}
         transformModelUrl={(v) => {
           return v.replace("nocache", "production");
