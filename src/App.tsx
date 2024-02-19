@@ -21,7 +21,7 @@ function App() {
         onInputBlurred={() => {}}
         onAudioErr={() => {}}
         initAccessToken={async () => {
-          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidmlydHVhbCI6ImNhNTk2YjJmLTkzYjAtNDc3YS04MzI1LTQ3NTdlMTMyNGMyNyIsInVzZXJJZCI6MSwicnVubmVyIjoiaHR0cHM6Ly92aWNlLWN1cnJlbmNpZXMtbWktd2lyZWxlc3MudHJ5Y2xvdWRmbGFyZS5jb20iLCJpYXQiOjE3MDgzMzAxNzUsImV4cCI6MTcwODQxNjU3NX0.e2ZXl_iKsKvtD9IZPKq56qoOC7tLyuj6aadHz8LKbVnBY5UHqHS_NINyhqnmy6CnmuWKsZSPPjKKMMkAgUcgLXagKPELoUJGNSybfUhPvTQvKFuPKSN6dXOtAjIJwpNvlcQDDOtjPg_Vxj3xwDpJzvxFXOZwIW6jWb_jv456m-y9AZdWIV4X4B9bFJqEbcd2WgA8jfuCB3AdHiAjSlV9RRArQsn-Arf2DQacy3XWCbMkQH16FiIMfo8EMsyJRUh38rlApKtAHkFwMk59wvXjwl-RXmzS6s_aDhiZ3C1PaTYVtvHRukA-6tZXK2cYO_jUXns7moRFX9gX0XB69H0rZg";
+          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidmlydHVhbCI6Ijk3ZjM4MmY3LTg3ODItNDJlNS1hNTkwLTJhMjA5ODg5MDJkMyIsInVzZXJuYW1lIjoiWGlvbmcgbm8gZGVsZXRlIiwiaWF0IjoxNzA4MzMwNzM0LCJleHAiOjE3MDg0MTcxMzR9.I7-nLhEjdUbuwtwz5ar_d1TFUqMSxxIUpJx4caRGFngmByzXGSsy_Pjns6Efc9Kna7p9fu5hN0okxeEHyXLD3paYed8EaYl3mMBsaorRTReBYFKWqDVOcyYTke6ZsNlPpCrGc9F7ddD4O_XcqvrkIjSFuld6HxHVGkLupv11lUK96-XiR_KmyTEJ_x-3vLj8X04_RGUAWr7lxSeYAaSkulXN4cn8ZkgO4RaCZndObxWylCEUpQOvZGa4j0RA5kCzMGU_G7Ca_BxbeB8MocovhJuPU5yyfMzxR7_CNpc_sfMOSCj86prm64foXtyD1LnUvWaXLinJ-BMCTtePfDe_sQ";
         }}
         transformModelUrl={(v) => {
           return v.replace("nocache", "production");

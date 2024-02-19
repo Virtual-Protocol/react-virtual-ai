@@ -200,7 +200,7 @@ export const Input: React.FC<InputProps> = ({
   return (
     <ChakraProvider>
       <div
-        className={`z-10 w-full flex flex-col p-3 gap-3 items-center fixed lg:max-w-[600px] bottom-[88px] ${className}`}
+        className={`z-10 w-full flex flex-col p-3 gap-3 items-center fixed bottom-[88px] ${className}`}
       >
         {!!Toolbar && Toolbar}
         <div className="w-full relative backdrop-blur-xl flex flex-row items-center gap-1 px-2 py-1 rounded-2xl bg-black/20">

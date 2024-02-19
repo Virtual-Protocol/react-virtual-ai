@@ -34,7 +34,19 @@ export const useVirtualAI = ({
       },
     });
     const modelRespJson = await modelResp.json();
-    setVirtualConfig(modelRespJson?.data ?? defaultVirtualConfig);
+
+    if (!!modelRespJson?.config) {
+      // backward compatibility
+      const modelConfigResp = await fetch(`${url}/${modelRespJson.config}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cachedRunnerToken}`,
+        },
+      });
+      const modelConfigRespJson = await modelConfigResp.json();
+      setVirtualConfig(modelConfigRespJson ?? defaultVirtualConfig);
+    } else setVirtualConfig(modelRespJson?.data ?? defaultVirtualConfig);
   };
 
   const initSession = async (vid: number | string) => {
