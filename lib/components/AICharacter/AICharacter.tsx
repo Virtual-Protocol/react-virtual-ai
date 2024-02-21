@@ -264,7 +264,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   return (
     <PresentationControls
       enabled={true} // the controls can be disabled by setting this to false
-      global={false} // Spin globally or by dragging the model
+      global={true} // Spin globally or by dragging the model
       cursor={false} // Whether to toggle cursor style on drag
       snap={false} // Snap-back to center (can also be a spring config)
       speed={2} // Speed factor
