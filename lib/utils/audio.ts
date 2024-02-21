@@ -75,6 +75,7 @@ export const startLipSync = async (
     try {
       audio.currentTime = 0;
       audio.play();
+      if (!!onAudioStart) onAudioStart();
 
       setTimeout(() => {
         onAudioEnd();
