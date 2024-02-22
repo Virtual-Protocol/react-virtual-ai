@@ -26,7 +26,7 @@ type Props = {
   onUserMessageCreated?: (content: any) => void;
   onVirtualMessageCreated?: (content: any) => void;
   onBeforeSendMessage?: () => void;
-  onErrorSendingMessage?: () => void;
+  onErrorSendingMessage?: (err: any) => void;
   onInputFocused?: () => void;
   onInputBlurred?: () => void;
   initAccessToken: (virtualId: number | string) => Promise<string>;
@@ -227,7 +227,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
       );
       setEmotion("idle");
-      if (!!onErrorSendingMessage) onErrorSendingMessage();
+      if (!!onErrorSendingMessage) onErrorSendingMessage(err);
     }
   };
 
