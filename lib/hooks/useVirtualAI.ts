@@ -112,22 +112,23 @@ export const useVirtualAI = ({
             })
           : formData,
     });
+    // if encountered 402 error, retry after init access token
+    if (resp.status === 402 && (retry ?? 0) < 3) {
+      localStorage.removeItem(`runnerToken${virtualId}`);
+      await initSession(virtualId);
+      return (await createPrompt(
+        content,
+        isNsfw,
+        isRedo,
+        skipTTS,
+        skipLipSync,
+        onPromptReceived,
+        (retry ?? 0) + 1
+      )) as PromptDto;
+    }
+
     const respJson = await resp.json();
     if (!!respJson?.error) {
-      // if encountered 402 error, retry after init access token
-      if (respJson.error?.status === 402 && (retry ?? 0) < 3) {
-        localStorage.removeItem(`runnerToken${virtualId}`);
-        await initSession(virtualId);
-        return (await createPrompt(
-          content,
-          isNsfw,
-          isRedo,
-          skipTTS,
-          skipLipSync,
-          onPromptReceived,
-          (retry ?? 0) + 1
-        )) as PromptDto;
-      }
       throw new Error(respJson.error);
     }
     if (!!onPromptReceived) {
