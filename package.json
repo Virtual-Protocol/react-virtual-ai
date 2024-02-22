@@ -1,6 +1,6 @@
 {
   "name": "@virtual-protocol/next-virtual",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
