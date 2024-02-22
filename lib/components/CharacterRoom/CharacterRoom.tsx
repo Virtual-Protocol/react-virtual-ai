@@ -266,6 +266,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               className="bg-white px-2 py-1 rounded-2xl"
               onClick={() => {
                 setEmotion("anger");
+                setAnim(
+                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/anger/look_around_angry_189.vmd"
+                );
                 setSpeakCount((prev) => prev + 1);
               }}
             >
