@@ -47,7 +47,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
         <p
           className={`font-wenhei text-lg text-white animate-flicker text-center w-fit`}
         >
-          You Waifu is Dressing Up...
+          Your Waifu is Dressing Up...
         </p>
       </div>
       <Suspense fallback={null}>
