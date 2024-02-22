@@ -23,8 +23,8 @@ type Props = {
   debugging?: boolean;
   virtualId?: number | string;
   aside?: boolean;
-  onUserMessageCreated?: (content: any) => void;
-  onVirtualMessageCreated?: (content: any) => void;
+  onUserMessageCreated?: (content: any) => Promise<void>;
+  onVirtualMessageCreated?: (content: any) => Promise<void>;
   onBeforeSendMessage?: () => void;
   onErrorSendingMessage?: (err: any) => void;
   onInputFocused?: () => void;
@@ -116,7 +116,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     try {
       if (typeof content === "string") {
         if (!!onUserMessageCreated)
-          onUserMessageCreated({
+          await onUserMessageCreated({
             text: content,
           });
       }
@@ -134,7 +134,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       // on prompt received, create new chat message object for the waifu
       if (typeof content !== "string") {
         if (!!onUserMessageCreated)
-          onUserMessageCreated({
+          await onUserMessageCreated({
             text: prompt.prompt,
           });
       }
@@ -150,7 +150,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           setEmotion(prompt.body.sentiment);
         }
         if (!!onVirtualMessageCreated)
-          onVirtualMessageCreated({
+          await onVirtualMessageCreated({
             prompt: prompt.prompt,
             text: prompt.text,
             expression: prompt.expression,
@@ -167,7 +167,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           // );
           startLipSync(
             audio,
-            () => {
+            async () => {
               setTalking(true);
               if (!!prompt.body?.url) {
                 setAnim(prompt.body.url);
@@ -176,7 +176,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                 setEmotion(prompt.body.sentiment);
               }
               if (!!onVirtualMessageCreated)
-                onVirtualMessageCreated({
+                await onVirtualMessageCreated({
                   prompt: prompt.prompt,
                   text: prompt.text,
                   expression: prompt.expression,
@@ -212,7 +212,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             setEmotion(prompt.body.sentiment);
           }
           if (!!onVirtualMessageCreated)
-            onVirtualMessageCreated({
+            await onVirtualMessageCreated({
               prompt: prompt.prompt,
               text: prompt.text,
               expression: prompt.expression,
