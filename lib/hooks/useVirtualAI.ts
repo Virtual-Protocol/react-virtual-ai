@@ -33,6 +33,7 @@ export const useVirtualAI = ({
         Authorization: `Bearer ${cachedRunnerToken}`,
       },
     });
+    if (modelResp.status !== 200) throw new Error("Fetch virtual failed");
     const modelRespJson = await modelResp.json();
 
     if (!!modelRespJson?.config) {
@@ -49,12 +50,19 @@ export const useVirtualAI = ({
     } else setVirtualConfig(modelRespJson?.data ?? defaultVirtualConfig);
   };
 
-  const initSession = async (vid: number | string) => {
-    if (!!vid) {
-      const token = await initAccessToken(vid);
-      localStorage.setItem(`runnerToken${vid}`, token);
+  const initSession = async (vid: number | string, retry?: number) => {
+    try {
+      if (!!vid) {
+        const token = await initAccessToken(vid);
+        localStorage.setItem(`runnerToken${vid}`, token);
+      }
+      await initVirtual();
+    } catch (err: any) {
+      console.log("Error fetching data", err);
+      if (retry ?? 0 >= 3) return;
+      localStorage.removeItem(`runnerToken${vid}`);
+      await initSession(vid, (retry ?? 0) + 1);
     }
-    await initVirtual();
   };
 
   useEffect(() => {
@@ -112,8 +120,8 @@ export const useVirtualAI = ({
             })
           : formData,
     });
-    // if encountered 402 error, retry after init access token
-    if (resp.status === 402 && (retry ?? 0) < 3) {
+    // if encountered error, retry after init access token
+    if (resp.status !== 200 && (retry ?? 0) < 3) {
       localStorage.removeItem(`runnerToken${virtualId}`);
       await initSession(virtualId);
       return (await createPrompt(
