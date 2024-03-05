@@ -8,6 +8,7 @@ export type VirtualAIProps = {
   userName?: string;
   virtualName?: string;
   initAccessToken: (virtualId: number | string) => Promise<string>;
+  onAccessTokenInitError?: (error: any) => void;
 };
 
 export const useVirtualAI = ({
@@ -15,6 +16,7 @@ export const useVirtualAI = ({
   userName,
   virtualName,
   initAccessToken,
+  onAccessTokenInitError,
 }: VirtualAIProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
   const [virtualConfig, setVirtualConfig] = useState(defaultVirtualConfig);
@@ -50,7 +52,7 @@ export const useVirtualAI = ({
     } else setVirtualConfig(modelRespJson?.data ?? defaultVirtualConfig);
   };
 
-  const initSession = async (vid: number | string, retry?: number) => {
+  const initSession = async (vid: number | string, retry: number = 0) => {
     try {
       if (!!vid) {
         const token = await initAccessToken(vid);
@@ -59,9 +61,12 @@ export const useVirtualAI = ({
       await initVirtual();
     } catch (err: any) {
       console.log("Error fetching data", err);
-      if (retry ?? 0 >= 3) return;
+      if (retry >= 3) {
+        onAccessTokenInitError && onAccessTokenInitError(err);
+        return;
+      }
       localStorage.removeItem(`runnerToken${vid}`);
-      await initSession(vid, (retry ?? 0) + 1);
+      await initSession(vid, retry + 1);
     }
   };
 
@@ -101,23 +106,23 @@ export const useVirtualAI = ({
       headers:
         typeof content === "string"
           ? {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${cachedRunnerToken}`,
-            }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cachedRunnerToken}`,
+          }
           : {
-              Authorization: `Bearer ${cachedRunnerToken}`,
-            },
+            Authorization: `Bearer ${cachedRunnerToken}`,
+          },
       body:
         typeof content === "string"
           ? JSON.stringify({
-              text: content,
-              isNsfw: isNsfw,
-              isRedo: isRedo,
-              skipLipSync,
-              skipTTS,
-              userName,
-              botName: virtualName,
-            })
+            text: content,
+            isNsfw: isNsfw,
+            isRedo: isRedo,
+            skipLipSync,
+            skipTTS,
+            userName,
+            botName: virtualName,
+          })
           : formData,
     });
     // if encountered error, retry after init access token
