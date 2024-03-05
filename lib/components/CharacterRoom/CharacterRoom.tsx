@@ -79,11 +79,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const [isSafari, setIsSafari] = useState(false);
 
   useEffect(() => {
-    // let userAgent = navigator.userAgent || navigator.vendor;
-    // console.log("userAgent", userAgent);
-    // const is = !/chrome/i.test(userAgent) && /safari/i.test(userAgent);
-    // setIsSafari(is);
-    setIsSafari(false);
+    let userAgent = navigator.userAgent || navigator.vendor;
+    const is = !/chrome/i.test(userAgent) && /safari/i.test(userAgent);
+    setIsSafari(is);
   }, []);
 
   useRandomInterval(
@@ -138,11 +136,57 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             text: prompt.prompt,
           });
       }
-      // safari does not allow playing audio
-      // TODO: Fix audio in Safari
-      if (isSafari) {
-        console.log("safari");
-        // do not play audio for safari
+      if (!!prompt.audioUid) {
+        const audio = new Audio(prompt.audioUid);
+        const audioContext = new AudioContext();
+        // const audio = new Audio(
+        //   `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/bdf8a7a4-127e-4f8c-aa26-645a273a2b6e.wav`
+        // );
+        await startLipSync(
+          audio,
+          audioContext,
+          async () => {
+            setTalking(true);
+            if (!!prompt.body?.url) {
+              setAnim(prompt.body.url);
+            }
+            if (!!prompt.body?.sentiment) {
+              setEmotion(prompt.body.sentiment);
+            }
+            if (!!onVirtualMessageCreated)
+              await onVirtualMessageCreated({
+                prompt: prompt.prompt,
+                text: prompt.text,
+                expression: prompt.expression,
+                body: prompt.body,
+                audioUid: prompt.audioUid,
+              });
+            setLatestBotMessage(prompt);
+            // setSpeakCount((prev) => prev + 1);
+          },
+          () => {
+            setTalking(false);
+            console.log("Resetting audio and animation");
+            setAnim(
+              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+            );
+            setEmotion("idle");
+          },
+          () => {
+            if (!!onAudioErr) onAudioErr();
+            setTalking(false);
+            console.log("Resetting audio and animation");
+            setAnim(
+              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+            );
+            setEmotion("idle");
+          }
+        );
+        audioContext.createGain();
+        await audioContext.resume();
+        await audio.play();
+        console.log("audioContext state", audioContext.state);
+      } else {
         if (!!prompt.body?.url) {
           setAnim(prompt.body.url);
         }
@@ -158,69 +202,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             audioUid: prompt.audioUid,
           });
         setLatestBotMessage(prompt);
-      } else {
-        console.log("Not safari");
-        if (!!prompt.audioUid) {
-          const audio = new Audio(prompt.audioUid);
-          // const audio = new Audio(
-          //   `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/bdf8a7a4-127e-4f8c-aa26-645a273a2b6e.wav`
-          // );
-          startLipSync(
-            audio,
-            async () => {
-              setTalking(true);
-              if (!!prompt.body?.url) {
-                setAnim(prompt.body.url);
-              }
-              if (!!prompt.body?.sentiment) {
-                setEmotion(prompt.body.sentiment);
-              }
-              if (!!onVirtualMessageCreated)
-                await onVirtualMessageCreated({
-                  prompt: prompt.prompt,
-                  text: prompt.text,
-                  expression: prompt.expression,
-                  body: prompt.body,
-                  audioUid: prompt.audioUid,
-                });
-              setLatestBotMessage(prompt);
-              // setSpeakCount((prev) => prev + 1);
-            },
-            () => {
-              setTalking(false);
-              console.log("Resetting audio and animation");
-              setAnim(
-                "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
-              );
-              setEmotion("idle");
-            },
-            () => {
-              if (!!onAudioErr) onAudioErr();
-              setTalking(false);
-              console.log("Resetting audio and animation");
-              setAnim(
-                "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
-              );
-              setEmotion("idle");
-            }
-          );
-        } else {
-          if (!!prompt.body?.url) {
-            setAnim(prompt.body.url);
-          }
-          if (!!prompt.body?.sentiment) {
-            setEmotion(prompt.body.sentiment);
-          }
-          if (!!onVirtualMessageCreated)
-            await onVirtualMessageCreated({
-              prompt: prompt.prompt,
-              text: prompt.text,
-              expression: prompt.expression,
-              body: prompt.body,
-              audioUid: prompt.audioUid,
-            });
-          setLatestBotMessage(prompt);
-        }
       }
     } catch (err: any) {
       setAnim(
@@ -399,15 +380,14 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   <Icon as={HiSpeakerWave} className="text-white text-xl" />
                 }
                 className={`rounded-full w-10 h-10 bg-black/30 hover:bg-black/30 backdrop-blur-xl z-40 self-end`}
-                isDisabled={talking}
+                isDisabled={!isSafari && talking}
                 onClick={async () => {
                   setTalking(true);
-                  // const audio = new Audio(
-                  //   `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/bdf8a7a4-127e-4f8c-aa26-645a273a2b6e.wav`
-                  // );
                   const audio = new Audio(`${latestBotMessage.audioUid ?? ""}`);
-                  startLipSync(
+                  const audioContext = new AudioContext();
+                  await startLipSync(
                     audio,
+                    audioContext,
                     () => {
                       // setSpeakCount((prev) => prev + 1);
                       setTalking(true);
@@ -430,6 +410,10 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                       setTalking(false);
                     }
                   );
+                  audioContext.createGain();
+                  await audioContext.resume();
+                  await audio.play();
+                  console.log("audioContext state", audioContext.state);
                 }}
               />
             ) : (
