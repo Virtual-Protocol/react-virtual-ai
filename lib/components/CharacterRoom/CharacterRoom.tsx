@@ -95,7 +95,12 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     setInputText(e.target.value);
   };
 
-  const sendPrompt = async (content: string | Blob, isRedo?: boolean) => {
+  const sendPrompt = async (
+    content: string | Blob,
+    audioEl: HTMLAudioElement,
+    audioContext: AudioContext,
+    isRedo?: boolean
+  ) => {
     setTalking(false);
     const canSendMessage = !!validateMessageCapability
       ? validateMessageCapability()
@@ -130,19 +135,19 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           });
       }
       if (!!prompt.audioUid) {
-        const audio = new Audio(prompt.audioUid);
-        const audioContext = new AudioContext();
+        audioEl.src = prompt.audioUid;
         // const audio = new Audio(
         //   `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/bdf8a7a4-127e-4f8c-aa26-645a273a2b6e.wav`
         // );
         await startLipSync(
-          audio,
+          audioEl,
           audioContext,
           async () => {
-            let userAgent = navigator.userAgent || navigator.vendor;
-            const isSafari =
-              !/chrome/i.test(userAgent) && /safari/i.test(userAgent);
-            if (!isSafari) setTalking(true);
+            // let userAgent = navigator.userAgent || navigator.vendor;
+            // const isSafari =
+            //   !/chrome/i.test(userAgent) && /safari/i.test(userAgent);
+            // if (!isSafari) setTalking(true);
+            setTalking(true);
             if (!!prompt.body?.url) {
               setAnim(prompt.body.url);
             }
@@ -178,10 +183,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             setEmotion("idle");
           }
         );
-        audioContext.createGain();
-        await audioContext.resume();
-        await audio.play();
-        console.log("audioContext state", audioContext.state);
       } else {
         if (!!prompt.body?.url) {
           setAnim(prompt.body.url);
@@ -218,12 +219,27 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       return;
     }
 
-    await sendPrompt(text);
+    const audio = new Audio();
+    const audioContext = new AudioContext();
+
+    await sendPrompt(text, audio, audioContext);
+
+    audioContext.createGain();
+    await audioContext.resume();
+    await audio.play();
+    console.log("audioContext state", audioContext.state);
   };
 
   const handleSendVoice = async (blob: Blob) => {
-    // Convert to wav
-    await sendPrompt(blob);
+    const audio = new Audio();
+    const audioContext = new AudioContext();
+
+    await sendPrompt(blob, audio, audioContext);
+
+    audioContext.createGain();
+    await audioContext.resume();
+    await audio.play();
+    console.log("audioContext state", audioContext.state);
   };
 
   if (!virtualId) return <></>;
@@ -407,7 +423,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   );
                   audioContext.createGain();
                   await audioContext.resume();
-                  await audio.play();
+                  audio.preload = "metadata";
+                  audio.play();
                   console.log("audioContext state", audioContext.state);
                 }}
               />
