@@ -34,7 +34,7 @@ type Props = {
   validateMessageCapability?: () => boolean;
   overrideModelUrl?: string;
   transformModelUrl?: (modelUrl: string) => string;
-  onAccessTokenInitError?: (error: any) => void;
+  onPromptError?: (error: any) => void;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -60,7 +60,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   validateMessageCapability,
   overrideModelUrl,
   transformModelUrl,
-  onAccessTokenInitError,
+  onPromptError,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -71,7 +71,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     userName,
     virtualName,
     initAccessToken,
-    onAccessTokenInitError,
+    onPromptError,
   });
   const [speakCount, setSpeakCount] = useState(0);
   const [emotion, setEmotion] = useState("idle");

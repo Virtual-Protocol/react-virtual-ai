@@ -8,7 +8,7 @@ export type VirtualAIProps = {
   userName?: string;
   virtualName?: string;
   initAccessToken: (virtualId: number | string) => Promise<string>;
-  onAccessTokenInitError?: (error: any) => void;
+  onPromptError?: (error: any) => void;
 };
 
 export const useVirtualAI = ({
@@ -16,7 +16,7 @@ export const useVirtualAI = ({
   userName,
   virtualName,
   initAccessToken,
-  onAccessTokenInitError,
+  onPromptError,
 }: VirtualAIProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
   const [virtualConfig, setVirtualConfig] = useState(defaultVirtualConfig);
@@ -24,6 +24,8 @@ export const useVirtualAI = ({
   const initVirtual = async () => {
     let cachedRunnerToken =
       localStorage.getItem(`runnerToken${virtualId}`) ?? "";
+
+
     const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
     const url = !!runnerUrl ? runnerUrl : "https://runner.virtuals.gg";
     setRunnerUrl(url);
@@ -62,8 +64,7 @@ export const useVirtualAI = ({
     } catch (err: any) {
       console.log("Error fetching data", err);
       if (retry >= 3) {
-        onAccessTokenInitError && onAccessTokenInitError(err);
-        return;
+        throw err;
       }
       localStorage.removeItem(`runnerToken${vid}`);
       await initSession(vid, retry + 1);
@@ -138,6 +139,8 @@ export const useVirtualAI = ({
         onPromptReceived,
         (retry ?? 0) + 1
       )) as PromptDto;
+    } else if (resp.status !== 200) {
+      onPromptError?.(resp);
     }
 
     const respJson = await resp.json();
