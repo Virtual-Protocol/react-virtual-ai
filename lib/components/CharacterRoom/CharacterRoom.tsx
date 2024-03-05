@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useState } from "react";
 import { Input } from "../Input/Input";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
@@ -76,13 +76,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     PromptDto | undefined
   >(undefined);
   const [talking, setTalking] = useState(false);
-  const [isSafari, setIsSafari] = useState(false);
-
-  useEffect(() => {
-    let userAgent = navigator.userAgent || navigator.vendor;
-    const is = !/chrome/i.test(userAgent) && /safari/i.test(userAgent);
-    setIsSafari(is);
-  }, []);
 
   useRandomInterval(
     async () => {
@@ -146,7 +139,10 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           audio,
           audioContext,
           async () => {
-            setTalking(true);
+            let userAgent = navigator.userAgent || navigator.vendor;
+            const isSafari =
+              !/chrome/i.test(userAgent) && /safari/i.test(userAgent);
+            if (!isSafari) setTalking(true);
             if (!!prompt.body?.url) {
               setAnim(prompt.body.url);
             }
@@ -380,7 +376,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   <Icon as={HiSpeakerWave} className="text-white text-xl" />
                 }
                 className={`rounded-full w-10 h-10 bg-black/30 hover:bg-black/30 backdrop-blur-xl z-40 self-end`}
-                isDisabled={!isSafari && talking}
+                isDisabled={talking}
                 onClick={async () => {
                   setTalking(true);
                   const audio = new Audio(`${latestBotMessage.audioUid ?? ""}`);
@@ -390,7 +386,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     audioContext,
                     () => {
                       // setSpeakCount((prev) => prev + 1);
-                      setTalking(true);
                       setAnim(
                         latestBotMessage.body?.url ??
                           "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
