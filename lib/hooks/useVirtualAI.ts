@@ -7,8 +7,12 @@ export type VirtualAIProps = {
   virtualId?: number | string;
   userName?: string;
   virtualName?: string;
-  initAccessToken: (virtualId: number | string) => Promise<string>;
+  initAccessToken: (
+    virtualId: number | string,
+    metadata?: { [id: string]: any }
+  ) => Promise<string>;
   onPromptError?: (error: any) => void;
+  metadata?: { [id: string]: any };
 };
 
 export const useVirtualAI = ({
@@ -17,6 +21,7 @@ export const useVirtualAI = ({
   virtualName,
   initAccessToken,
   onPromptError,
+  metadata,
 }: VirtualAIProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
   const [virtualConfig, setVirtualConfig] = useState(defaultVirtualConfig);
@@ -24,7 +29,6 @@ export const useVirtualAI = ({
   const initVirtual = async () => {
     let cachedRunnerToken =
       localStorage.getItem(`runnerToken${virtualId}`) ?? "";
-
 
     const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
     const url = !!runnerUrl ? runnerUrl : "https://runner.virtuals.gg";
@@ -57,7 +61,7 @@ export const useVirtualAI = ({
   const initSession = async (vid: number | string, retry: number = 0) => {
     try {
       if (!!vid) {
-        const token = await initAccessToken(vid);
+        const token = await initAccessToken(vid, metadata);
         localStorage.setItem(`runnerToken${vid}`, token);
       }
       await initVirtual();
@@ -91,7 +95,7 @@ export const useVirtualAI = ({
     retry?: number
   ): Promise<PromptDto> => {
     if (!virtualId) throw new Error("Virtual not found");
-    const cachedRunnerToken = await initAccessToken(virtualId ?? -1);
+    const cachedRunnerToken = await initAccessToken(virtualId ?? -1, metadata);
     const formData = new FormData();
     if (typeof content !== "string") {
       formData.append("audio", content, "recording.webm");
@@ -107,23 +111,23 @@ export const useVirtualAI = ({
       headers:
         typeof content === "string"
           ? {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${cachedRunnerToken}`,
-          }
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${cachedRunnerToken}`,
+            }
           : {
-            Authorization: `Bearer ${cachedRunnerToken}`,
-          },
+              Authorization: `Bearer ${cachedRunnerToken}`,
+            },
       body:
         typeof content === "string"
           ? JSON.stringify({
-            text: content,
-            isNsfw: isNsfw,
-            isRedo: isRedo,
-            skipLipSync,
-            skipTTS,
-            userName,
-            botName: virtualName,
-          })
+              text: content,
+              isNsfw: isNsfw,
+              isRedo: isRedo,
+              skipLipSync,
+              skipTTS,
+              userName,
+              botName: virtualName,
+            })
           : formData,
     });
     // if encountered error, retry after init access token

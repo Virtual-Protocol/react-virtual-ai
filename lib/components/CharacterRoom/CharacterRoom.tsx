@@ -29,12 +29,16 @@ type Props = {
   onErrorSendingMessage?: (err: any) => void;
   onInputFocused?: () => void;
   onInputBlurred?: () => void;
-  initAccessToken: (virtualId: number | string) => Promise<string>;
+  initAccessToken: (
+    virtualId: number | string,
+    metadata?: { [id: string]: any }
+  ) => Promise<string>;
   onAudioErr?: () => void;
   validateMessageCapability?: () => boolean;
   overrideModelUrl?: string;
   transformModelUrl?: (modelUrl: string) => string;
   onPromptError?: (error: any) => void;
+  metadata?: { [id: string]: any };
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -61,6 +65,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   overrideModelUrl,
   transformModelUrl,
   onPromptError,
+  metadata,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -72,6 +77,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     virtualName,
     initAccessToken,
     onPromptError,
+    metadata,
   });
   const [speakCount, setSpeakCount] = useState(0);
   const [emotion, setEmotion] = useState("idle");
