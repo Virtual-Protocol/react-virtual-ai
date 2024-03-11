@@ -87,7 +87,6 @@ export const useVirtualAI = ({
 
   const createPrompt = async (
     content: string | Blob,
-    isRedo: boolean,
     skipTTS: boolean,
     skipLipSync: boolean,
     onPromptReceived?: (prompt: PromptDto) => void,
@@ -98,7 +97,6 @@ export const useVirtualAI = ({
     const formData = new FormData();
     if (typeof content !== "string") {
       formData.append("audio", content, "recording.webm");
-      formData.append("isRedo", isRedo ? "true" : "false");
       formData.append("skipLipSync", skipLipSync ? "true" : "false");
       formData.append("skipTTS", skipTTS ? "true" : "false");
       formData.append("userName", userName ?? "");
@@ -119,7 +117,6 @@ export const useVirtualAI = ({
         typeof content === "string"
           ? JSON.stringify({
               text: content,
-              isRedo: isRedo,
               skipLipSync,
               skipTTS,
               userName,
@@ -133,7 +130,6 @@ export const useVirtualAI = ({
       await initSession(virtualId);
       return (await createPrompt(
         content,
-        isRedo,
         skipTTS,
         skipLipSync,
         onPromptReceived,

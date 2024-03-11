@@ -107,8 +107,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const sendPrompt = async (
     content: string | Blob,
     audioEl: HTMLAudioElement,
-    audioContext: AudioContext,
-    isRedo?: boolean
+    audioContext: AudioContext
   ) => {
     setTalking(false);
     const canSendMessage = !!validateMessageCapability
@@ -128,12 +127,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       const skipTTS = true;
       const skipLipSync = true;
       setLatestBotMessage(undefined);
-      const prompt = await createPrompt(
-        content,
-        !!isRedo,
-        !!skipTTS,
-        !!skipLipSync
-      );
+      const prompt = await createPrompt(content, !!skipTTS, !!skipLipSync);
 
       // on prompt received, create new chat message object for the waifu
       if (typeof content !== "string") {
