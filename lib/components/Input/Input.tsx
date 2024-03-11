@@ -9,6 +9,7 @@ import { FaKeyboard } from "react-icons/fa6";
 import { IoMdCloseCircle } from "react-icons/io";
 import { secondsToTimeStr } from "../../utils/time";
 import { ChangeEventHandler, ReactElement } from "react";
+import "../../index.css";
 
 type InputProps = {
   value: string;

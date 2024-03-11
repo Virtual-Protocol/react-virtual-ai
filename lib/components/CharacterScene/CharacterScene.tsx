@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import { VirtualConfigType } from "../../types/VirtualConfigType";
+import "../../index.css";
 
 type CharacterSceneType = {
   animation: string;
@@ -16,6 +17,7 @@ type CharacterSceneType = {
   emotion?: string;
   zoom?: number;
   position?: number[];
+  loadingText?: string;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -28,6 +30,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   emotion,
   zoom,
   position,
+  loadingText,
 }) => {
   const [done, setDone] = useState(false);
 
@@ -47,7 +50,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
         <p
           className={`font-wenhei text-lg text-white animate-flicker text-center w-fit`}
         >
-          Your Waifu is Dressing Up...
+          {loadingText ?? "Your Virtual is Dressing Up..."}
         </p>
       </div>
       <Suspense fallback={null}>

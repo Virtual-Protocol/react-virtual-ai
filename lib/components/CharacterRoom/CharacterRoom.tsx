@@ -9,6 +9,7 @@ import { startLipSync } from "../../utils/audio";
 import { useVirtualAI } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
 import { PromptDto } from "../../types/PromptDto";
+import "../../index.css";
 
 type Props = {
   userName?: string;
@@ -39,6 +40,7 @@ type Props = {
   transformModelUrl?: (modelUrl: string) => string;
   onPromptError?: (error: any) => void;
   metadata?: { [id: string]: any };
+  loadingText?: string;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -66,6 +68,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   transformModelUrl,
   onPromptError,
   metadata,
+  loadingText,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -348,6 +351,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         <CharacterScene
           zoom={zoom}
           animation={anim}
+          loadingText={loadingText}
           // modelUrl="/models/latest/no_hair.vrm"
           modelUrl={
             !!overrideModelUrl

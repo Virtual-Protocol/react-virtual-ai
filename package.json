@@ -19,7 +19,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
-    "release": "standard-version && git push --follow-tags && npm publish"
+    "release": "standard-version && git push --follow-tags && npm publish",
+    "build-tailwind": "NODE_ENV=production npx tailwindcss -i ./src/index.css -o ./dist/index.css --postcss --minify"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
