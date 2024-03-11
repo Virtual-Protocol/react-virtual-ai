@@ -130,7 +130,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       setLatestBotMessage(undefined);
       const prompt = await createPrompt(
         content,
-        true,
         !!isRedo,
         !!skipTTS,
         !!skipLipSync
