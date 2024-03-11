@@ -4,6 +4,7 @@ import { ChatMessages } from "./components/ChatMessages/ChatMessages";
 import { ChatMessageDto } from "./types/ChatMessageDto";
 import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
+import { CharacterScene } from "../lib/main";
 
 function App() {
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -49,7 +50,7 @@ function App() {
       <button className="fixed top-4 left-4 z-50" onClick={() => {}}>
         Random action
       </button>
-      <CharacterRoom
+      {/* <CharacterRoom
         userName="User"
         virtualName="Virtual"
         virtualId={1}
@@ -99,7 +100,141 @@ function App() {
         transformModelUrl={(v) => {
           return v.replace("nocache", "production");
         }}
-      ></CharacterRoom>
+      ></CharacterRoom> */}
+      <CharacterScene
+        multiple
+        animation={
+          "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd"
+        }
+        // modelUrl="/models/latest/no_hair.vrm"
+        modelUrl={
+          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/ignis.vrm"
+        }
+        virtualConfig={{
+          model:
+            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/ignis.vrm",
+          animations: {
+            face: {
+              voice: "/like.mp3",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
+            },
+            chest: {
+              voice: "/angry.mp3",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
+            },
+            lower: {
+              voice: "/shy.mp3",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
+            },
+          },
+          parts: {
+            face: {
+              startX: -0.82,
+              endX: 0.82,
+              startY: 2.64,
+              endY: 0.19,
+            },
+            chest: {
+              startX: -0.82,
+              endX: 0.82,
+              startY: -0.87,
+              endY: -2.54,
+            },
+            lower: {
+              startX: -1.34,
+              endX: 1.6,
+              startY: -4.13,
+              endY: -5.73,
+            },
+          },
+          position: [0, -9, 0],
+          stiffness: 6,
+          preloadMotions: [
+            {
+              uid: "idle1",
+              sentiment: "idle",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
+            },
+            {
+              uid: "idle2",
+              sentiment: "idle",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
+            },
+            {
+              uid: "idle6",
+              sentiment: "idle",
+              url: "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/idle/Swaying+Arms+and+Hips.vmd",
+            },
+          ],
+        }}
+      />
+      <CharacterScene
+        multiple
+        animation={
+          "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd"
+        }
+        // modelUrl="/models/latest/no_hair.vrm"
+        modelUrl={
+          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/gaia.vrm"
+        }
+        virtualConfig={{
+          model:
+            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/gaia.vrm",
+          animations: {
+            face: {
+              voice: "/like.mp3",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
+            },
+            chest: {
+              voice: "/angry.mp3",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
+            },
+            lower: {
+              voice: "/shy.mp3",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
+            },
+          },
+          parts: {
+            face: {
+              startX: -0.82,
+              endX: 0.82,
+              startY: 2.64,
+              endY: 0.19,
+            },
+            chest: {
+              startX: -0.82,
+              endX: 0.82,
+              startY: -0.87,
+              endY: -2.54,
+            },
+            lower: {
+              startX: -1.34,
+              endX: 1.6,
+              startY: -4.13,
+              endY: -5.73,
+            },
+          },
+          position: [0, -9, 0],
+          stiffness: 6,
+          preloadMotions: [
+            {
+              uid: "idle1",
+              sentiment: "idle",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
+            },
+            {
+              uid: "idle2",
+              sentiment: "idle",
+              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
+            },
+            {
+              uid: "idle6",
+              sentiment: "idle",
+              url: "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/idle/Swaying+Arms+and+Hips.vmd",
+            },
+          ],
+        }}
+      />
       <div
         className={`w-[95%] lg:w-[80%] max-h-[60vh] absolute left-1/2 bottom-[148px] -translate-x-1/2 flex flex-col messages-outer`}
       >

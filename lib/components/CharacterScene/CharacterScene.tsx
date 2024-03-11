@@ -6,6 +6,7 @@ import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import { VirtualConfigType } from "../../types/VirtualConfigType";
 import "../../index.css";
+import { SimpleAICharacter } from "../SimpleAICharacter/SimpleAICharacter";
 
 type CharacterSceneType = {
   animation: string;
@@ -18,6 +19,7 @@ type CharacterSceneType = {
   zoom?: number;
   position?: number[];
   loadingText?: string;
+  multiple?: boolean;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -31,6 +33,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   zoom,
   position,
   loadingText,
+  multiple,
 }) => {
   const [done, setDone] = useState(false);
 
@@ -62,21 +65,36 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
           linear
           flat
         >
-          {!!modelUrl && (
-            <AICharacter
-              animation={animation}
-              url={modelUrl}
-              speakCount={speakCount}
-              virtualConfig={virtualConfig}
-              onAudioEnd={onAudioEnd}
-              onLoad={() => {
-                setDone(true);
-              }}
-              aside={aside}
-              emotion={emotion}
-              position={position}
-            />
-          )}
+          {!!modelUrl &&
+            (multiple ? (
+              <SimpleAICharacter
+                animation={animation}
+                url={modelUrl}
+                speakCount={speakCount}
+                virtualConfig={virtualConfig}
+                onAudioEnd={onAudioEnd}
+                onLoad={() => {
+                  setDone(true);
+                }}
+                aside={aside}
+                emotion={emotion}
+                position={position}
+              />
+            ) : (
+              <AICharacter
+                animation={animation}
+                url={modelUrl}
+                speakCount={speakCount}
+                virtualConfig={virtualConfig}
+                onAudioEnd={onAudioEnd}
+                onLoad={() => {
+                  setDone(true);
+                }}
+                aside={aside}
+                emotion={emotion}
+                position={position}
+              />
+            ))}
           <directionalLight
             color="#FFFFFF"
             intensity={1.5294117647058822}
