@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.33](https://github.com/Virtual-Protocol/next-virtual/compare/v0.0.32...v0.0.33) (2024-03-11)
+
 ### [0.0.32](https://github.com/Virtual-Protocol/next-virtual/compare/v0.0.31...v0.0.32) (2024-03-07)
 
 ### [0.0.31](https://github.com/Virtual-Protocol/next-virtual/compare/v0.0.30...v0.0.31) (2024-03-05)
