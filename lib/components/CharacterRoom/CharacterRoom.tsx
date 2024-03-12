@@ -127,8 +127,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             text: content,
           });
       }
-      const skipTTS = true;
-      const skipLipSync = true;
+      const skipTTS = false;
+      const skipLipSync = false;
       setLatestBotMessage(undefined);
       const prompt = await createPrompt(content, !!skipTTS, !!skipLipSync);
 
