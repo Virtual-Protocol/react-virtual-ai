@@ -7,30 +7,29 @@ import { PresentationControls, useGLTF, useProgress } from "@react-three/drei";
 import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 import { blink, fadeByEmotion } from "../../utils/model";
 import gsap from "gsap";
-import { VirtualConfigType } from "../../types/VirtualConfigType";
 import "../../index.css";
 
 export type AICharacterType = {
   animation: string;
   url?: string;
-  virtualConfig: VirtualConfigType;
   onAudioEnd?: Function;
   onLoad?: Function;
   aside?: boolean;
   speakCount?: number;
   emotion?: string;
   position?: number[];
+  stiffness?: number;
 };
 
 export const SimpleAICharacter: React.FC<AICharacterType> = ({
   url,
-  virtualConfig,
   onAudioEnd,
   onLoad,
   aside,
   speakCount = 0,
   emotion,
   position,
+  stiffness,
 }) => {
   const gltf = useGLTF(url ?? "", true, true, (loader) => {
     // @ts-ignore
@@ -101,7 +100,7 @@ export const SimpleAICharacter: React.FC<AICharacterType> = ({
         return;
       }
       //  e.settings.dragForce = 1
-      e.settings.stiffness = virtualConfig.stiffness ?? 6;
+      e.settings.stiffness = stiffness ?? 6;
     });
 
     return () => {
@@ -181,7 +180,7 @@ export const SimpleAICharacter: React.FC<AICharacterType> = ({
     >
       <primitive
         object={currentVrm?.scene}
-        position={position ?? virtualConfig.position ?? [0, -10, 0]}
+        position={position ?? [0, -10, 0]}
         // position={[0, -9, 0]}
         scale={10}
         ref={tmp}

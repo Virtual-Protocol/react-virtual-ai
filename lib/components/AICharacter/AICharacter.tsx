@@ -7,19 +7,18 @@ import { PresentationControls, useGLTF, useProgress } from "@react-three/drei";
 import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 import { blink, fadeByEmotion, loadAnimation as load } from "../../utils/model";
 import gsap from "gsap";
-import { VirtualConfigType } from "../../types/VirtualConfigType";
 import "../../index.css";
 
 export type AICharacterType = {
   animation: string;
   url?: string;
-  virtualConfig: VirtualConfigType;
   onAudioEnd?: Function;
   onLoad?: Function;
   aside?: boolean;
   speakCount?: number;
   emotion?: string;
   position?: number[];
+  stiffness?: number;
 };
 
 let globalMixer: THREE.AnimationMixer | undefined;
@@ -33,7 +32,7 @@ let lastCloseTime = new Date();
 export const AICharacter: React.FC<AICharacterType> = ({
   animation,
   url,
-  virtualConfig,
+  stiffness,
   onAudioEnd,
   onLoad,
   aside,
@@ -118,7 +117,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
         return;
       }
       //  e.settings.dragForce = 1
-      e.settings.stiffness = virtualConfig.stiffness ?? 6;
+      e.settings.stiffness = stiffness ?? 6;
     });
 
     // initialize mixer
@@ -277,7 +276,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
     >
       <primitive
         object={gltf.userData.vrm.scene}
-        position={position ?? virtualConfig.position ?? [0, -10, 0]}
+        position={position ?? [0, -10, 0]}
         // position={[0, -9, 0]}
         scale={10}
         ref={tmp}

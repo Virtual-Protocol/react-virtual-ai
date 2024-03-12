@@ -41,6 +41,11 @@ type Props = {
   onPromptError?: (error: any) => void;
   metadata?: { [id: string]: any };
   loadingText?: string;
+  preloadMotions?: {
+    uid: string;
+    sentiment: string;
+    url: string;
+  }[];
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -69,12 +74,13 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onPromptError,
   metadata,
   loadingText,
+  preloadMotions,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
     "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
   );
-  const { modelUrl, createPrompt, virtualConfig } = useVirtualAI({
+  const { modelUrl, createPrompt } = useVirtualAI({
     virtualId,
     userName,
     virtualName,
@@ -92,7 +98,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   useRandomInterval(
     async () => {
       // every 30 - 60 seconds, perform an idle animation
-      const preloadedIdleAnimations = virtualConfig.preloadMotions;
+      const preloadedIdleAnimations = preloadMotions;
       if (!preloadedIdleAnimations?.length) return;
       const min = 0;
       const max = preloadedIdleAnimations.length - 1;
@@ -360,7 +366,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               ? transformModelUrl(modelUrl)
               : modelUrl
           }
-          virtualConfig={virtualConfig}
           speakCount={speakCount}
           onAudioEnd={() => {
             console.log("Resetting audio and animation");

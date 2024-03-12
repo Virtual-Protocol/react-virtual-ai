@@ -86,7 +86,7 @@ return (
 If you prefer implementing own components, use the `useVirtualAI` hook as follows:
 
 ```javascript
-const { modelUrl, createPrompt, virtualConfig, runnerUrl } = useVirtualAI({
+const { modelUrl, createPrompt, runnerUrl } = useVirtualAI({
   virtualId,
   userName,
   virtualName,

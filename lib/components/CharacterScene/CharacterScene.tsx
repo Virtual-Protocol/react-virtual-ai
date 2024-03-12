@@ -4,14 +4,12 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
-import { VirtualConfigType } from "../../types/VirtualConfigType";
 import "../../index.css";
 import { SimpleAICharacter } from "../SimpleAICharacter/SimpleAICharacter";
 
 type CharacterSceneType = {
   animation: string;
   modelUrl?: string;
-  virtualConfig: VirtualConfigType;
   onAudioEnd?: Function;
   aside?: boolean;
   speakCount?: number;
@@ -20,12 +18,12 @@ type CharacterSceneType = {
   position?: number[];
   loadingText?: string;
   multiple?: boolean;
+  stiffness?: number;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
   animation,
   modelUrl,
-  virtualConfig,
   onAudioEnd,
   aside,
   speakCount = 0,
@@ -34,6 +32,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   position,
   loadingText,
   multiple,
+  stiffness,
 }) => {
   const [done, setDone] = useState(false);
 
@@ -71,7 +70,6 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
                 animation={animation}
                 url={modelUrl}
                 speakCount={speakCount}
-                virtualConfig={virtualConfig}
                 onAudioEnd={onAudioEnd}
                 onLoad={() => {
                   setDone(true);
@@ -85,7 +83,6 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
                 animation={animation}
                 url={modelUrl}
                 speakCount={speakCount}
-                virtualConfig={virtualConfig}
                 onAudioEnd={onAudioEnd}
                 onLoad={() => {
                   setDone(true);
@@ -93,6 +90,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
                 aside={aside}
                 emotion={emotion}
                 position={position}
+                stiffness={stiffness}
               />
             ))}
           <directionalLight

@@ -1,4 +1,3 @@
-import { defaultVirtualConfig } from "../constants/model";
 import { PromptDto } from "../types/PromptDto";
 import { getVirtualRunnerUrl } from "../utils/jwt";
 import { useEffect, useState } from "react";
@@ -24,7 +23,7 @@ export const useVirtualAI = ({
   metadata,
 }: VirtualAIProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
-  const [virtualConfig, setVirtualConfig] = useState(defaultVirtualConfig);
+  const [modelUrl, setModelUrl] = useState("");
 
   const initVirtual = async () => {
     let cachedRunnerToken =
@@ -44,18 +43,7 @@ export const useVirtualAI = ({
     if (modelResp.status !== 200) throw new Error("Fetch virtual failed");
     const modelRespJson = await modelResp.json();
 
-    if (!!modelRespJson?.config) {
-      // backward compatibility
-      const modelConfigResp = await fetch(`${url}/${modelRespJson.config}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cachedRunnerToken}`,
-        },
-      });
-      const modelConfigRespJson = await modelConfigResp.json();
-      setVirtualConfig(modelConfigRespJson ?? defaultVirtualConfig);
-    } else setVirtualConfig(modelRespJson?.data ?? defaultVirtualConfig);
+    setModelUrl(modelRespJson?.data?.model ?? "");
   };
 
   const initSession = async (vid: number | string, retry: number = 0) => {
@@ -79,7 +67,7 @@ export const useVirtualAI = ({
     if (!!virtualId) {
       // reset previous values
       setRunnerUrl("");
-      setVirtualConfig(defaultVirtualConfig);
+      setModelUrl("");
       // init session
       initSession(virtualId);
     }
@@ -151,8 +139,7 @@ export const useVirtualAI = ({
 
   return {
     runnerUrl,
-    modelUrl: virtualConfig.model,
+    modelUrl,
     createPrompt,
-    virtualConfig,
   };
 };
