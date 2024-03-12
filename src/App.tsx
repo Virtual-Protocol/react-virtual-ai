@@ -33,9 +33,9 @@ function App() {
   }, [messages, thinking]);
 
   return (
-    <div className="flex flex-col w-screen flex-1 h-screen relative overflow-y-hidden bg-black/70">
+    <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-black/70">
       <button
-        className="fixed top-4 right-4 z-50"
+        className="virtual-fixed virtual-top-4 virtual-right-4 virtual-z-50"
         onClick={() => {
           const audio = new Audio(
             "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/33aa254e-a13b-46fb-9807-6aa76b2da467.wav"
@@ -46,17 +46,20 @@ function App() {
       >
         Audio
       </button>
-      <button className="fixed top-4 left-4 z-50" onClick={() => {}}>
+      <button
+        className="virtual-fixed virtual-top-4 virtual-left-4 virtual-z-50"
+        onClick={() => {}}
+      >
         Random action
       </button>
       <CharacterRoom
         userName="User"
         virtualName="Virtual"
         virtualId={1}
-        inputClassName="!bottom-[24px]"
-        speakerClassName="!bottom-[88px]"
-        onUserMessageCreated={async (content: any) => {
-          const newMessage: MessageType = {
+        inputClassName="!virtual-bottom-[24px]"
+        speakerClassName="!virtual-bottom-[88px]"
+        onUserMessageCreated={async (content) => {
+          const newMessage = {
             uid: crypto.randomUUID(),
             content: content,
             isBotReply: false,
@@ -71,7 +74,7 @@ function App() {
           return true;
         }}
         onVirtualMessageCreated={async (content) => {
-          const newMessage: MessageType = {
+          const newMessage = {
             uid: crypto.randomUUID(),
             content: content,
             isBotReply: true,
@@ -90,19 +93,18 @@ function App() {
           setThinking(false);
         }}
         aside={false}
-        hideInput
         onInputFocused={() => {}}
         onInputBlurred={() => {}}
         onAudioErr={() => {}}
         initAccessToken={async () => {
-          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIyYmE0MTFkNS1iMTBjLTRmZDctOTc2ZC0zZjNkY2E0ZjQ5M2UiLCJpZCI6OSwidmlydHVhbCI6IjM1YzJiNWFmLWE4OTUtNGIyYy1iZDZiLTE4MzJhZmEyZDFlMSIsInZpcnR1YWxJZCI6MjA4LCJ1c2VybmFtZSI6ImtpbmdvZmxlYXZlciIsInVzZXJVaWQiOiIxZGE4Nzg2ZC05ZjU2LTQzNGUtOTE5Zi1lOWQ3ZGQxOTMzMjVfMjMzZDdlMTAtN2RhMS00YWY4LWE4YTItMTI3MTZmMTE0ZjAyIiwiY2hhckNhcmRJbmRleCI6MCwicnVubmVyIjoiaHR0cHM6Ly9yaXNpbmctc29ydGVkLW1vbnN0ZXJzLXR1ZXNkYXkudHJ5Y2xvdWRmbGFyZS5jb20iLCJyb2xlIjoidXNlciIsImF1ZCI6InY6MjA4IiwiaWF0IjoxNzEwMjEzODkzLCJleHAiOjE3MTAzMDAyOTN9.Xfd9EFNDPuYFmEZOxIhhqSZqa4I6m-UDGS2c0oczN6RgarMJ74CKVENhAOo4JvGOUWiiCkgQxqQkVYKEAP9wEv28zPAoVdGsvSk_T7SrRVCZo7ZZrv47HUXVg-KBpr4bajnxBRtfvAY3NMicSidiieIM7I2xUHQgQTuODe3Ey5xwoKf-SQoLkUEsuydBEGA_PMDuwQwYpo1uux_AfpISy1hKbWKSrvc1mTgv_NMOXFa5lAsRNj6lIIcH_Bv4vHStKm_wQAEv-S_LM3fVvkBRrCa6SQfXjYtYtl1n5IpBxGUovioJBv4XggPY1qFteOXiyKl56O87uJ95OJtHaearcg";
+          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI5NGM0YTBlMC1kYWY3LTQyMjMtOWVmOS0xZDFlYzhhNzAzMGYiLCJpZCI6OCwidmlydHVhbCI6IjJiMmQxMTUzLTA2ZTQtNGY3MC04YTMzLWM4MTA1MGI5YTA0MiIsInZpcnR1YWxJZCI6MjA2LCJ1c2VybmFtZSI6ImtpbmdvZmxlYXZlciIsInVzZXJVaWQiOiIxZGE4Nzg2ZC05ZjU2LTQzNGUtOTE5Zi1lOWQ3ZGQxOTMzMjVfNDZhNTcxNzEtZDBmNy00MzU2LWI2YTEtNGQxYzYwMzU2ZWUzIiwiY2hhckNhcmRJbmRleCI6MCwicnVubmVyIjoiaHR0cHM6Ly9yZWFkeS1wYXJhbWV0ZXItY2VydGFpbmx5LWJveGluZy50cnljbG91ZGZsYXJlLmNvbSIsInJvbGUiOiJ1c2VyIiwiYXVkIjoidjoyMDYiLCJpYXQiOjE3MTAyMzAwMDksImV4cCI6MTcxMDMxNjQwOX0.btiudHN7lIlU343FSUmJBT2x_IO2v7v922To_mTzg4LcgtDmqUDzQFsXzRQq2h0tLjNfAohSephHjWVdS1cB591NFaprn86TeVLCnLsPln6eNBJ7BMintTIfLHTfR5MLCLh9tBQB_tQfI2f3-i9yc7MQkgXrps39hNTkaMsMykkuJ77sSkuX0PNfs2jTD2JYiOMmBsjar3nY10ZTjf70lRkh1r7lPKmrqhiLVQJXlt4Y4WDkDzljafLeWzN-ulRY5fuUu7A7ka0q4fnimbEgSA8TxNxPRakftrt8rFyy66sga0UZCsg0VOECdVpV1dF90F5DVPtyUugqF1lYpfB_4w";
         }}
         transformModelUrl={(v) => {
           return v.replace("nocache", "production");
         }}
       ></CharacterRoom>
       <div
-        className={`w-[95%] lg:w-[80%] max-h-[60vh] absolute left-1/2 bottom-[148px] -translate-x-1/2 flex flex-col messages-outer`}
+        className={`virtual-w-[95%] virtual-lg:w-[80%] virtual-max-h-[60vh] virtual-absolute virtual-left-1/2 virtual-bottom-[148px] virtual--translate-x-1/2 virtual-flex virtual-flex-col virtual-messages-outer`}
       >
         {<ChatMessages messages={formattedMessages} expanded />}
       </div>

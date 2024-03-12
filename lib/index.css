@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes fadeOut {
+@keyframes virtual-fadeOut {
   0% {
     opacity: 1;
   }
@@ -11,16 +11,16 @@
   }
 }
 
-.fadeOut {
-  -webkit-animation-name: fadeOut;
-  animation-name: fadeOut;
+.virtual-fadeOut {
+  -webkit-animation-name: virtual-fadeOut;
+  animation-name: virtual-fadeOut;
   -webkit-animation-duration: 0.5s;
   animation-duration: 0.5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
 
-@keyframes fadeIn {
+@keyframes virtual-fadeIn {
   0% {
     opacity: 0;
   }
@@ -29,16 +29,87 @@
   }
 }
 
-.fadeIn {
-  -webkit-animation-name: fadeIn;
-  animation-name: fadeIn;
+.virtual-fadeIn {
+  -webkit-animation-name: virtual-fadeIn;
+  animation-name: virtual-fadeIn;
   -webkit-animation-duration: 0.5s;
   animation-duration: 0.5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
 
-@-webkit-keyframes sk-bouncedelay {
+.virtual-animate-flicker {
+  animation: virtual-fadeIn 1s infinite alternate;
+}
+
+textarea::placeholder {
+  color: white;
+}
+
+input {
+  font-size: 16px;
+}
+
+canvas {
+  touch-action: none;
+}
+
+@font-face {
+  font-family: "HYWenHei";
+  src: url("./fonts/zhcn.woff");
+  /* font-weight: 400;
+  font-style: normal; */
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("./fonts/Barlow/Barlow-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("./fonts/Barlow/Barlow-Light.ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("./fonts/Barlow/Barlow-Medium.ttf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("./fonts/Barlow/Barlow-SemiBold.ttf");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("./fonts/Barlow/Barlow-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("./fonts/Barlow/Barlow-ExtraBold.ttf");
+  font-weight: 900;
+  font-style: normal;
+}
+
+/*Huge thanks to @tobiasahlin at http://tobiasahlin.com/spinkit/ */
+.virtual-spinner {
+  text-align: center;
+  color: white;
+}
+
+@-webkit-keyframes virtual-sk-bouncedelay {
   0%,
   80%,
   100% {
@@ -49,7 +120,7 @@
   }
 }
 
-@keyframes sk-bouncedelay {
+@keyframes virtual-sk-bouncedelay {
   0%,
   80%,
   100% {
@@ -62,58 +133,23 @@
   }
 }
 
-.animate-flicker {
-  animation: fadeIn 1s infinite alternate;
+.virtual-spinner > div {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: virtual-sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: virtual-sk-bouncedelay 1.4s infinite ease-in-out both;
 }
 
-textarea::placeholder {
-  color: white;
+.virtual-spinner .virtual-bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
 }
 
-@keyframes fadeInWithPointerEvents {
-  0% {
-    opacity: 0;
-    pointer-events: none;
-  }
-  100% {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-
-.fadeInWithPointerEvents {
-  -webkit-animation-name: fadeInWithPointerEvents;
-  animation-name: fadeInWithPointerEvents;
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-@keyframes fadeOutWithPointerEvents {
-  0% {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  100% {
-    opacity: 0;
-    pointer-events: none;
-  }
-}
-
-.fadeOutWithPointerEvents {
-  -webkit-animation-name: fadeOutWithPointerEvents;
-  animation-name: fadeOutWithPointerEvents;
-  -webkit-animation-duration: 0.5s;
-  animation-duration: 0.5s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-}
-
-input {
-  font-size: 16px;
-}
-
-canvas {
-  touch-action: none;
+.virtual-spinner .virtual-bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
 }

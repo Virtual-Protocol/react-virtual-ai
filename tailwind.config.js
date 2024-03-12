@@ -1,5 +1,8 @@
+import defaultTheme from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  prefix: "virtual-",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,7 +10,10 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {},
+      fontFamily: {
+        wenhei: ['"HYWenHei"', ...defaultTheme.fontFamily.sans],
+        barlow: ['"Barlow"', ...defaultTheme.fontFamily.sans],
+      },
       backgroundImage: {},
       keyframes: {
         hover: {

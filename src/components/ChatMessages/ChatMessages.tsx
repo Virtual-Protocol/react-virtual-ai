@@ -14,11 +14,11 @@ export const ChatMessages: React.FC<Props> = ({ messages, expanded }) => {
 
   return (
     <div
-      className="w-full h-full relative overflow-auto overflow-x-hidden flex flex-col pt-4"
+      className="virtual-w-full virtual-h-full virtual-relative virtual-overflow-auto virtual-overflow-x-hidden virtual-flex virtual-flex-col virtual-pt-4"
       ref={chatMessagesEl}
     >
       <div
-        className={`w-full flex gap-1 relative pr-3 overflow-x-hidden flex-col-reverse pointer messages`}
+        className={`virtual-w-full virtual-flex virtual-gap-1 virtual-relative virtual-pr-3 virtual-overflow-x-hidden virtual-flex-col-reverse virtual-pointer virtual-messages`}
       >
         {messages.map((message) => {
           if (message.type === "TEXT" && message.sender === "You") {
@@ -39,7 +39,7 @@ export const ChatMessages: React.FC<Props> = ({ messages, expanded }) => {
           return (
             <p
               key={message.id}
-              className="font-barlow p-2 text-[#111] text-sm bg-[#F0E9FF] rounded-lg whitespace-pre-line"
+              className="virtual-font-barlow virtual-p-2 virtual-text-[#111] virtual-text-sm virtual-bg-[#F0E9FF] virtual-rounded-lg virtual-whitespace-pre-line"
             >
               {message.message}
             </p>

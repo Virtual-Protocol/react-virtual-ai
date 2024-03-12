@@ -8,6 +8,7 @@ import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 import { blink, fadeByEmotion } from "../../utils/model";
 import gsap from "gsap";
 import { VirtualConfigType } from "../../types/VirtualConfigType";
+import "../../index.css";
 
 export type AICharacterType = {
   animation: string;

@@ -26,7 +26,7 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
     if (indices.length === 0) {
       return [
         <span
-          className="text-white whitespace-pre-line"
+          className="virtual-text-white virtual-whitespace-pre-line"
           key={crypto.randomUUID()}
         >
           {message.message}
@@ -38,7 +38,7 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
       const text = message.message.slice(0, indices?.[0].start);
       elements.push(
         <span
-          className="text-white whitespace-pre-line"
+          className="virtual-text-white virtual-whitespace-pre-line"
           key={crypto.randomUUID()}
         >
           {text}
@@ -50,7 +50,7 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
       const highlighted = message.message.slice(ind.start, ind.end);
       elements.push(
         <span
-          className="text-yellow-400 whitespace-pre-line"
+          className="virtual-text-yellow-400 virtual-whitespace-pre-line"
           key={crypto.randomUUID()}
         >
           {highlighted}
@@ -64,7 +64,7 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
         );
         elements.push(
           <span
-            className="text-white whitespace-pre-line"
+            className="virtual-text-white virtual-whitespace-pre-line"
             key={crypto.randomUUID()}
           >
             {notHighlighted}
@@ -83,7 +83,7 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
       );
       elements.push(
         <span
-          className="text-white whitespace-pre-line"
+          className="virtual-text-white virtual-whitespace-pre-line"
           key={crypto.randomUUID()}
         >
           {last}
@@ -108,7 +108,7 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
     if (indices.length === 0) {
       return [
         <span
-          className="text-white whitespace-pre-line"
+          className="virtual-text-white virtual-whitespace-pre-line"
           key={crypto.randomUUID()}
         >
           {message.message?.replace(/"/g, "")}
@@ -120,7 +120,7 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
       const highlighted = message.message.slice(ind.start, ind.end);
       elements.push(
         <span
-          className="text-white whitespace-pre-line"
+          className="virtual-text-white virtual-whitespace-pre-line"
           key={crypto.randomUUID()}
         >
           {highlighted?.replace(/"/g, " ")}
@@ -132,13 +132,13 @@ export const OtherTextMessage: React.FC<Props> = ({ message, expanded }) => {
   }, [message.message, quoted]);
 
   return (
-    <div className="flex flex-row relative max-w-[90%] items-center">
+    <div className="virtual-flex virtual-flex-row virtual-relative virtual-max-w-[90%] virtual-items-center">
       {expanded ? (
-        <p className="font-barlow p-2 text-white text-sm bg-black/10 backdrop-blur-2xl rounded-lg whitespace-pre-line">
+        <p className="virtual-font-barlow virtual-p-2 virtual-text-white virtual-text-sm virtual-bg-black/10 virtual-backdrop-blur-2xl virtual-rounded-lg virtual-whitespace-pre-line">
           {...highlightedMessages}
         </p>
       ) : (
-        <p className="font-barlow p-2 text-white text-sm bg-black/10 backdrop-blur-2xl rounded-lg whitespace-pre-line">
+        <p className="virtual-font-barlow virtual-p-2 virtual-text-white virtual-text-sm virtual-bg-black/10 virtual-backdrop-blur-2xl virtual-rounded-lg virtual-whitespace-pre-line">
           {...simplifiedMessages}
         </p>
       )}

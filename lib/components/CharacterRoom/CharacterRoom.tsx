@@ -9,6 +9,7 @@ import { startLipSync } from "../../utils/audio";
 import { useVirtualAI } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
 import { PromptDto } from "../../types/PromptDto";
+import "../../index.css";
 
 type Props = {
   userName?: string;
@@ -250,17 +251,17 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
 
   return (
     <form
-      className="justify-end h-full w-full flex flex-col overflow-y-hidden relative"
+      className="virtual-justify-end virtual-h-full virtual-w-full virtual-flex virtual-flex-col virtual-overflow-y-hidden virtual-relative"
       onSubmit={(e) => {
         e.preventDefault();
         handleSendClick();
       }}
     >
       {debugging && (
-        <div className="flex flex-col items-center gap-1 fixed top-2 left-1/2 -translate-x-1/2 z-40">
-          <div className="flex flex-row items-center gap-2 flex-wrap">
+        <div className="virtual-flex virtual-flex-col virtual-items-center virtual-gap-1 virtual-fixed virtual-top-2 virtual-left-1/2 virtual--translate-x-1/2 virtual-z-40">
+          <div className="virtual-flex virtual-flex-row virtual-items-center virtual-gap-2 virtual-flex-wrap">
             <button
-              className="bg-white px-2 py-1 rounded-2xl"
+              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setEmotion("anger");
                 setAnim(
@@ -272,7 +273,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               Angry
             </button>
             <button
-              className="bg-white px-2 py-1 rounded-2xl"
+              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setAnim(
                   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/mixamo/Joyful+Jump.fbx"
@@ -284,7 +285,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               Joyful Jump
             </button>
             <button
-              className="bg-white px-2 py-1 rounded-2xl"
+              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setAnim(
                   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/mixamo/Crying.fbx"
@@ -296,7 +297,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               Sad
             </button>
             <button
-              className="bg-white px-2 py-1 rounded-2xl"
+              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setAnim(
                   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Happy_7bb121f971.fbx"
@@ -308,7 +309,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               Happy
             </button>
             <button
-              className="bg-white px-2 py-1 rounded-2xl"
+              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setAnim(
                   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Happy_Idle_5c47e63d71.fbx"
@@ -320,7 +321,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               Happy Idle
             </button>
             <button
-              className="bg-white px-2 py-1 rounded-2xl"
+              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setAnim(
                   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Thinking_8971a6cf3f.fbx"
@@ -332,7 +333,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               Thinking
             </button>
             <button
-              className="bg-white px-2 py-1 rounded-2xl"
+              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setAnim(
                   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Talking_384b16a4d2.fbx"
@@ -346,7 +347,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           </div>
         </div>
       )}
-      <div className="w-full h-full relative">
+      <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
           zoom={zoom}
           animation={anim}
@@ -394,9 +395,12 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               <IconButton
                 aria-label="Play / Pause"
                 icon={
-                  <Icon as={HiSpeakerWave} className="text-white text-xl" />
+                  <Icon
+                    as={HiSpeakerWave}
+                    className="virtual-text-white virtual-text-xl"
+                  />
                 }
-                className={`rounded-full w-10 h-10 bg-black/30 hover:bg-black/30 backdrop-blur-xl z-40 self-end`}
+                className={`virtual-rounded-full virtual-w-10 virtual-h-10 virtual-bg-black/30 virtual-hover:bg-black/30 virtual-backdrop-blur-xl virtual-z-40 virtual-self-end`}
                 isDisabled={talking}
                 onClick={async () => {
                   setTalking(true);
