@@ -4,7 +4,6 @@ import { ChatMessages } from "./components/ChatMessages/ChatMessages";
 import { ChatMessageDto } from "./types/ChatMessageDto";
 import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
-import { CharacterScene } from "../lib/main";
 
 function App() {
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -50,7 +49,7 @@ function App() {
       <button className="fixed top-4 left-4 z-50" onClick={() => {}}>
         Random action
       </button>
-      {/* <CharacterRoom
+      <CharacterRoom
         userName="User"
         virtualName="Virtual"
         virtualId={1}
@@ -91,150 +90,17 @@ function App() {
           setThinking(false);
         }}
         aside={false}
+        hideInput
         onInputFocused={() => {}}
         onInputBlurred={() => {}}
         onAudioErr={() => {}}
         initAccessToken={async () => {
-          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NzYyY2M2MC1mOGQzLTQ1MDEtOGE4NC1lMmE2YTJiYzFkZDUiLCJpZCI6OSwidmlydHVhbCI6IjBkNmM5OGNhLTE1YWEtNDQ1NC1hYTExLTFmM2E5Y2FmNmExMyIsInZpcnR1YWxJZCI6MTI0LCJ1c2VybmFtZSI6Indpbmc4ODgiLCJ1c2VyVWlkIjoidXNlci0xIiwicnVubmVyIjoiaHR0cHM6Ly9jb25zaWRlcmluZy1uZXdtYW4tcHVyc3VhbnQtam9obnNvbi50cnljbG91ZGZsYXJlLmNvbSIsImlhdCI6MTcwOTYyNjQzOCwiZXhwIjoxNzA5NzEyODM4fQ.cYX7bJ9hM290ypEF7hYGHm-a7CAK1F0y0MIAjpDfW1KzeaCjvPJgeVYmCkbhY0T7Aul06O7df4iLR-4uWuTmmEPstTDnici6FuCSiPuCQOyH1qWZg3-o_Cew7VLQ3zL-AI_TqOojxfsMYo4UKmShjA7vQEfOFp3mlUR6-OmdFHcj1DASbf3cU8yv_PVG28c_A-Q1ZF-c53vaIlgToLfQWPpo5krx3zixbmCxMLrmVfkc5NuUIPiEVqThywnxVxi2YV_AoZzplBlGvNEky3xsjoeeBq4x-EWpdeieU8CjX5U42JaAK8uLx5VFY7U50wozg05xcgN2UuTfAWv6ajeTKg";
+          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIyYmE0MTFkNS1iMTBjLTRmZDctOTc2ZC0zZjNkY2E0ZjQ5M2UiLCJpZCI6OSwidmlydHVhbCI6IjM1YzJiNWFmLWE4OTUtNGIyYy1iZDZiLTE4MzJhZmEyZDFlMSIsInZpcnR1YWxJZCI6MjA4LCJ1c2VybmFtZSI6ImtpbmdvZmxlYXZlciIsInVzZXJVaWQiOiIxZGE4Nzg2ZC05ZjU2LTQzNGUtOTE5Zi1lOWQ3ZGQxOTMzMjVfMjMzZDdlMTAtN2RhMS00YWY4LWE4YTItMTI3MTZmMTE0ZjAyIiwiY2hhckNhcmRJbmRleCI6MCwicnVubmVyIjoiaHR0cHM6Ly9yaXNpbmctc29ydGVkLW1vbnN0ZXJzLXR1ZXNkYXkudHJ5Y2xvdWRmbGFyZS5jb20iLCJyb2xlIjoidXNlciIsImF1ZCI6InY6MjA4IiwiaWF0IjoxNzEwMjEzODkzLCJleHAiOjE3MTAzMDAyOTN9.Xfd9EFNDPuYFmEZOxIhhqSZqa4I6m-UDGS2c0oczN6RgarMJ74CKVENhAOo4JvGOUWiiCkgQxqQkVYKEAP9wEv28zPAoVdGsvSk_T7SrRVCZo7ZZrv47HUXVg-KBpr4bajnxBRtfvAY3NMicSidiieIM7I2xUHQgQTuODe3Ey5xwoKf-SQoLkUEsuydBEGA_PMDuwQwYpo1uux_AfpISy1hKbWKSrvc1mTgv_NMOXFa5lAsRNj6lIIcH_Bv4vHStKm_wQAEv-S_LM3fVvkBRrCa6SQfXjYtYtl1n5IpBxGUovioJBv4XggPY1qFteOXiyKl56O87uJ95OJtHaearcg";
         }}
         transformModelUrl={(v) => {
           return v.replace("nocache", "production");
         }}
-      ></CharacterRoom> */}
-      <CharacterScene
-        multiple
-        animation={
-          "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd"
-        }
-        // modelUrl="/models/latest/no_hair.vrm"
-        modelUrl={
-          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/ignis.vrm"
-        }
-        virtualConfig={{
-          model:
-            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/ignis.vrm",
-          animations: {
-            face: {
-              voice: "/like.mp3",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
-            },
-            chest: {
-              voice: "/angry.mp3",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
-            },
-            lower: {
-              voice: "/shy.mp3",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
-            },
-          },
-          parts: {
-            face: {
-              startX: -0.82,
-              endX: 0.82,
-              startY: 2.64,
-              endY: 0.19,
-            },
-            chest: {
-              startX: -0.82,
-              endX: 0.82,
-              startY: -0.87,
-              endY: -2.54,
-            },
-            lower: {
-              startX: -1.34,
-              endX: 1.6,
-              startY: -4.13,
-              endY: -5.73,
-            },
-          },
-          position: [0, -9, 0],
-          stiffness: 6,
-          preloadMotions: [
-            {
-              uid: "idle1",
-              sentiment: "idle",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
-            },
-            {
-              uid: "idle2",
-              sentiment: "idle",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
-            },
-            {
-              uid: "idle6",
-              sentiment: "idle",
-              url: "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/idle/Swaying+Arms+and+Hips.vmd",
-            },
-          ],
-        }}
-      />
-      <CharacterScene
-        multiple
-        animation={
-          "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd"
-        }
-        // modelUrl="/models/latest/no_hair.vrm"
-        modelUrl={
-          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/gaia.vrm"
-        }
-        virtualConfig={{
-          model:
-            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/nocache/gaia.vrm",
-          animations: {
-            face: {
-              voice: "/like.mp3",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
-            },
-            chest: {
-              voice: "/angry.mp3",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
-            },
-            lower: {
-              voice: "/shy.mp3",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
-            },
-          },
-          parts: {
-            face: {
-              startX: -0.82,
-              endX: 0.82,
-              startY: 2.64,
-              endY: 0.19,
-            },
-            chest: {
-              startX: -0.82,
-              endX: 0.82,
-              startY: -0.87,
-              endY: -2.54,
-            },
-            lower: {
-              startX: -1.34,
-              endX: 1.6,
-              startY: -4.13,
-              endY: -5.73,
-            },
-          },
-          position: [0, -9, 0],
-          stiffness: 6,
-          preloadMotions: [
-            {
-              uid: "idle1",
-              sentiment: "idle",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Idle/Sleepy_yawn_idle_113.vmd",
-            },
-            {
-              uid: "idle2",
-              sentiment: "idle",
-              url: "https://s3.ap-southeast-1.amazonaws.com/cdn-staging.hiddenhands.io/vmd/Misc/State/Hand_on_cheast_106.vmd",
-            },
-            {
-              uid: "idle6",
-              sentiment: "idle",
-              url: "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/idle/Swaying+Arms+and+Hips.vmd",
-            },
-          ],
-        }}
-      />
+      ></CharacterRoom>
       <div
         className={`w-[95%] lg:w-[80%] max-h-[60vh] absolute left-1/2 bottom-[148px] -translate-x-1/2 flex flex-col messages-outer`}
       >

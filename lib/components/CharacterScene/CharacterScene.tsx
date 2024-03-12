@@ -5,7 +5,6 @@ import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import { VirtualConfigType } from "../../types/VirtualConfigType";
-import "../../index.css";
 import { SimpleAICharacter } from "../SimpleAICharacter/SimpleAICharacter";
 
 type CharacterSceneType = {

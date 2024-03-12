@@ -9,7 +9,6 @@ import { startLipSync } from "../../utils/audio";
 import { useVirtualAI } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
 import { PromptDto } from "../../types/PromptDto";
-import "../../index.css";
 
 type Props = {
   userName?: string;
