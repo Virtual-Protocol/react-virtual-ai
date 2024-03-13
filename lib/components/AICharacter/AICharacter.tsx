@@ -166,6 +166,10 @@ export const AICharacter: React.FC<AICharacterType> = ({
         previousAction.fadeOut(0);
         previousAction = undefined;
       }
+      if (!!activeAction) {
+        activeAction.fadeOut(0);
+        activeAction = undefined;
+      }
     };
   }, [url]);
 
