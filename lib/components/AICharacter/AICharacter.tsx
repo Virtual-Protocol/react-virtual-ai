@@ -238,6 +238,8 @@ export const AICharacter: React.FC<AICharacterType> = ({
       return;
     }
 
+    if (!!activeAction && activeAction.getClip().name === action) return;
+
     if (!!previousAction) {
       console.log("fading out", previousAction.getClip().name);
       previousAction.fadeOut(0.5);
