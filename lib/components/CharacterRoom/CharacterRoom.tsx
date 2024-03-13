@@ -4,7 +4,6 @@ import { PropsWithChildren, useState } from "react";
 import { Input } from "../Input/Input";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
-import { useRandomInterval } from "../../hooks/useRandomInterval";
 import { startLipSync } from "../../utils/audio";
 import { useVirtualAI } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
@@ -74,7 +73,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onPromptError,
   metadata,
   loadingText,
-  preloadMotions,
+  // preloadMotions,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState("");
@@ -93,19 +92,19 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   >(undefined);
   const [talking, setTalking] = useState(false);
 
-  useRandomInterval(
-    async () => {
-      // every 30 - 60 seconds, perform an idle animation
-      const preloadedIdleAnimations = preloadMotions;
-      if (!preloadedIdleAnimations?.length) return;
-      const min = 0;
-      const max = preloadedIdleAnimations.length - 1;
-      const randomNumber = Math.floor(Math.random() * (max - min)) + min;
-      setAnim(preloadedIdleAnimations[randomNumber]?.url ?? "");
-    },
-    30000,
-    60000
-  );
+  // useRandomInterval(
+  //   async () => {
+  //     // every 30 - 60 seconds, perform an idle animation
+  //     const preloadedIdleAnimations = preloadMotions;
+  //     if (!preloadedIdleAnimations?.length) return;
+  //     const min = 0;
+  //     const max = preloadedIdleAnimations.length - 1;
+  //     const randomNumber = Math.floor(Math.random() * (max - min)) + min;
+  //     setAnim(preloadedIdleAnimations[randomNumber]?.url ?? "");
+  //   },
+  //   30000,
+  //   60000
+  // );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
