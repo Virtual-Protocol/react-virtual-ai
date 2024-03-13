@@ -77,9 +77,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   preloadMotions,
 }) => {
   const [inputText, setInputText] = useState("");
-  const [anim, setAnim] = useState(
-    "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
-  );
+  const [anim, setAnim] = useState("");
   const { modelUrl, createPrompt } = useVirtualAI({
     virtualId,
     userName,
@@ -271,7 +269,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               onClick={() => {
                 setEmotion("anger");
                 setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/anger/look_around_angry_189.vmd"
+                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/anger/Frustrated_y_179.vmd"
                 );
                 setSpeakCount((prev) => prev + 1);
               }}

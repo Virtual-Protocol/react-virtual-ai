@@ -8,6 +8,7 @@ import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 import { blink, fadeByEmotion, loadAnimation as load } from "../../utils/model";
 import gsap from "gsap";
 import "../../index.css";
+import { delay } from "framer-motion";
 
 export type AICharacterType = {
   animation: string;
@@ -126,41 +127,44 @@ export const AICharacter: React.FC<AICharacterType> = ({
       setTimeout(() => {
         isAnimating = false;
       }, 1000);
-      // currentVrm?.humanoid.resetNormalizedPose();
-      // start idle animation
-      fadeToActionString(
-        "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-        {},
-        true
-      );
+
+      if (!!previousAction) {
+        console.log("fading out", previousAction.getClip().name);
+        previousAction.fadeOut(0.5);
+        previousAction = undefined;
+        delay(() => {
+          fadeToActionString(
+            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+            true
+          );
+        }, 500);
+      } else {
+        fadeToActionString(
+          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+          true
+        );
+      }
     });
 
     globalMixer = m;
     // start idle animation
     fadeToActionString(
       "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-      {},
       true,
       v,
       m
     );
-    // return () => {
-    //   if (!!currentVrm) {
-    //     try {
-    //       console.log("disposing previous vrm on unload");
-    //       VRMUtils.deepDispose(currentVrm.scene);
-    //       currentVrm = undefined;
-    //     } catch (err: any) {
-    //       console.log("Dispose error", err);
-    //     }
-    //   }
-    // };
   }, [gltf]);
 
   useEffect(() => {
     return () => {
       if (!!onAudioEnd) {
         onAudioEnd();
+      }
+      isAnimating = false;
+      if (!!previousAction) {
+        previousAction.fadeOut(0);
+        previousAction = undefined;
       }
     };
   }, [url]);
@@ -204,9 +208,9 @@ export const AICharacter: React.FC<AICharacterType> = ({
   });
 
   useEffect(() => {
+    if (!animation) return;
     fadeToActionString(
       animation,
-      {},
       animation.includes("a_idle_neutral_loop_88") ||
         animation.includes("sample_talk_128")
     );
@@ -219,30 +223,41 @@ export const AICharacter: React.FC<AICharacterType> = ({
 
   const fadeToActionString = async (
     action: string,
-    preloadClips: {
-      [path: string]: THREE.AnimationClip;
-    },
     loop?: boolean,
     v?: VRM,
     m?: THREE.AnimationMixer
   ) => {
-    console.log("fading to", action);
+    const mixer = m ?? globalMixer;
+    if (!mixer) return;
+
     const clip = await load(action, v ?? currentVrm);
     if (!clip) return;
-    // fade to action
-    const mixerAction = (m ?? globalMixer)?.clipAction(clip);
-    if (!!mixerAction) mixerAction.clampWhenFinished = true;
-    // console.log("Clip and Action", mixerAction, clip, action);
-    previousAction = activeAction;
-    activeAction = mixerAction;
-    preloadClips[action] = clip;
 
-    if (!!previousAction && previousAction !== activeAction) {
-      previousAction?.fadeOut(1);
+    if (isAnimating && !loop) {
+      console.log("is animating, skipping", clip.name);
+      return;
     }
+
+    if (!!previousAction) {
+      console.log("fading out", previousAction.getClip().name);
+      previousAction.fadeOut(0.5);
+      previousAction = undefined;
+      delay(() => {
+        fadeToActionString(action, loop, v, m);
+      }, 500);
+      return;
+    }
+
+    // clip action
+    const mixerAction = mixer.clipAction(clip);
+    if (!mixerAction) return;
+    activeAction = mixerAction;
+    activeAction.clampWhenFinished = true;
+
+    console.log("fading to", action);
     if (loop) {
       activeAction
-        ?.reset()
+        .reset()
         .setEffectiveTimeScale(1)
         .setEffectiveWeight(1)
         .fadeIn(1)
@@ -250,13 +265,14 @@ export const AICharacter: React.FC<AICharacterType> = ({
     } else {
       isAnimating = true;
       activeAction
-        ?.reset()
+        .reset()
         .setEffectiveTimeScale(1)
         .setEffectiveWeight(1)
         .fadeIn(1)
         .setLoop(THREE.LoopOnce, 1)
         .play();
     }
+    previousAction = activeAction;
   };
 
   if (!gltf?.userData?.vrm?.scene) return <></>;
