@@ -52,7 +52,6 @@ function App() {
         virtualName="Virtual"
         virtualId={1}
         inputClassName="!virtual-bottom-[24px]"
-        speakerClassName="!virtual-bottom-[88px]"
         onUserMessageCreated={async (content) => {
           const newMessage = {
             uid: crypto.randomUUID(),

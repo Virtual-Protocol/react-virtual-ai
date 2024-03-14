@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import { ChakraProvider, Icon, IconButton, Textarea } from "@chakra-ui/react";
 import { FaMicrophone } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
@@ -16,14 +16,13 @@ type InputProps = {
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
   onSubmit: Function;
   disabled?: boolean;
-  loading: boolean;
   onSubmitVoice: (b: Blob) => void;
-  onVoiceCall: Function;
   hideVoice?: boolean;
   onFocus?: Function;
   className?: string;
   Toolbar?: ReactElement;
   onBlur?: Function;
+  style?: CSSProperties;
 };
 
 export const Input: React.FC<InputProps> = ({
@@ -31,10 +30,10 @@ export const Input: React.FC<InputProps> = ({
   onChange,
   onSubmit,
   disabled,
-  loading,
   onSubmitVoice,
   hideVoice,
   onFocus,
+  style,
   className,
   Toolbar,
   onBlur,
@@ -80,6 +79,7 @@ export const Input: React.FC<InputProps> = ({
       <ChakraProvider>
         <div
           className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-lg:w-[600px] virtual-bottom-[88px] ${className}`}
+          style={style}
         >
           {!!Toolbar && Toolbar}
           <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
@@ -116,7 +116,7 @@ export const Input: React.FC<InputProps> = ({
             </button>
             <IconButton
               aria-label="Send Message"
-              isDisabled={disabled || loading}
+              isDisabled={disabled}
               icon={
                 <Icon
                   as={IoMdSend}
@@ -196,7 +196,7 @@ export const Input: React.FC<InputProps> = ({
             </button>
             <IconButton
               aria-label="Change Keyboard"
-              isDisabled={disabled || loading}
+              isDisabled={disabled}
               icon={
                 <Icon
                   as={FaKeyboard}
@@ -238,14 +238,14 @@ export const Input: React.FC<InputProps> = ({
             onBlur={() => {
               if (!!onBlur) onBlur();
             }}
-            isDisabled={disabled || loading}
+            isDisabled={disabled}
             rows={1}
           />
           {!!value.trim() && (
             <IconButton
               aria-label="Send Message"
               type="submit"
-              isDisabled={disabled || loading}
+              isDisabled={disabled}
               icon={
                 <Icon
                   as={IoMdSend}
@@ -258,7 +258,7 @@ export const Input: React.FC<InputProps> = ({
           {!value.trim() && !hideVoice && (
             <IconButton
               aria-label="Send Voice"
-              isDisabled={disabled || loading}
+              isDisabled={disabled}
               icon={
                 <Icon
                   as={FaMicrophone}

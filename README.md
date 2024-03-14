@@ -38,7 +38,10 @@ Sample implementation:
 
 ```javascript
 // This function fetches runner access token and keep in cache
-export const initAccessToken = async (virtualId: number) => {
+export const initAccessToken = async (
+  virtualId: number,
+  metadata?: { [id: string]: any }
+) => {
   if (!virtualId) return "";
   // runner token by bot is saved as runnerToken<virtualId> in localStorage
   let cachedRunnerToken = localStorage.getItem(`runnerToken${virtualId}`) ?? "";
@@ -57,6 +60,7 @@ export const initAccessToken = async (virtualId: number) => {
         },
         body: JSON.stringify({
           virtualId: virtualId,
+          metadata: metadata,
         }),
       }
     );
@@ -94,28 +98,139 @@ const { modelUrl, createPrompt, runnerUrl } = useVirtualAI({
 });
 ```
 
-## API References (WIP)
+## API References
 
 ### useVirtualAI
 
-- `messages`: ChatMessageDto[] - List of messages of the selected chat room.
-- `setMessages`: Function - Set the message list
-- `activeChat`: number - Active room ID (-1 if undefined)
-- `setActiveChat`: Function - Set active room ID
-- `chatRooms`: ChatRoom[] - List of chat rooms
-- `setChatRooms`: Function - Set chat room list
+`virtualId?: number | string`: Unique identifier for the virtual, this value will be passed to initAccessToken function when next-virtual requests for new runner tokens.
+
+`userName?: string`: User's name
+
+`virtualName?: string`: Virtual's name
+
+`initAccessToken: (virtualId: number | string, metadata?: { [id: string]: any }) => Promise<string>`: Function that will return runner access token based on virtual ID and additional metadata. Sample implementation is attached at `Step 3`
+
+`onPromptError?: (error: any) => void`: Callback function when prompt fails.
+
+`metadata?: { [id: string]: any }`: Additional parameters that will be passed to initAccessToken function.
 
 ### CharacterRoom
 
-- `InputComponent`?: React.FC<InputProps> - Override the default `Input` component
-- `AICharacterComponent`?: React.FC<AICharacterProps> - Override the default `AICharacter` component
-- `aiCharacterStyle`?: CSSProperties - AI Character styles
-- `VoiceCallRoomComponent`?: React.FC<VoiceCallRoomProps> - Override the default `VoiceCallRoom` component
-- `VoiceCallRoomStyle`?: CSSProperties - VoiceCallRoom styles
-- `ChatMessagesComponent`?: React.FC<ChatMessagesProps> - Override the default `ChatMessages` component
-- `idleAnimations`: string[] - List of idle animation states
-- `modelAnimations`: ModelAnimation[] - List of model animations and states
-- `modelPath`: string - Model path URL
+`userName?: string`: User's name
+
+`virtualName?: string`: Virtual's name
+
+`onSendMessage?: Function`: Callback when text message is submitted
+
+`hideVoice?: boolean`: Hide voice input button
+
+`inputClassName?: string`: Input button additional class names
+
+`inputStyle?: CSSProperties`: Input button additional styles
+
+`hideInput?: boolean`: Hide input fields
+
+`zoom?: number`: ThreeJS zoom amount (default 2)
+
+`position?: number[]`: 3D model position (default [0, -10, 0])
+
+`virtualId?: number | string`: virtualId for initAccessToken
+
+`aside?: boolean`: Whether to put 3D model camera aside
+
+`onUserMessageCreated?: (content: any) => Promise<void>`: Callback when user message is created
+
+`onVirtualMessageCreated?: (content: any) => Promise<void>`: Callback when virtual message is created
+
+`onBeforeSendMessage?: () => void`: Callback before sending text or voice message
+
+`onErrorSendingMessage?: (err: any) => void`: Callback when error sending text or voice message
+
+`onInputFocused?: () => void`: Callback when input field is focused
+
+`onInputBlurred?: () => void`: Callback when input field is blurred
+
+`initAccessToken: (virtualId: number | string, metadata?: { [id: string]: any }) => Promise<string>`: Function that returns runner access token, details are in `Step 3`
+
+`onAudioErr?: () => void`: Callback when audio playback error
+
+`validateMessageCapability?: () => boolean`: Validate if user is allowed to send message, return `false` to prohibit user sending message
+
+`overrideModelUrl?: string`: Custom 3D Model URL
+
+`transformModelUrl?: (modelUrl: string) => string`: Function to preprocess model URL and returns a new URL
+
+`onPromptError?: (error: any) => void`: Callback when prompting failed
+
+`metadata?: { [id: string]: any }`: Metadata to attach in initAccessToken function
+
+`loadingText?: string`: Text to show when loading 3D model, default is "Your Virtual is Dressing Up..."
+
+### CharacterScene
+
+`animation: string`: Animation URL, supports .vmd and mixamo .fbx
+
+`modelUrl?: string`: 3D Model URL, supports .vrm
+
+`onAudioEnd?: Function`: Callback when audio playback error happens
+
+`aside?: boolean`: Whether to set 3D model camera aside
+
+`speakCount?: number`: Trigger audio playback when this value changes
+
+`emotion?: "idle" | "think" | "anger" | "disgust" | "fear" | "joy" | "neutral" | "sadness" | "surprise"`: Emotion to play
+
+`zoom?: number`: Camera zoom, default is 2
+
+`position?: number[]`: 3D model position (default [0, -10, 0])
+
+`loadingText?: string`: Text to show when loading 3D model, default is "Your Virtual is Dressing Up..."
+
+`stiffness?: number`: 3D model stiffness, default is 6
+
+### AICharacter
+
+`animation: string`: Animation URL, supports .vmd and mixamo .fbx
+
+`url?: string`: 3D Model URL, supports .vrm
+
+`onAudioEnd?: Function`: Callback when audio playback error happens
+
+`onLoad?: Function`: Callback when 3D model is loaded
+
+`aside?: boolean`: Whether to set 3D model camera aside
+
+`speakCount?: number`: Trigger audio playback when this value changes
+
+`emotion?: "idle" | "think" | "anger" | "disgust" | "fear" | "joy" | "neutral" | "sadness" | "surprise"`: Emotion to play
+
+`position?: number[]`: 3D model position (default [0, -10, 0])
+
+`stiffness?: number`: 3D model stiffness, default is 6
+
+### Input
+
+`value: string`: Text input value
+
+`onChange: ChangeEventHandler<HTMLTextAreaElement>`: On text input value change
+
+`onSubmit: Function`: Callback when submit button is pressed
+
+`disabled?: boolean`: Whether the input field is disabled
+
+`onSubmitVoice: (b: Blob) => void`: Callback on voice submitted
+
+`hideVoice?: boolean`: Whether to hide voice button
+
+`onFocus?: Function`: Callback on input focus
+
+`className?: string`: Additional class names for input field
+
+`Toolbar?: ReactElement`: Additional component above input field
+
+`onBlur?: Function`: Callback on input blur
+
+`style?: CSSProperties`: Additional styles for input field
 
 ## Contributing
 

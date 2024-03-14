@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren, useState } from "react";
+import { CSSProperties, PropsWithChildren, useState } from "react";
 import { Input } from "../Input/Input";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
@@ -16,7 +16,7 @@ type Props = {
   onSendMessage?: Function;
   hideVoice?: boolean;
   inputClassName?: string;
-  speakerClassName?: string;
+  inputStyle?: CSSProperties;
   hideInput?: boolean;
   zoom?: number;
   position?: number[];
@@ -40,11 +40,6 @@ type Props = {
   onPromptError?: (error: any) => void;
   metadata?: { [id: string]: any };
   loadingText?: string;
-  preloadMotions?: {
-    uid: string;
-    sentiment: string;
-    url: string;
-  }[];
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -53,6 +48,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onSendMessage,
   hideVoice,
   inputClassName,
+  inputStyle,
   hideInput,
   zoom,
   position,
@@ -73,7 +69,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onPromptError,
   metadata,
   loadingText,
-  // preloadMotions,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState("");
@@ -86,25 +81,21 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     metadata,
   });
   const [speakCount, setSpeakCount] = useState(0);
-  const [emotion, setEmotion] = useState("idle");
+  const [emotion, setEmotion] = useState<
+    | "idle"
+    | "think"
+    | "anger"
+    | "disgust"
+    | "fear"
+    | "joy"
+    | "neutral"
+    | "sadness"
+    | "surprise"
+  >("idle");
   const [latestBotMessage, setLatestBotMessage] = useState<
     PromptDto | undefined
   >(undefined);
   const [talking, setTalking] = useState(false);
-
-  // useRandomInterval(
-  //   async () => {
-  //     // every 30 - 60 seconds, perform an idle animation
-  //     const preloadedIdleAnimations = preloadMotions;
-  //     if (!preloadedIdleAnimations?.length) return;
-  //     const min = 0;
-  //     const max = preloadedIdleAnimations.length - 1;
-  //     const randomNumber = Math.floor(Math.random() * (max - min)) + min;
-  //     setAnim(preloadedIdleAnimations[randomNumber]?.url ?? "");
-  //   },
-  //   30000,
-  //   60000
-  // );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
@@ -160,7 +151,18 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               setAnim(prompt.body.url);
             }
             if (!!prompt.body?.sentiment) {
-              setEmotion(prompt.body.sentiment);
+              setEmotion(
+                prompt.body.sentiment as
+                  | "idle"
+                  | "think"
+                  | "anger"
+                  | "disgust"
+                  | "fear"
+                  | "joy"
+                  | "neutral"
+                  | "sadness"
+                  | "surprise"
+              );
             }
             if (!!onVirtualMessageCreated)
               await onVirtualMessageCreated({
@@ -196,7 +198,18 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           setAnim(prompt.body.url);
         }
         if (!!prompt.body?.sentiment) {
-          setEmotion(prompt.body.sentiment);
+          setEmotion(
+            prompt.body.sentiment as
+              | "idle"
+              | "think"
+              | "anger"
+              | "disgust"
+              | "fear"
+              | "joy"
+              | "neutral"
+              | "sadness"
+              | "surprise"
+          );
         }
         if (!!onVirtualMessageCreated)
           await onVirtualMessageCreated({
@@ -381,9 +394,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           value={inputText}
           onChange={handleInputChange}
           onSubmit={handleSendClick}
-          loading={anim === "think"}
+          disabled={anim === "think"}
           onSubmitVoice={handleSendVoice}
-          onVoiceCall={() => {}}
           hideVoice={hideVoice}
           onFocus={() => {
             if (!!onInputFocused) onInputFocused();
@@ -392,6 +404,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             if (!!onInputBlurred) onInputBlurred();
           }}
           className={inputClassName}
+          style={inputStyle}
           Toolbar={
             !!latestBotMessage && !hideInput ? (
               <IconButton
@@ -417,7 +430,18 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                         latestBotMessage.body?.url ??
                           "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
                       );
-                      setEmotion(latestBotMessage.body?.sentiment ?? "idle");
+                      setEmotion(
+                        (latestBotMessage.body?.sentiment ?? "idle") as
+                          | "idle"
+                          | "think"
+                          | "anger"
+                          | "disgust"
+                          | "fear"
+                          | "joy"
+                          | "neutral"
+                          | "sadness"
+                          | "surprise"
+                      );
                     },
                     () => {
                       setTalking(false);

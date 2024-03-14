@@ -13,7 +13,16 @@ type CharacterSceneType = {
   onAudioEnd?: Function;
   aside?: boolean;
   speakCount?: number;
-  emotion?: string;
+  emotion?:
+    | "idle"
+    | "think"
+    | "anger"
+    | "disgust"
+    | "fear"
+    | "joy"
+    | "neutral"
+    | "sadness"
+    | "surprise";
   zoom?: number;
   position?: number[];
   loadingText?: string;

@@ -17,7 +17,16 @@ export type AICharacterType = {
   onLoad?: Function;
   aside?: boolean;
   speakCount?: number;
-  emotion?: string;
+  emotion?:
+    | "idle"
+    | "think"
+    | "anger"
+    | "disgust"
+    | "fear"
+    | "joy"
+    | "neutral"
+    | "sadness"
+    | "surprise";
   position?: number[];
   stiffness?: number;
 };
