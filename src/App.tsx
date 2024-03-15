@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CharacterRoom } from "../lib/components/CharacterRoom/CharacterRoom";
 import { ChatMessages } from "./components/ChatMessages/ChatMessages";
 import { ChatMessageDto } from "./types/ChatMessageDto";
@@ -40,10 +40,6 @@ function App() {
     return tmp;
   }, [messages, thinking]);
 
-  useEffect(() => {
-    alert(selected);
-  }, [selected]);
-
   return (
     <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-black/70">
       <button
@@ -63,6 +59,9 @@ function App() {
         virtualName="Virtual"
         virtualId={1}
         inputClassName="!virtual-bottom-[24px]"
+        onLoadErr={(v) => {
+          alert(v);
+        }}
         onUserMessageCreated={async (content) => {
           const newMessage = {
             uid: crypto.randomUUID(),

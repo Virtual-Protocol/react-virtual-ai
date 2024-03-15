@@ -46,6 +46,7 @@ type Props = {
   loadingText?: string;
   configs?: ConfigType;
   onProgressChange?: (v: number) => void;
+  onLoadErr?: (err: any) => void;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -77,6 +78,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   loadingText,
   configs,
   onProgressChange,
+  onLoadErr,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState("");
@@ -389,6 +391,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
           onProgressChange={onProgressChange}
+          onLoadErr={onLoadErr}
           zoom={zoom}
           animation={anim}
           loadingText={loadingText}

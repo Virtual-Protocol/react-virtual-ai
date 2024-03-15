@@ -16,6 +16,7 @@ type AICharacterType = {
   url?: string;
   onAudioEnd?: Function;
   onLoad?: (progress: number) => void;
+  onLoadErr?: (err: any) => void;
   aside?: boolean;
   speakCount?: number;
   emotion?:
@@ -52,6 +53,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   position,
   currentVrm,
   setCurrentVrm,
+  onLoadErr,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
   const [progress, setProgress] = useState(0);
@@ -147,6 +149,8 @@ export const AICharacter: React.FC<AICharacterType> = ({
               fadeToActionString(
                 "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
                 v,
+                m,
+                `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
                 true
               );
             }, 500);
@@ -154,6 +158,8 @@ export const AICharacter: React.FC<AICharacterType> = ({
             fadeToActionString(
               "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
               v,
+              m,
+              `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
               true
             );
           }
@@ -164,8 +170,9 @@ export const AICharacter: React.FC<AICharacterType> = ({
         fadeToActionString(
           "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
           v,
-          true,
-          m
+          m,
+          `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
+          true
         );
       },
 
@@ -175,21 +182,17 @@ export const AICharacter: React.FC<AICharacterType> = ({
       },
 
       // called when loading has errors
-      (error) => console.error(error)
+      (error) => {
+        console.error(error);
+        if (!!onLoadErr) onLoadErr(error);
+        setProgress(0);
+      }
     );
     return () => {
       if (!!onAudioEnd) {
         onAudioEnd();
       }
       isAnimating = false;
-      if (!!previousAction) {
-        previousAction.fadeOut(0);
-        previousAction = undefined;
-      }
-      if (!!activeAction) {
-        activeAction.fadeOut(0);
-        activeAction = undefined;
-      }
     };
   }, [url]);
 
@@ -232,14 +235,16 @@ export const AICharacter: React.FC<AICharacterType> = ({
   });
 
   useEffect(() => {
-    if (!animation || !currentVrm) return;
+    if (!animation || !currentVrm || !globalMixer || !url) return;
     fadeToActionString(
       animation,
       currentVrm,
+      globalMixer,
+      `${animation}_${url}`,
       animation.includes("a_idle_neutral_loop_88") ||
         animation.includes("sample_talk_128")
     );
-  }, [animation, speakCount, currentVrm]);
+  }, [animation, speakCount, currentVrm, url]);
 
   useEffect(() => {
     if (!emotion || !currentVrm) return;
@@ -249,13 +254,14 @@ export const AICharacter: React.FC<AICharacterType> = ({
   const fadeToActionString = async (
     action: string,
     v: VRM,
-    loop?: boolean,
-    m?: THREE.AnimationMixer
+    m: THREE.AnimationMixer,
+    clipName: string,
+    loop?: boolean
   ) => {
     const mixer = m ?? globalMixer;
     if (!mixer) return;
 
-    const clip = await load(action, v ?? currentVrm);
+    const clip = await load(action, v, clipName);
     if (!clip) return;
 
     if (isAnimating && !loop) {
@@ -263,14 +269,17 @@ export const AICharacter: React.FC<AICharacterType> = ({
       return;
     }
 
-    if (!!activeAction && activeAction.getClip().name === action) return;
+    if (!!activeAction && activeAction.getClip().name === clipName) {
+      console.log("same name, slipping", clipName);
+      return;
+    }
 
     if (!!previousAction) {
       console.log("fading out", previousAction.getClip().name);
       previousAction.fadeOut(0.5);
       previousAction = undefined;
       delay(() => {
-        fadeToActionString(action, v, loop, m);
+        fadeToActionString(action, v, m, clipName, loop);
       }, 500);
       return;
     }
@@ -281,8 +290,9 @@ export const AICharacter: React.FC<AICharacterType> = ({
     activeAction = mixerAction;
     activeAction.clampWhenFinished = true;
 
-    console.log("fading to", action);
+    console.log("fading to", action, loop);
     if (loop) {
+      isAnimating = false;
       activeAction
         .reset()
         .setEffectiveTimeScale(1)
