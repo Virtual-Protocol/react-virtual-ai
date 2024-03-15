@@ -2,19 +2,49 @@
 
 import * as THREE from "three";
 import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
-import "../../index.css";
 import { delay } from "framer-motion";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { loadAnimation } from "../utils/model";
 
+/**
+ * VrmService configurations
+ */
 type VrmServiceConfigs = {
+  /**
+   * Callback when VRM model is loaded
+   * @param vrm VRM instance
+   * @returns
+   */
   onLoad?: (vrm: VRM) => void;
+  /**
+   * Callback when VRM model failed to be loaded
+   * @param err Error
+   * @returns
+   */
   onLoadErr?: (err: any) => void;
+  /**
+   * Callback when VRM model is loading
+   * @param progressInPercentage percentage of loading from 0 to 100
+   * @returns
+   */
   onLoadProgress?: (progressInPercentage: number) => void;
+  /**
+   * 3D Model stiffness
+   */
   stiffness?: number;
+  /**
+   * VRM URL
+   */
   vrmUrl: string;
+  /**
+   * Camera instance to set VRM model lookAt direction
+   */
+  camera?: THREE.Camera;
 };
 
+/**
+ * VrmService provides functions to load VRM model and fade to animations.
+ */
 export class VrmService {
   previousAction: THREE.AnimationAction | undefined;
   activeAction: THREE.AnimationAction | undefined;
@@ -34,11 +64,14 @@ export class VrmService {
     this.loader = loader;
   }
 
-  loadModel(url: string) {
+  /**
+   * Load VRM model
+   */
+  loadModel() {
     this.currentVrm = undefined;
     this.loader.load(
       // URL of the VRM you want to load
-      url,
+      this.configs.vrmUrl,
 
       // called when the resource is loaded
       (gltf) => {
@@ -52,6 +85,11 @@ export class VrmService {
         VRMUtils.rotateVRM0(v); // rotate the vrm around y axis if the vrm is VRM0.0
         VRMUtils.removeUnnecessaryJoints(v.scene);
         VRMUtils.removeUnnecessaryVertices(v.scene);
+
+        if (!!v.lookAt) {
+          v.lookAt.target = this.configs.camera;
+          v.lookAt.autoUpdate = true;
+        }
 
         this.currentVrm = v;
 
@@ -106,6 +144,12 @@ export class VrmService {
     );
   }
 
+  /**
+   * Fade to target animation URL
+   * @param url VMD / Mixamo FBX Animation. Other formats are not supported at the moment
+   * @param loop Whether to loop the selected animation or not
+   * @returns
+   */
   async fadeToAnimationUrl(url: string, loop?: boolean) {
     if (!this.mixer || !this.currentVrm || !this.configs?.vrmUrl) return;
 

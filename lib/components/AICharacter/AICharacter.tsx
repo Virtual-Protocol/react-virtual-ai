@@ -1,15 +1,13 @@
 "use client";
 
 import * as THREE from "three";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PresentationControls } from "@react-three/drei";
-import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
-import { blink, fadeByEmotion, loadAnimation as load } from "../../utils/model";
+import { VRM } from "@pixiv/three-vrm";
+import { blink, fadeByEmotion } from "../../utils/model";
 import gsap from "gsap";
-import "../../index.css";
-import { delay } from "framer-motion";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { VrmService } from "../../services/VrmService";
 
 type AICharacterType = {
   animation: string;
@@ -35,11 +33,6 @@ type AICharacterType = {
   setCurrentVrm: (v?: VRM) => void;
 };
 
-let previousAction: THREE.AnimationAction | undefined;
-let activeAction: THREE.AnimationAction | undefined;
-let isAnimating = false;
-let lastCloseTime = new Date();
-
 export const AICharacter: React.FC<AICharacterType> = ({
   animation,
   url,
@@ -55,9 +48,8 @@ export const AICharacter: React.FC<AICharacterType> = ({
   onLoadErr,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
-  const [mixer, setMixer] = useState<THREE.AnimationMixer | undefined>();
   const [progress, setProgress] = useState(0);
-  const tmp = useRef();
+  const [vrmService, setVrmService] = useState<VrmService | undefined>();
 
   useThree(({ camera: c }) => {
     if (!camera) setCamera(c);
@@ -81,122 +73,45 @@ export const AICharacter: React.FC<AICharacterType> = ({
   }, [progress]);
 
   useEffect(() => {
-    if (!url) return;
-    const loader = new GLTFLoader();
-    loader.register((parser) => {
-      return new VRMLoaderPlugin(parser);
-    });
-    setCurrentVrm(undefined);
-    // try {
-    //   if (!currentVrm) return;
-    //   console.log("disposing previous vrm");
-    //   VRMUtils.deepDispose(currentVrm.scene);
-    // } catch (err: any) {
-    //   console.log("Dispose error", err);
-    // }
-    loader.load(
-      // URL of the VRM you want to load
-      url,
-
-      // called when the resource is loaded
-      (gltf) => {
-        // console.log("gltf", gltf?.userData?.vrmMeta?.title, url);
-        const v: VRM = gltf.userData.vrm;
-        // console.log("vrm", v);
-        if (!v) return;
-
-        if (!!v.lookAt && !!camera) {
-          v.lookAt.target = camera;
-          v.lookAt.autoUpdate = true;
-        }
-        setCurrentVrm(v);
-        // console.log("currentVrm", v);
-
-        // Disable frustum culling
-        v?.scene.traverse((obj: any) => {
-          obj.frustumCulled = false;
-        });
-        v.humanoid.resetNormalizedPose();
-        VRMUtils.rotateVRM0(v); // rotate the vrm around y axis if the vrm is VRM0.0
-        VRMUtils.removeUnnecessaryJoints(v.scene);
-        VRMUtils.removeUnnecessaryVertices(v.scene);
-
-        // restrict stiffness
-        // console.log("Joints", v.springBoneManager?.joints);
-        v.springBoneManager?.joints.forEach((e) => {
-          // console.log("joints", e.bone.name);
-          if (e.bone.name.includes("Skirt")) {
-            e.settings.stiffness = 5;
-            e.settings.dragForce = 0.2;
-            e.settings.hitRadius = 1;
-            return;
-          }
-          //  e.settings.dragForce = 1
-          e.settings.stiffness = stiffness ?? 6;
-        });
-
-        // initialize mixer
-        const m = new THREE.AnimationMixer(v.scene);
-        m.addEventListener("finished", () => {
-          setTimeout(() => {
-            isAnimating = false;
-          }, 1000);
-
-          fadeToActionString(
-            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-            v,
-            m,
-            `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
-            true
-          );
-        });
-
-        fadeToActionString(
-          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-          v,
-          m,
-          `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
-          true
-        );
-
-        setMixer(m);
-        setProgress(100);
-      },
-
-      // called while loading is progressing
-      (progress) => {
-        let p = 100.0 * (progress.loaded / progress.total);
-        if (p >= 100) p = 99;
-        setProgress(p);
-      },
-
-      // called when loading has errors
-      (error) => {
-        console.error(error);
-        if (!!onLoadErr) onLoadErr(error);
-        setProgress(0);
-      }
-    );
-    return () => {
+    if (!url || !camera) {
+      setVrmService(undefined);
+      setCurrentVrm(undefined);
       if (!!onAudioEnd) {
         onAudioEnd();
       }
-      isAnimating = false;
-    };
-  }, [url]);
+      return;
+    }
+    const newVrmService = new VrmService({
+      vrmUrl: url,
+      camera: camera,
+      stiffness: stiffness,
+      onLoad: (vrm) => {
+        setCurrentVrm(vrm);
+      },
+      onLoadProgress: (p) => {
+        setProgress(p);
+      },
+      onLoadErr: (error) => {
+        if (!!onLoadErr) onLoadErr(error);
+      },
+    });
+    setVrmService(newVrmService);
+    newVrmService.loadModel();
+  }, [url, camera]);
 
   useFrame((_, delta) => {
     currentVrm?.update(delta);
-    mixer?.update(delta);
+    vrmService?.mixer?.update(delta);
 
     // blink eyes every 5 seconds
     if (
       !!currentVrm &&
-      new Date().getTime() - lastCloseTime.getTime() > 5000 &&
-      !isAnimating
+      new Date().getTime() - (vrmService?.lastCloseTime?.getTime() ?? 0) >
+        5000 &&
+      !vrmService?.isAnimating
     ) {
       blink(currentVrm);
-      lastCloseTime = new Date();
+      if (!!vrmService) vrmService.lastCloseTime = new Date();
     }
 
     if (!!currentVrm?.lookAt && !!camera) {
@@ -224,16 +139,9 @@ export const AICharacter: React.FC<AICharacterType> = ({
   });
 
   useEffect(() => {
-    if (!animation || !currentVrm || !mixer || !url) return;
-    fadeToActionString(
-      animation,
-      currentVrm,
-      mixer,
-      `${animation}_${url}`,
-      animation.includes("a_idle_neutral_loop_88") ||
-        animation.includes("sample_talk_128")
-    );
-  }, [animation, speakCount, currentVrm, url, mixer]);
+    if (!animation || !vrmService || !url) return;
+    vrmService.fadeToAnimationUrl(animation);
+  }, [animation, speakCount, url, vrmService]);
 
   useEffect(() => {
     if (!emotion || !currentVrm) return;
@@ -251,74 +159,6 @@ export const AICharacter: React.FC<AICharacterType> = ({
         | "surprise"
     );
   }, [emotion, speakCount, currentVrm]);
-
-  const fadeToActionString = async (
-    action: string,
-    v: VRM,
-    m: THREE.AnimationMixer,
-    clipName: string,
-    loop?: boolean
-  ) => {
-    // console.log("fadeToActionString", {
-    //   action,
-    //   v,
-    //   m,
-    //   clipName,
-    //   loop,
-    // });
-    if (!m) return;
-
-    const clip = await load(action, v);
-    clip.name = clipName;
-    if (!clip) return;
-
-    if (isAnimating && !loop) {
-      console.log("is animating, skipping", clip.name);
-      return;
-    }
-
-    if (!!activeAction && activeAction.getClip().name === clipName) {
-      console.log("same name, skipping", clipName);
-      return;
-    }
-
-    if (!!previousAction && previousAction.getClip().name !== clipName) {
-      console.log("fading out", previousAction.getClip().name);
-      previousAction.fadeOut(0.5);
-      previousAction = undefined;
-      delay(() => {
-        fadeToActionString(action, v, m, clipName, loop);
-      }, 500);
-      return;
-    }
-
-    // clip action
-    const mixerAction = m.clipAction(clip);
-    if (!mixerAction) return;
-    activeAction = mixerAction;
-    activeAction.clampWhenFinished = true;
-
-    console.log("fading to", activeAction, action, loop, url);
-    if (loop) {
-      isAnimating = false;
-      activeAction
-        .reset()
-        .setEffectiveTimeScale(1)
-        .setEffectiveWeight(1)
-        .fadeIn(1)
-        .play();
-    } else {
-      isAnimating = true;
-      activeAction
-        .reset()
-        .setEffectiveTimeScale(1)
-        .setEffectiveWeight(1)
-        .fadeIn(1)
-        .setLoop(THREE.LoopOnce, 1)
-        .play();
-    }
-    previousAction = activeAction;
-  };
 
   if (!currentVrm?.scene || progress < 100) return <></>;
 
@@ -338,9 +178,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
       <primitive
         object={currentVrm.scene}
         position={position ?? [0, -10, 0]}
-        // position={[0, -9, 0]}
         scale={10}
-        ref={tmp}
       />
     </PresentationControls>
   );
