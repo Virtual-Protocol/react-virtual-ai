@@ -398,7 +398,15 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       )}
       <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
-          onProgressChange={onProgressChange}
+          onProgressChange={(v) => {
+            if (v < 100) {
+              setAnim(
+                "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+              );
+              setEmotion("idle");
+            }
+            if (!!onProgressChange) onProgressChange(v);
+          }}
           onLoadErr={onLoadErr}
           zoom={zoom}
           animation={anim}
