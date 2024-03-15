@@ -29,16 +29,15 @@ export const useVirtual = ({
   const [virtualService, setVirtualService] = useState(defaultVirtualService);
 
   useEffect(() => {
-    console.log("metadata has changed", metadata);
-  }, [metadata]);
-
-  useEffect(() => {
-    console.log("Initialized virtual service", {
-      virtualId,
-      userName,
-      virtualName,
-      metadata,
-    });
+    // skip if everything is same
+    if (
+      virtualId === virtualService.configs.virtualId &&
+      userName === virtualService.configs.userName &&
+      virtualName === virtualService.configs.virtualName &&
+      JSON.stringify(virtualService.configs.metadata ?? {}) ===
+        JSON.stringify(metadata ?? {})
+    )
+      return;
     setVirtualService(
       new VirtualService({
         virtualId,
@@ -49,14 +48,7 @@ export const useVirtual = ({
         metadata,
       })
     );
-  }, [
-    virtualId,
-    userName,
-    virtualName,
-    // initAccessToken,
-    // onPromptError,
-    metadata,
-  ]);
+  }, [virtualId, userName, virtualName, metadata, virtualService]);
 
   useEffect(() => {
     if (!!virtualId && !!virtualService) {
