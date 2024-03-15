@@ -30,7 +30,7 @@ type CharacterSceneType = {
   multiple?: boolean;
   stiffness?: number;
   currentVrm?: VRM;
-  setCurrentVrm?: (v: VRM) => void;
+  setCurrentVrm?: (v?: VRM) => void;
   onProgressChange?: (v: number) => void;
   onLoadErr?: (err: any) => void;
 };
@@ -71,9 +71,9 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
         <p
           className={`virtual-font-wenhei virtual-text-lg virtual-text-white virtual-animate-flicker virtual-text-center virtual-w-fit`}
         >
-          {`${
-            loadingText ?? "Your Virtual is Dressing Up..."
-          } ${progress.toFixed(2)}%`}
+          {`${loadingText ?? "Your Virtual is Dressing Up..."}`}
+          <br />
+          {`${progress.toFixed(2)}%`}
         </p>
       </div>
       <Suspense fallback={null}>

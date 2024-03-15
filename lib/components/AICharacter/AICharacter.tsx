@@ -32,7 +32,7 @@ type AICharacterType = {
   position?: number[];
   stiffness?: number;
   currentVrm?: VRM;
-  setCurrentVrm: (v: VRM) => void;
+  setCurrentVrm: (v?: VRM) => void;
 };
 
 let globalMixer: THREE.AnimationMixer | undefined;
@@ -86,6 +86,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
     loader.register((parser) => {
       return new VRMLoaderPlugin(parser);
     });
+    setCurrentVrm(undefined);
     // try {
     //   if (!currentVrm) return;
     //   console.log("disposing previous vrm");
