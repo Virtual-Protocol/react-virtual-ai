@@ -125,7 +125,10 @@ export class VrmService {
           true
         );
 
-        this.configs.onLoadProgress?.(100);
+        // set timeout 1 second to prevent model glitching
+        setTimeout(() => {
+          this.configs.onLoadProgress?.(100);
+        }, 1000);
       },
 
       // called while loading is progressing
