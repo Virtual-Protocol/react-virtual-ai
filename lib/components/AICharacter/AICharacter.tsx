@@ -35,7 +35,6 @@ type AICharacterType = {
   setCurrentVrm: (v?: VRM) => void;
 };
 
-let globalMixer: THREE.AnimationMixer | undefined;
 let previousAction: THREE.AnimationAction | undefined;
 let activeAction: THREE.AnimationAction | undefined;
 let isAnimating = false;
@@ -56,6 +55,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   onLoadErr,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
+  const [mixer, setMixer] = useState<THREE.AnimationMixer | undefined>();
   const [progress, setProgress] = useState(0);
   const tmp = useRef();
 
@@ -142,31 +142,24 @@ export const AICharacter: React.FC<AICharacterType> = ({
             isAnimating = false;
           }, 1000);
 
-          if (!!previousAction) {
-            console.log("fading out", previousAction.getClip().name);
-            previousAction.fadeOut(0.5);
-            previousAction = undefined;
-            delay(() => {
-              fadeToActionString(
-                "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-                v,
-                m,
-                `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
-                true
-              );
-            }, 500);
-          } else {
-            fadeToActionString(
-              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-              v,
-              m,
-              `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
-              true
-            );
-          }
+          fadeToActionString(
+            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+            v,
+            m,
+            `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
+            true
+          );
         });
 
-        globalMixer = m;
+        fadeToActionString(
+          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+          v,
+          m,
+          `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
+          true
+        );
+
+        setMixer(m);
         setProgress(100);
       },
 
@@ -194,7 +187,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
 
   useFrame((_, delta) => {
     currentVrm?.update(delta);
-    globalMixer?.update(delta);
+    mixer?.update(delta);
 
     // blink eyes every 5 seconds
     if (
@@ -231,16 +224,16 @@ export const AICharacter: React.FC<AICharacterType> = ({
   });
 
   useEffect(() => {
-    if (!animation || !currentVrm || !globalMixer || !url) return;
+    if (!animation || !currentVrm || !mixer || !url) return;
     fadeToActionString(
       animation,
       currentVrm,
-      globalMixer,
+      mixer,
       `${animation}_${url}`,
       animation.includes("a_idle_neutral_loop_88") ||
         animation.includes("sample_talk_128")
     );
-  }, [animation, speakCount, currentVrm, url]);
+  }, [animation, speakCount, currentVrm, url, mixer]);
 
   useEffect(() => {
     if (!emotion || !currentVrm) return;
@@ -254,10 +247,17 @@ export const AICharacter: React.FC<AICharacterType> = ({
     clipName: string,
     loop?: boolean
   ) => {
-    const mixer = m ?? globalMixer;
-    if (!mixer) return;
+    // console.log("fadeToActionString", {
+    //   action,
+    //   v,
+    //   m,
+    //   clipName,
+    //   loop,
+    // });
+    if (!m) return;
 
-    const clip = await load(action, v, clipName);
+    const clip = await load(action, v);
+    clip.name = clipName;
     if (!clip) return;
 
     if (isAnimating && !loop) {
@@ -266,11 +266,11 @@ export const AICharacter: React.FC<AICharacterType> = ({
     }
 
     if (!!activeAction && activeAction.getClip().name === clipName) {
-      console.log("same name, slipping", clipName);
+      console.log("same name, skipping", clipName);
       return;
     }
 
-    if (!!previousAction) {
+    if (!!previousAction && previousAction.getClip().name !== clipName) {
       console.log("fading out", previousAction.getClip().name);
       previousAction.fadeOut(0.5);
       previousAction = undefined;
@@ -281,12 +281,12 @@ export const AICharacter: React.FC<AICharacterType> = ({
     }
 
     // clip action
-    const mixerAction = mixer.clipAction(clip);
+    const mixerAction = m.clipAction(clip);
     if (!mixerAction) return;
     activeAction = mixerAction;
     activeAction.clampWhenFinished = true;
 
-    console.log("fading to", action, loop);
+    console.log("fading to", activeAction, action, loop, url);
     if (loop) {
       isAnimating = false;
       activeAction

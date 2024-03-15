@@ -6,11 +6,7 @@ import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
 import { UNSAFE_initAccessToken } from "../lib/utils/initAccessToken";
 
-const urls = [
-  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/production/gaia.vrm",
-  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/production/ignis.vrm",
-  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/production/seraphina.vrm",
-];
+const urls = ["/models/gaia.vrm", "/models/ignis.vrm", "/models/seraphina.vrm"];
 
 function App() {
   const [messages, setMessages] = useState<MessageType[]>([]);

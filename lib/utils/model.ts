@@ -178,11 +178,7 @@ export const loadVMDAsync = async (url: string) => {
   });
 };
 
-export const loadAnimation = async (
-  url: string,
-  vrm?: VRM,
-  clipName?: string
-) => {
+export const loadAnimation = async (url: string, vrm?: VRM) => {
   if (!url || !vrm) return;
 
   // console.log("boneMap", boneMap);
@@ -208,7 +204,7 @@ export const loadAnimation = async (
     Object.values(vrm.humanoid.humanBones).map((raw) => raw.node),
     vrm
   );
-  clip.name = clipName ?? url;
+  clip.name = url;
 
   const tracks: any[] = []; // KeyframeTracks compatible with VRM will be added here
 
