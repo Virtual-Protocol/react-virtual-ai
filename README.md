@@ -4,6 +4,10 @@
 
 Gitbook: https://virtualprotocol.gitbook.io/whitepaper/technical-documentation/modular-consensus-framework/inference-by-dapps
 
+## Examples
+
+Examples are available in the `lib/examples` folder of the repository.
+
 ## Features
 
 1. **Plug-and-Play Integration with VIRTUAL**: Integrate conversational AI 3D models into your React applications by utilizing the customizable components.
@@ -90,11 +94,28 @@ return (
 );
 ```
 
+## VirtualService
+
+The VirtualService class contains all operations that communicate with the Virtual runner service. It is also used in the `useVirtual` hook to get the prompt responses.
+
+```javascript
+const virtualService = new VirtualService({
+  virtualId: 1,
+  userName: "",
+  virtualName: "",
+  initAccessToken: undefined,
+  onPromptError: undefined,
+  metadata: undefined,
+});
+```
+
 ## Other Usages
+
+There are also other services and functions that you can explore to customize your own components
 
 ### useVirtual hook
 
-If you prefer implementing own components, use the `useVirtual` hook as follows:
+This hook is a wrapper to the `VirtualService` class that allows you to communicate with Virtual with the functions returned such as `createPrompt`, `getTTSResponse` and `getLLMResponse`.
 
 ```javascript
 const { modelUrl, createPrompt, getTTSResponse, getLLMResponse } = useVirtual({
@@ -140,10 +161,6 @@ There are several util functions provided, you may utilize separately for specif
 `VirtualService`: VirtualService contains all operations required to send prompt to the VIRTUAL.
 
 `VrmService`: VrmService provides functions to load VRM model and fade to animations.
-
-## Examples
-
-Examples are available in the "examples" folder of the repository.
 
 ## API References
 
