@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.66](https://github.com/Virtual-Protocol/next-virtual/compare/v0.0.65...v0.0.66) (2024-03-15)
+
 ### [0.0.65](https://github.com/Virtual-Protocol/next-virtual/compare/v0.0.64...v0.0.65) (2024-03-15)
 
 ### [0.0.64](https://github.com/Virtual-Protocol/next-virtual/compare/v0.0.63...v0.0.64) (2024-03-15)
