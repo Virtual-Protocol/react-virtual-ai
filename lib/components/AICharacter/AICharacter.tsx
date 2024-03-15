@@ -166,11 +166,14 @@ export const AICharacter: React.FC<AICharacterType> = ({
         });
 
         globalMixer = m;
+        setProgress(100);
       },
 
       // called while loading is progressing
       (progress) => {
-        setProgress(100.0 * (progress.loaded / progress.total));
+        let p = 100.0 * (progress.loaded / progress.total);
+        if (p >= 100) p = 99;
+        setProgress(p);
       },
 
       // called when loading has errors
