@@ -81,7 +81,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onLoadErr,
 }) => {
   const [inputText, setInputText] = useState("");
-  const [anim, setAnim] = useState("");
+  const [anim, setAnim] = useState(
+    "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+  );
   const { modelUrl, createPrompt, getVoiceUrl } = useVirtualAI({
     virtualId,
     userName,
@@ -185,23 +187,23 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                 audioUid: prompt.audioUid,
               });
             setLatestBotMessage(prompt);
-            // setSpeakCount((prev) => prev + 1);
+            setSpeakCount((prev) => prev + 1);
           },
           () => {
             setTalking(false);
             console.log("Resetting audio and animation");
-            setAnim(
-              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
-            );
+            // setAnim(
+            //   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+            // );
             setEmotion("idle");
           },
           () => {
             if (!!onAudioErr) onAudioErr();
             setTalking(false);
             console.log("Resetting audio and animation");
-            setAnim(
-              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
-            );
+            // setAnim(
+            //   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+            // );
             setEmotion("idle");
           }
         );
@@ -414,9 +416,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           speakCount={speakCount}
           onAudioEnd={() => {
             console.log("Resetting audio and animation");
-            setAnim(
-              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
-            );
+            // setAnim(
+            //   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+            // );
             setEmotion("idle");
           }}
           aside={aside}
@@ -486,9 +488,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     () => {
                       setTalking(false);
                       console.log("Resetting audio and animation");
-                      setAnim(
-                        "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
-                      );
+                      // setAnim(
+                      //   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+                      // );
                       setEmotion("idle");
                     },
                     () => {

@@ -166,14 +166,6 @@ export const AICharacter: React.FC<AICharacterType> = ({
         });
 
         globalMixer = m;
-        // start idle animation
-        fadeToActionString(
-          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-          v,
-          m,
-          `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd_${url}`,
-          true
-        );
       },
 
       // called while loading is progressing
