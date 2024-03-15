@@ -29,7 +29,12 @@ export const useVirtual = ({
   const [virtualService, setVirtualService] = useState(defaultVirtualService);
 
   useEffect(() => {
-    console.log("Initialized virtual service");
+    console.log("Initialized virtual service", {
+      virtualId,
+      userName,
+      virtualName,
+      metadata,
+    });
     setVirtualService(
       new VirtualService({
         virtualId,
@@ -44,8 +49,8 @@ export const useVirtual = ({
     virtualId,
     userName,
     virtualName,
-    initAccessToken,
-    onPromptError,
+    // initAccessToken,
+    // onPromptError,
     metadata,
   ]);
 
