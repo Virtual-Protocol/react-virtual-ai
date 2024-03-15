@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import "../../index.css";
@@ -31,6 +31,7 @@ type CharacterSceneType = {
   stiffness?: number;
   currentVrm?: VRM;
   setCurrentVrm?: (v: VRM) => void;
+  onProgressChange?: (v: number) => void;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -47,9 +48,14 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   stiffness,
   currentVrm,
   setCurrentVrm,
+  onProgressChange,
 }) => {
   const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
+
+  useEffect(() => {
+    if (!!onProgressChange) onProgressChange(progress);
+  }, [progress]);
 
   return (
     <div

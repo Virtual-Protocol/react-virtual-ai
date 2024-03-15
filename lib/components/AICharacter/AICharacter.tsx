@@ -84,6 +84,13 @@ export const AICharacter: React.FC<AICharacterType> = ({
     loader.register((parser) => {
       return new VRMLoaderPlugin(parser);
     });
+    // try {
+    //   if (!currentVrm) return;
+    //   console.log("disposing previous vrm");
+    //   VRMUtils.deepDispose(currentVrm.scene);
+    // } catch (err: any) {
+    //   console.log("Dispose error", err);
+    // }
     loader.load(
       // URL of the VRM you want to load
       url,
@@ -185,18 +192,6 @@ export const AICharacter: React.FC<AICharacterType> = ({
       }
     };
   }, [url]);
-
-  useEffect(() => {
-    return () => {
-      try {
-        if (!currentVrm) return;
-        console.log("disposing previous vrm");
-        VRMUtils.deepDispose(currentVrm.scene);
-      } catch (err: any) {
-        console.log("Dispose error", err);
-      }
-    };
-  }, [currentVrm]);
 
   useFrame((_, delta) => {
     currentVrm?.update(delta);
