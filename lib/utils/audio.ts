@@ -1,10 +1,11 @@
-import { currentVrm } from "../components/AICharacter/AICharacter";
+import { VRM } from "@pixiv/three-vrm";
 // @ts-ignore
 import { LipSync } from "./lipsync";
 
 let lipsyncService: any | undefined;
 
 export const startLipSync = async (
+  currentVrm: VRM | undefined,
   audio: HTMLAudioElement,
   audioContext: AudioContext,
   onAudioStart: Function,

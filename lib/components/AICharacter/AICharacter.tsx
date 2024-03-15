@@ -29,14 +29,14 @@ type AICharacterType = {
     | "surprise";
   position?: number[];
   stiffness?: number;
+  currentVrm?: VRM;
+  setCurrentVrm: (v: VRM) => void;
 };
 
 let globalMixer: THREE.AnimationMixer | undefined;
 let previousAction: THREE.AnimationAction | undefined;
 let activeAction: THREE.AnimationAction | undefined;
-export let currentVrm: VRM | undefined;
 let isAnimating = false;
-
 let lastCloseTime = new Date();
 
 export const AICharacter: React.FC<AICharacterType> = ({
@@ -49,6 +49,8 @@ export const AICharacter: React.FC<AICharacterType> = ({
   speakCount = 0,
   emotion,
   position,
+  currentVrm,
+  setCurrentVrm,
 }) => {
   const gltf = useGLTF(url ?? "", true, true, (loader) => {
     // @ts-ignore
@@ -87,21 +89,12 @@ export const AICharacter: React.FC<AICharacterType> = ({
     const v: VRM = gltf.userData.vrm;
     // console.log("vrm", v);
     if (!v) return;
-    if (!!currentVrm) {
-      try {
-        console.log("disposing previous vrm");
-        VRMUtils.deepDispose(currentVrm.scene);
-        currentVrm = undefined;
-      } catch (err: any) {
-        console.log("Dispose error", err);
-      }
-    }
 
     if (!!v.lookAt && !!camera) {
       v.lookAt.target = camera;
       v.lookAt.autoUpdate = true;
     }
-    currentVrm = v;
+    setCurrentVrm(v);
     setTimeout(() => {
       if (!!onLoad) onLoad();
     }, 2000);
@@ -144,12 +137,14 @@ export const AICharacter: React.FC<AICharacterType> = ({
         delay(() => {
           fadeToActionString(
             "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+            v,
             true
           );
         }, 500);
       } else {
         fadeToActionString(
           "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+          v,
           true
         );
       }
@@ -159,11 +154,23 @@ export const AICharacter: React.FC<AICharacterType> = ({
     // start idle animation
     fadeToActionString(
       "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-      true,
       v,
+      true,
       m
     );
   }, [gltf]);
+
+  useEffect(() => {
+    return () => {
+      try {
+        if (!currentVrm) return;
+        console.log("disposing previous vrm");
+        VRMUtils.deepDispose(currentVrm.scene);
+      } catch (err: any) {
+        console.log("Dispose error", err);
+      }
+    };
+  }, [currentVrm]);
 
   useEffect(() => {
     return () => {
@@ -221,23 +228,24 @@ export const AICharacter: React.FC<AICharacterType> = ({
   });
 
   useEffect(() => {
-    if (!animation) return;
+    if (!animation || !currentVrm) return;
     fadeToActionString(
       animation,
+      currentVrm,
       animation.includes("a_idle_neutral_loop_88") ||
         animation.includes("sample_talk_128")
     );
-  }, [animation, speakCount]);
+  }, [animation, speakCount, currentVrm]);
 
   useEffect(() => {
     if (!emotion || !currentVrm) return;
     fadeByEmotion(currentVrm, emotion);
-  }, [emotion, speakCount]);
+  }, [emotion, speakCount, currentVrm]);
 
   const fadeToActionString = async (
     action: string,
+    v: VRM,
     loop?: boolean,
-    v?: VRM,
     m?: THREE.AnimationMixer
   ) => {
     const mixer = m ?? globalMixer;
@@ -258,7 +266,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
       previousAction.fadeOut(0.5);
       previousAction = undefined;
       delay(() => {
-        fadeToActionString(action, loop, v, m);
+        fadeToActionString(action, v, loop, m);
       }, 500);
       return;
     }

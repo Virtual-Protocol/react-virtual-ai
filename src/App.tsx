@@ -95,8 +95,8 @@ function App() {
           alert(e);
         }}
         metadata={{
-          apiKey: "OLZE9PY5230TYrspfhZm",
-          apiSecret: "pDCyfQYi90W4hV8kLE4n0DeVJHNmA8oE3C2",
+          apiKey: "NsIH8CSaTz22faE1Z1S1",
+          apiSecret: "Y237Dlb3LSd9H3ywzgXyCy7tBlpA0E5lNsb",
           userUid: "1",
           userName: "Jia Xiong",
         }}

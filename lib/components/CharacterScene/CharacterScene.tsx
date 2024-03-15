@@ -6,6 +6,7 @@ import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import "../../index.css";
 import { AICharacterWithoutAnimation } from "../AICharacterWithoutAnimation/AICharacterWithoutAnimation";
+import { VRM } from "@pixiv/three-vrm";
 
 type CharacterSceneType = {
   animation: string;
@@ -28,6 +29,8 @@ type CharacterSceneType = {
   loadingText?: string;
   multiple?: boolean;
   stiffness?: number;
+  currentVrm?: VRM;
+  setCurrentVrm?: (v: VRM) => void;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -42,8 +45,11 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   loadingText,
   multiple,
   stiffness,
+  currentVrm,
+  setCurrentVrm,
 }) => {
   const [done, setDone] = useState(false);
+  const [localVrm, setLocalVrm] = useState<VRM | undefined>();
 
   useEffect(() => {
     setDone(false);
@@ -100,6 +106,8 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
                 emotion={emotion}
                 position={position}
                 stiffness={stiffness}
+                currentVrm={!!currentVrm ? currentVrm : localVrm}
+                setCurrentVrm={!!setCurrentVrm ? setCurrentVrm : setLocalVrm}
               />
             ))}
           <directionalLight

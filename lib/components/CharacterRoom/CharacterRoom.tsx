@@ -12,6 +12,7 @@ import "../../index.css";
 import { UNSAFE_initAccessToken } from "../../utils/initAccessToken";
 import { ConfigType } from "../../types/ConfigType";
 import { getQuotedTexts } from "../../utils/string";
+import { VRM } from "@pixiv/three-vrm";
 
 type Props = {
   userName?: string;
@@ -103,6 +104,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     PromptType | undefined
   >(undefined);
   const [talking, setTalking] = useState(false);
+  const [currentVrm, setCurrentVrm] = useState<VRM | undefined>();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
@@ -144,6 +146,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         //   `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/bdf8a7a4-127e-4f8c-aa26-645a273a2b6e.wav`
         // );
         await startLipSync(
+          currentVrm,
           audioEl,
           audioContext,
           async () => {
@@ -386,6 +389,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           zoom={zoom}
           animation={anim}
           loadingText={loadingText}
+          currentVrm={currentVrm}
+          setCurrentVrm={setCurrentVrm}
           // modelUrl="/models/latest/no_hair.vrm"
           modelUrl={
             !!overrideModelUrl
@@ -444,10 +449,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   const audio = new Audio(`${latestBotMessage.audioUid ?? ""}`);
                   const audioContext = new AudioContext();
                   await startLipSync(
+                    currentVrm,
                     audio,
                     audioContext,
                     () => {
-                      // setSpeakCount((prev) => prev + 1);
+                      setSpeakCount((prev) => prev + 1);
                       setAnim(
                         latestBotMessage.body?.url ??
                           "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
