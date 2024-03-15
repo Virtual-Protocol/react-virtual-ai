@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { ChatMessageDto } from "../../../types/ChatMessageDto";
-import { getQuotedTexts } from "../../../utils/utils";
+import { getQuotedTexts } from "../../../../lib/utils/string";
 
 type Props = {
   message: ChatMessageDto;

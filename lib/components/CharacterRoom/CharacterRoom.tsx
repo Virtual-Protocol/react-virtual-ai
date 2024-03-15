@@ -11,7 +11,7 @@ import { PromptDto } from "../../types/PromptDto";
 import "../../index.css";
 import { UNSAFE_initAccessToken } from "../../utils/initAccessToken";
 import { ConfigType } from "../../types/ConfigType";
-import { getQuotedTexts } from "../../../src/utils/utils";
+import { getQuotedTexts } from "../../utils/string";
 
 type Props = {
   userName?: string;
