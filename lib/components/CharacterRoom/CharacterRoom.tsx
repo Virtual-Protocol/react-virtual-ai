@@ -7,7 +7,7 @@ import { HiSpeakerWave } from "react-icons/hi2";
 import { startLipSync } from "../../utils/audio";
 import { useVirtualAI } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
-import { PromptDto } from "../../types/PromptDto";
+import { PromptType } from "../../types/PromptType";
 import "../../index.css";
 import { UNSAFE_initAccessToken } from "../../utils/initAccessToken";
 import { ConfigType } from "../../types/ConfigType";
@@ -100,7 +100,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     | "surprise"
   >("idle");
   const [latestBotMessage, setLatestBotMessage] = useState<
-    PromptDto | undefined
+    PromptType | undefined
   >(undefined);
   const [talking, setTalking] = useState(false);
 

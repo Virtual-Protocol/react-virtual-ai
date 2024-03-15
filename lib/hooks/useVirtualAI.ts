@@ -1,5 +1,5 @@
 import { ConfigType } from "../types/ConfigType";
-import { PromptDto } from "../types/PromptDto";
+import { PromptType } from "../types/PromptType";
 import { UNSAFE_initAccessToken } from "../utils/initAccessToken";
 import { getVirtualRunnerUrl } from "../utils/jwt";
 import { useEffect, useState } from "react";
@@ -81,9 +81,9 @@ export const useVirtualAI = ({
   const createPrompt = async (
     content: string | Blob,
     configs?: ConfigType,
-    onPromptReceived?: (prompt: PromptDto) => void,
+    onPromptReceived?: (prompt: PromptType) => void,
     retry?: number
-  ): Promise<PromptDto> => {
+  ): Promise<PromptType> => {
     try {
       if (!virtualId) throw new Error("Virtual not found");
       const initToken = !!initAccessToken
@@ -129,7 +129,7 @@ export const useVirtualAI = ({
           },
           onPromptReceived,
           (retry ?? 0) + 1
-        )) as PromptDto;
+        )) as PromptType;
       } else if (resp.status !== 200) {
         onPromptError?.(resp);
       }
@@ -139,9 +139,9 @@ export const useVirtualAI = ({
         throw new Error(respJson.error);
       }
       if (!!onPromptReceived) {
-        onPromptReceived(respJson as PromptDto);
+        onPromptReceived(respJson as PromptType);
       }
-      return respJson as PromptDto;
+      return respJson as PromptType;
     } catch (err: any) {
       if ((retry ?? 0) < 3)
         return (await createPrompt(
@@ -151,7 +151,7 @@ export const useVirtualAI = ({
           },
           onPromptReceived,
           (retry ?? 0) + 1
-        )) as PromptDto;
+        )) as PromptType;
       onPromptError?.(err);
       return {
         expression: {

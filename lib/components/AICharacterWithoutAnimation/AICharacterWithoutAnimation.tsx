@@ -9,7 +9,7 @@ import { blink, fadeByEmotion } from "../../utils/model";
 import gsap from "gsap";
 import "../../index.css";
 
-export type AICharacterType = {
+type AICharacterType = {
   animation: string;
   url?: string;
   onAudioEnd?: Function;

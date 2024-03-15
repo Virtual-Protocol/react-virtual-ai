@@ -1,4 +1,4 @@
-export type PromptDto = {
+export type PromptType = {
   text?: string;
   audio?: string;
   prompt?: string;

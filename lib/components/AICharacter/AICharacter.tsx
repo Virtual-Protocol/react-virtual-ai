@@ -10,7 +10,7 @@ import gsap from "gsap";
 import "../../index.css";
 import { delay } from "framer-motion";
 
-export type AICharacterType = {
+type AICharacterType = {
   animation: string;
   url?: string;
   onAudioEnd?: Function;
