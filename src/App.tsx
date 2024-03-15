@@ -56,7 +56,8 @@ function App() {
         virtualId={1}
         inputClassName="!virtual-bottom-[24px]"
         onLoadErr={(v) => {
-          alert(v);
+          // alert(v);
+          console.log("err", v);
         }}
         onUserMessageCreated={async (content) => {
           const newMessage = {
