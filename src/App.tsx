@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CharacterRoom } from "../lib/components/CharacterRoom/CharacterRoom";
 import { ChatMessages } from "./components/ChatMessages/ChatMessages";
 import { ChatMessageDto } from "./types/ChatMessageDto";
@@ -6,9 +6,16 @@ import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
 import { UNSAFE_initAccessToken } from "../lib/utils/initAccessToken";
 
+const urls = [
+  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/production/gaia.vrm",
+  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/production/ignis.vrm",
+  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/3d/production/seraphina.vrm",
+];
+
 function App() {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [thinking, setThinking] = useState(false);
+  const [selected, setSelected] = useState(0);
 
   const formattedMessages = useMemo(() => {
     const tmp: ChatMessageDto[] = [];
@@ -33,19 +40,22 @@ function App() {
     return tmp;
   }, [messages, thinking]);
 
+  useEffect(() => {
+    alert(selected);
+  }, [selected]);
+
   return (
     <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-black/70">
       <button
         className="virtual-fixed virtual-top-4 virtual-right-4 virtual-z-50"
         onClick={() => {
-          const audio = new Audio(
-            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/33aa254e-a13b-46fb-9807-6aa76b2da467.wav"
-          );
-          audio.load();
-          audio.play();
+          setSelected((prev) => {
+            if (prev >= urls.length - 1) return 0;
+            return prev + 1;
+          });
         }}
       >
-        Audio
+        Change
       </button>
       <CharacterRoom
         debugging
@@ -102,9 +112,7 @@ function App() {
         }}
         configs={{ skipTTS: true }}
         initAccessToken={UNSAFE_initAccessToken}
-        transformModelUrl={(v) => {
-          return v.replace("nocache", "production");
-        }}
+        overrideModelUrl={urls[selected]}
       ></CharacterRoom>
       <div
         className={`virtual-w-[95%] virtual-lg:w-[80%] virtual-max-h-[60vh] virtual-absolute virtual-left-1/2 virtual-bottom-[148px] virtual--translate-x-1/2 virtual-flex virtual-flex-col virtual-messages-outer`}

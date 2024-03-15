@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import "../../index.css";
@@ -48,12 +48,8 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   currentVrm,
   setCurrentVrm,
 }) => {
-  const [done, setDone] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
-
-  useEffect(() => {
-    setDone(false);
-  }, [modelUrl]);
 
   return (
     <div
@@ -61,13 +57,15 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
     >
       <div
         className={`virtual-absolute virtual-top-1/2 virtual-left-1/2 virtual--translate-x-1/2 virtual--translate-y-1/2 virtual-rounded-2xl virtual-px-4 virtual-py-2 virtual-bg-black/30 virtual-flex virtual-items-center virtual-justify-center virtual-pointer-events-none ${
-          done ? "virtual-fadeOut" : ""
+          progress >= 100 ? "virtual-fadeOut" : ""
         }`}
       >
         <p
           className={`virtual-font-wenhei virtual-text-lg virtual-text-white virtual-animate-flicker virtual-text-center virtual-w-fit`}
         >
-          {loadingText ?? "Your Virtual is Dressing Up..."}
+          {`${
+            loadingText ?? "Your Virtual is Dressing Up..."
+          } ${progress.toFixed(2)}%`}
         </p>
       </div>
       <Suspense fallback={null}>
@@ -87,7 +85,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
                 speakCount={speakCount}
                 onAudioEnd={onAudioEnd}
                 onLoad={() => {
-                  setDone(true);
+                  setProgress(100);
                 }}
                 aside={aside}
                 emotion={emotion}
@@ -99,8 +97,8 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
                 url={modelUrl}
                 speakCount={speakCount}
                 onAudioEnd={onAudioEnd}
-                onLoad={() => {
-                  setDone(true);
+                onLoad={(v) => {
+                  setProgress(v);
                 }}
                 aside={aside}
                 emotion={emotion}

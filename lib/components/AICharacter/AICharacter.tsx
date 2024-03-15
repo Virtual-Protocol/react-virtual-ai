@@ -3,18 +3,19 @@
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { PresentationControls, useGLTF, useProgress } from "@react-three/drei";
+import { PresentationControls } from "@react-three/drei";
 import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 import { blink, fadeByEmotion, loadAnimation as load } from "../../utils/model";
 import gsap from "gsap";
 import "../../index.css";
 import { delay } from "framer-motion";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 type AICharacterType = {
   animation: string;
   url?: string;
   onAudioEnd?: Function;
-  onLoad?: Function;
+  onLoad?: (progress: number) => void;
   aside?: boolean;
   speakCount?: number;
   emotion?:
@@ -52,15 +53,8 @@ export const AICharacter: React.FC<AICharacterType> = ({
   currentVrm,
   setCurrentVrm,
 }) => {
-  const gltf = useGLTF(url ?? "", true, true, (loader) => {
-    // @ts-ignore
-    loader.register((parser) => {
-      // @ts-ignore
-      return new VRMLoaderPlugin(parser);
-    });
-  });
-  const progress = useProgress();
   const [camera, setCamera] = useState<THREE.Camera>();
+  const [progress, setProgress] = useState(0);
   const tmp = useRef();
 
   useThree(({ camera: c }) => {
@@ -81,98 +75,101 @@ export const AICharacter: React.FC<AICharacterType> = ({
   }, [aside]);
 
   useEffect(() => {
-    if (progress.progress >= 100 && !!onLoad) onLoad();
+    if (!!onLoad) onLoad(progress);
   }, [progress]);
 
   useEffect(() => {
-    // console.log("gltf", gltf?.userData?.vrmMeta?.title, url);
-    const v: VRM = gltf.userData.vrm;
-    // console.log("vrm", v);
-    if (!v) return;
-
-    if (!!v.lookAt && !!camera) {
-      v.lookAt.target = camera;
-      v.lookAt.autoUpdate = true;
-    }
-    setCurrentVrm(v);
-    setTimeout(() => {
-      if (!!onLoad) onLoad();
-    }, 2000);
-    // console.log("currentVrm", v);
-
-    // Disable frustum culling
-    v?.scene.traverse((obj: any) => {
-      obj.frustumCulled = false;
+    if (!url) return;
+    const loader = new GLTFLoader();
+    loader.register((parser) => {
+      return new VRMLoaderPlugin(parser);
     });
-    v.humanoid.resetNormalizedPose();
-    VRMUtils.rotateVRM0(v); // rotate the vrm around y axis if the vrm is VRM0.0
-    VRMUtils.removeUnnecessaryJoints(v.scene);
-    VRMUtils.removeUnnecessaryVertices(v.scene);
+    loader.load(
+      // URL of the VRM you want to load
+      url,
 
-    // restrict stiffness
-    // console.log("Joints", v.springBoneManager?.joints);
-    v.springBoneManager?.joints.forEach((e) => {
-      // console.log("joints", e.bone.name);
-      if (e.bone.name.includes("Skirt")) {
-        e.settings.stiffness = 5;
-        e.settings.dragForce = 0.2;
-        e.settings.hitRadius = 1;
-        return;
-      }
-      //  e.settings.dragForce = 1
-      e.settings.stiffness = stiffness ?? 6;
-    });
+      // called when the resource is loaded
+      (gltf) => {
+        // console.log("gltf", gltf?.userData?.vrmMeta?.title, url);
+        const v: VRM = gltf.userData.vrm;
+        // console.log("vrm", v);
+        if (!v) return;
 
-    // initialize mixer
-    const m = new THREE.AnimationMixer(v.scene);
-    m.addEventListener("finished", () => {
-      setTimeout(() => {
-        isAnimating = false;
-      }, 1000);
+        if (!!v.lookAt && !!camera) {
+          v.lookAt.target = camera;
+          v.lookAt.autoUpdate = true;
+        }
+        setCurrentVrm(v);
+        // console.log("currentVrm", v);
 
-      if (!!previousAction) {
-        console.log("fading out", previousAction.getClip().name);
-        previousAction.fadeOut(0.5);
-        previousAction = undefined;
-        delay(() => {
-          fadeToActionString(
-            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-            v,
-            true
-          );
-        }, 500);
-      } else {
+        // Disable frustum culling
+        v?.scene.traverse((obj: any) => {
+          obj.frustumCulled = false;
+        });
+        v.humanoid.resetNormalizedPose();
+        VRMUtils.rotateVRM0(v); // rotate the vrm around y axis if the vrm is VRM0.0
+        VRMUtils.removeUnnecessaryJoints(v.scene);
+        VRMUtils.removeUnnecessaryVertices(v.scene);
+
+        // restrict stiffness
+        // console.log("Joints", v.springBoneManager?.joints);
+        v.springBoneManager?.joints.forEach((e) => {
+          // console.log("joints", e.bone.name);
+          if (e.bone.name.includes("Skirt")) {
+            e.settings.stiffness = 5;
+            e.settings.dragForce = 0.2;
+            e.settings.hitRadius = 1;
+            return;
+          }
+          //  e.settings.dragForce = 1
+          e.settings.stiffness = stiffness ?? 6;
+        });
+
+        // initialize mixer
+        const m = new THREE.AnimationMixer(v.scene);
+        m.addEventListener("finished", () => {
+          setTimeout(() => {
+            isAnimating = false;
+          }, 1000);
+
+          if (!!previousAction) {
+            console.log("fading out", previousAction.getClip().name);
+            previousAction.fadeOut(0.5);
+            previousAction = undefined;
+            delay(() => {
+              fadeToActionString(
+                "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+                v,
+                true
+              );
+            }, 500);
+          } else {
+            fadeToActionString(
+              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+              v,
+              true
+            );
+          }
+        });
+
+        globalMixer = m;
+        // start idle animation
         fadeToActionString(
           "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
           v,
-          true
+          true,
+          m
         );
-      }
-    });
+      },
 
-    globalMixer = m;
-    // start idle animation
-    fadeToActionString(
-      "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
-      v,
-      true,
-      m
+      // called while loading is progressing
+      (progress) => {
+        setProgress(100.0 * (progress.loaded / progress.total));
+      },
+
+      // called when loading has errors
+      (error) => console.error(error)
     );
-  }, [gltf]);
-
-  useEffect(() => {
-    return () => {
-      try {
-        if (!currentVrm) return;
-        console.log("disposing previous vrm");
-        VRMUtils.deepDispose(currentVrm.scene);
-      } catch (err: any) {
-        console.log("Dispose error", err);
-      }
-    };
-  }, [currentVrm]);
-
-  useEffect(() => {
     return () => {
       if (!!onAudioEnd) {
         onAudioEnd();
@@ -188,6 +185,18 @@ export const AICharacter: React.FC<AICharacterType> = ({
       }
     };
   }, [url]);
+
+  useEffect(() => {
+    return () => {
+      try {
+        if (!currentVrm) return;
+        console.log("disposing previous vrm");
+        VRMUtils.deepDispose(currentVrm.scene);
+      } catch (err: any) {
+        console.log("Dispose error", err);
+      }
+    };
+  }, [currentVrm]);
 
   useFrame((_, delta) => {
     currentVrm?.update(delta);
@@ -298,7 +307,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
     previousAction = activeAction;
   };
 
-  if (!gltf?.userData?.vrm?.scene) return <></>;
+  if (!currentVrm?.scene || progress < 100) return <></>;
 
   return (
     <PresentationControls
@@ -314,7 +323,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
       config={{ mass: 1, tension: 170, friction: 26 }} // Spring config
     >
       <primitive
-        object={gltf.userData.vrm.scene}
+        object={currentVrm.scene}
         position={position ?? [0, -10, 0]}
         // position={[0, -9, 0]}
         scale={10}
