@@ -1,6 +1,6 @@
 "use client";
 
-import { CSSProperties, PropsWithChildren, useState } from "react";
+import { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
 import { CharacterInput } from "../CharacterInput/CharacterInput";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
@@ -287,6 +287,12 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     await audio.play();
     console.log("audioContext state", audioContext.state);
   };
+
+  useEffect(() => {
+    return () => {
+      setLatestBotMessage(undefined);
+    };
+  }, [virtualId]);
 
   if (!virtualId) return <></>;
 
