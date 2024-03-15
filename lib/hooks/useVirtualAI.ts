@@ -1,4 +1,6 @@
+import { ConfigType } from "../types/ConfigType";
 import { PromptDto } from "../types/PromptDto";
+import { UNSAFE_initAccessToken } from "../utils/initAccessToken";
 import { getVirtualRunnerUrl } from "../utils/jwt";
 import { useEffect, useState } from "react";
 
@@ -6,7 +8,7 @@ export type VirtualAIProps = {
   virtualId?: number | string;
   userName?: string;
   virtualName?: string;
-  initAccessToken: (
+  initAccessToken?: (
     virtualId: number | string,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
@@ -49,7 +51,10 @@ export const useVirtualAI = ({
   const initSession = async (vid: number | string, retry: number = 0) => {
     try {
       if (!!vid) {
-        const token = await initAccessToken(vid, metadata);
+        const initToken = !!initAccessToken
+          ? initAccessToken
+          : UNSAFE_initAccessToken;
+        const token = await initToken(vid, metadata);
         localStorage.setItem(`runnerToken${vid}`, token);
       }
       await initVirtual();
@@ -75,71 +80,135 @@ export const useVirtualAI = ({
 
   const createPrompt = async (
     content: string | Blob,
-    skipTTS: boolean,
-    skipLipSync: boolean,
+    configs?: ConfigType,
     onPromptReceived?: (prompt: PromptDto) => void,
     retry?: number
   ): Promise<PromptDto> => {
-    if (!virtualId) throw new Error("Virtual not found");
-    const cachedRunnerToken = await initAccessToken(virtualId ?? -1, metadata);
-    const formData = new FormData();
-    if (typeof content !== "string") {
-      formData.append("audio", content, "recording.webm");
-      formData.append("skipLipSync", skipLipSync ? "true" : "false");
-      formData.append("skipTTS", skipTTS ? "true" : "false");
-      formData.append("userName", userName ?? "");
-      formData.append("botName", virtualName ?? "");
-    }
-    const resp = await fetch(`${runnerUrl}/prompts`, {
-      method: "POST",
-      headers:
-        typeof content === "string"
-          ? {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${cachedRunnerToken}`,
-            }
-          : {
-              Authorization: `Bearer ${cachedRunnerToken}`,
-            },
-      body:
-        typeof content === "string"
-          ? JSON.stringify({
-              text: content,
-              skipLipSync,
-              skipTTS,
-              userName,
-              botName: virtualName,
-            })
-          : formData,
-    });
-    // if encountered error, retry after init access token
-    if (resp.status !== 200 && (retry ?? 0) < 3) {
-      localStorage.removeItem(`runnerToken${virtualId}`);
-      await initSession(virtualId);
-      return (await createPrompt(
-        content,
-        skipTTS,
-        skipLipSync,
-        onPromptReceived,
-        (retry ?? 0) + 1
-      )) as PromptDto;
-    } else if (resp.status !== 200) {
-      onPromptError?.(resp);
-    }
+    try {
+      if (!virtualId) throw new Error("Virtual not found");
+      const initToken = !!initAccessToken
+        ? initAccessToken
+        : UNSAFE_initAccessToken;
+      const cachedRunnerToken = await initToken(virtualId ?? -1, metadata);
+      const formData = new FormData();
+      if (typeof content !== "string") {
+        formData.append("audio", content, "recording.webm");
+        formData.append("skipTTS", configs?.skipTTS ? "true" : "false");
+        formData.append("userName", userName ?? "");
+        formData.append("botName", virtualName ?? "");
+      }
+      const resp = await fetch(`${runnerUrl}/prompts`, {
+        method: "POST",
+        headers:
+          typeof content === "string"
+            ? {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cachedRunnerToken}`,
+              }
+            : {
+                Authorization: `Bearer ${cachedRunnerToken}`,
+              },
+        body:
+          typeof content === "string"
+            ? JSON.stringify({
+                text: content,
+                skipTTS: configs?.skipTTS,
+                userName,
+                botName: virtualName,
+              })
+            : formData,
+      });
+      // if encountered error, retry after init access token
+      if (resp.status !== 200 && (retry ?? 0) < 3) {
+        localStorage.removeItem(`runnerToken${virtualId}`);
+        await initSession(virtualId);
+        return (await createPrompt(
+          content,
+          {
+            skipTTS: !!configs?.skipTTS,
+          },
+          onPromptReceived,
+          (retry ?? 0) + 1
+        )) as PromptDto;
+      } else if (resp.status !== 200) {
+        onPromptError?.(resp);
+      }
 
-    const respJson = await resp.json();
-    if (!!respJson?.error) {
-      throw new Error(respJson.error);
+      const respJson = await resp.json();
+      if (!!respJson?.error) {
+        throw new Error(respJson.error);
+      }
+      if (!!onPromptReceived) {
+        onPromptReceived(respJson as PromptDto);
+      }
+      return respJson as PromptDto;
+    } catch (err: any) {
+      if ((retry ?? 0) < 3)
+        return (await createPrompt(
+          content,
+          {
+            skipTTS: !!configs?.skipTTS,
+          },
+          onPromptReceived,
+          (retry ?? 0) + 1
+        )) as PromptDto;
+      onPromptError?.(err);
+      return {
+        expression: {
+          uid: "",
+          name: "",
+          url: "",
+        },
+      };
     }
-    if (!!onPromptReceived) {
-      onPromptReceived(respJson as PromptDto);
+  };
+
+  const getVoiceUrl = async (
+    content: string,
+    retry?: number
+  ): Promise<string> => {
+    try {
+      if (!virtualId) throw new Error("Virtual not found");
+      const initToken = !!initAccessToken
+        ? initAccessToken
+        : UNSAFE_initAccessToken;
+      const cachedRunnerToken = await initToken(virtualId ?? -1, metadata);
+      const resp = await fetch(`${runnerUrl}/voice`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cachedRunnerToken}`,
+        },
+        body: JSON.stringify({
+          text: content,
+        }),
+      });
+      // if encountered error, retry after init access token
+      if (resp.status !== 200 && (retry ?? 0) < 3) {
+        localStorage.removeItem(`runnerToken${virtualId}`);
+        await initSession(virtualId);
+        return (await getVoiceUrl(content, (retry ?? 0) + 1)) as string;
+      } else if (resp.status !== 200) {
+        onPromptError?.(resp);
+      }
+
+      const respJson = await resp.json();
+      if (!!respJson?.error) {
+        throw new Error(respJson.error);
+      }
+      return (respJson?.audioUid ?? "") as string;
+    } catch (err: any) {
+      if ((retry ?? 0) < 3)
+        return (await getVoiceUrl(content, (retry ?? 0) + 1)) as string;
+      onPromptError?.(err);
+      return "";
     }
-    return respJson as PromptDto;
   };
 
   return {
     runnerUrl,
     modelUrl,
     createPrompt,
+    getVoiceUrl,
   };
 };

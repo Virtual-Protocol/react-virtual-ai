@@ -21,7 +21,7 @@ export type AICharacterType = {
   stiffness?: number;
 };
 
-export const SimpleAICharacter: React.FC<AICharacterType> = ({
+export const AICharacterWithoutAnimation: React.FC<AICharacterType> = ({
   url,
   onAudioEnd,
   onLoad,

@@ -25,7 +25,7 @@ type InputProps = {
   style?: CSSProperties;
 };
 
-export const Input: React.FC<InputProps> = ({
+export const CharacterInput: React.FC<InputProps> = ({
   value,
   onChange,
   onSubmit,

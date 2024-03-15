@@ -12,10 +12,5 @@ export type PromptDto = {
     name: string;
     url: string;
   };
-  lipsync?: {
-    start: number;
-    end: number;
-    value: "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "X";
-  }[];
   audioUid?: string;
 };

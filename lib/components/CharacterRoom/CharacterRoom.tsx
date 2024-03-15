@@ -1,7 +1,7 @@
 "use client";
 
 import { CSSProperties, PropsWithChildren, useState } from "react";
-import { Input } from "../Input/Input";
+import { CharacterInput } from "../CharacterInput/CharacterInput";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { startLipSync } from "../../utils/audio";
@@ -9,6 +9,9 @@ import { useVirtualAI } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
 import { PromptDto } from "../../types/PromptDto";
 import "../../index.css";
+import { UNSAFE_initAccessToken } from "../../utils/initAccessToken";
+import { ConfigType } from "../../types/ConfigType";
+import { getQuotedTexts } from "../../../src/utils/utils";
 
 type Props = {
   userName?: string;
@@ -29,7 +32,7 @@ type Props = {
   onErrorSendingMessage?: (err: any) => void;
   onInputFocused?: () => void;
   onInputBlurred?: () => void;
-  initAccessToken: (
+  initAccessToken?: (
     virtualId: number | string,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
@@ -40,6 +43,7 @@ type Props = {
   onPromptError?: (error: any) => void;
   metadata?: { [id: string]: any };
   loadingText?: string;
+  configs?: ConfigType;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -69,14 +73,17 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onPromptError,
   metadata,
   loadingText,
+  configs,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState("");
-  const { modelUrl, createPrompt } = useVirtualAI({
+  const { modelUrl, createPrompt, getVoiceUrl } = useVirtualAI({
     virtualId,
     userName,
     virtualName,
-    initAccessToken,
+    initAccessToken: !!initAccessToken
+      ? initAccessToken
+      : UNSAFE_initAccessToken,
     onPromptError,
     metadata,
   });
@@ -121,10 +128,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             text: content,
           });
       }
-      const skipTTS = false;
-      const skipLipSync = false;
       setLatestBotMessage(undefined);
-      const prompt = await createPrompt(content, !!skipTTS, !!skipLipSync);
+      const prompt = await createPrompt(content, configs);
 
       // on prompt received, create new chat message object for the waifu
       if (typeof content !== "string") {
@@ -220,6 +225,19 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             audioUid: prompt.audioUid,
           });
         setLatestBotMessage(prompt);
+        const audioUid = await getVoiceUrl(
+          getQuotedTexts(prompt.text ?? "").join(" ")
+        );
+        setLatestBotMessage((prev) => {
+          if (!prev) {
+            return undefined;
+          } else {
+            return {
+              ...prev,
+              audioUid: audioUid,
+            };
+          }
+        });
       }
     } catch (err: any) {
       setAnim(
@@ -390,7 +408,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         />
       </div>
       {!hideInput && (
-        <Input
+        <CharacterInput
           value={inputText}
           onChange={handleInputChange}
           onSubmit={handleSendClick}
@@ -416,9 +434,13 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   />
                 }
                 className={`virtual-rounded-full virtual-w-10 virtual-h-10 virtual-bg-black/30 virtual-hover:bg-black/30 virtual-backdrop-blur-xl virtual-z-40 virtual-self-end`}
-                isDisabled={talking}
+                isDisabled={talking || !latestBotMessage.audioUid}
                 onClick={async () => {
                   setTalking(true);
+                  if (!latestBotMessage.audioUid) {
+                    setTalking(false);
+                    return;
+                  }
                   const audio = new Audio(`${latestBotMessage.audioUid ?? ""}`);
                   const audioContext = new AudioContext();
                   await startLipSync(

@@ -4,6 +4,7 @@ import { ChatMessages } from "./components/ChatMessages/ChatMessages";
 import { ChatMessageDto } from "./types/ChatMessageDto";
 import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
+import { UNSAFE_initAccessToken } from "../lib/utils/initAccessToken";
 
 function App() {
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -90,9 +91,17 @@ function App() {
         onInputFocused={() => {}}
         onInputBlurred={() => {}}
         onAudioErr={() => {}}
-        initAccessToken={async () => {
-          return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJlZGUxZDkyMy1hOTlhLTQ0ODktODBlYy1iMTlkZmNmMWY5OGIiLCJpZCI6MTAsInZpcnR1YWwiOiJkMTA1MjU4ZS0wOWMxLTQ0NTUtOTIxNy03NjgyMzUwYzVmM2IiLCJ2aXJ0dWFsSWQiOjIwNywidXNlcm5hbWUiOiJraW5nb2ZsZWF2ZXIiLCJ1c2VyVWlkIjoiMWRhODc4NmQtOWY1Ni00MzRlLTkxOWYtZTlkN2RkMTkzMzI1Xzc5MDQyYmEzLWRmNzItNDk4NC1hNTQ4LTg5NjVjYjQyYmY0MCIsImNoYXJDYXJkSW5kZXgiOjAsInJ1bm5lciI6Imh0dHBzOi8vYWxsb3ktaWRlbnRpZnlpbmctZHZkcy1taW5kLnRyeWNsb3VkZmxhcmUuY29tIiwicm9sZSI6InVzZXIiLCJhdWQiOiJ2OjIwNyIsImlhdCI6MTcxMDMxMzU1MiwiZXhwIjoxNzEwMzk5OTUyfQ.hS-bgcKr6r481501KA0iDVmxZoH8R4cKVSWv5gRVTi2RhqW3PnDmtYoICjqeMYATKK5VS-pjNG_ChGsMFdfqES0tm1mkPIWRVI36gg0kSPHURPRZpDTOobgUrSLzLpy1yucu5HG_wAA09WSOt_K_1eH43o0PxpGk7xbS4b_N8PxaRO1D8wUtVCm5PfRo4b-iYklR2v-fewtElfnSnBU0NH7CkQDlayopfVJlfaTvTRm8pVvi5jInx0-aTIbnuFO0sXHWVgiWrS2hYP6n6-OLF9filw60I9pqgPIEWKI9PYjTR2seMfroLiBvCKbhdQfw7kKaQuC0z3meCg4ZrYc4zg";
+        onPromptError={(e) => {
+          alert(e);
         }}
+        metadata={{
+          apiKey: "OLZE9PY5230TYrspfhZm",
+          apiSecret: "pDCyfQYi90W4hV8kLE4n0DeVJHNmA8oE3C2",
+          userUid: "1",
+          userName: "Jia Xiong",
+        }}
+        configs={{ skipTTS: true }}
+        initAccessToken={UNSAFE_initAccessToken}
         transformModelUrl={(v) => {
           return v.replace("nocache", "production");
         }}

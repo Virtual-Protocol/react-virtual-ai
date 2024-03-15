@@ -5,7 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import "../../index.css";
-import { SimpleAICharacter } from "../SimpleAICharacter/SimpleAICharacter";
+import { AICharacterWithoutAnimation } from "../AICharacterWithoutAnimation/AICharacterWithoutAnimation";
 
 type CharacterSceneType = {
   animation: string;
@@ -75,7 +75,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
         >
           {!!modelUrl &&
             (multiple ? (
-              <SimpleAICharacter
+              <AICharacterWithoutAnimation
                 animation={animation}
                 url={modelUrl}
                 speakCount={speakCount}
