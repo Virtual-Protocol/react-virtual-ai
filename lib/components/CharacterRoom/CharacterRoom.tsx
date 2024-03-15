@@ -15,44 +15,143 @@ import { getQuotedTexts } from "../../utils/string";
 import { VRM } from "@pixiv/three-vrm";
 
 type Props = {
+  /**
+   * User name that VIRTUAL will address
+   */
   userName?: string;
+  /**
+   * VIRTUAL name
+   */
   virtualName?: string;
-  onSendMessage?: Function;
+  /**
+   * Whether to hide voice input button
+   */
   hideVoice?: boolean;
+  /**
+   * Addional class name for input container
+   */
   inputClassName?: string;
+  /**
+   * Additional input style
+   */
   inputStyle?: CSSProperties;
+  /**
+   * Whether to hide input component
+   */
   hideInput?: boolean;
+  /**
+   * ThreeJS camera zoom (default 2)
+   */
   zoom?: number;
+  /**
+   * 3D model position in [x,y,z] (default [0, -10, 0])
+   */
   position?: number[];
   debugging?: boolean;
+  /**
+   * virtualId that will decide user memory
+   */
   virtualId?: number | string;
+  /**
+   * Whether to put 3D model aside
+   */
   aside?: boolean;
+  /**
+   * Callback on user message created
+   * @param content any
+   * @returns
+   */
   onUserMessageCreated?: (content: any) => Promise<void>;
+  /**
+   * Callback on virtual message created
+   * @param content any
+   * @returns
+   */
   onVirtualMessageCreated?: (content: any) => Promise<void>;
+  /**
+   * Callback before sending message
+   * @returns
+   */
   onBeforeSendMessage?: () => void;
+  /**
+   * Callback when sending message encounters error
+   * @param err Error
+   * @returns
+   */
   onErrorSendingMessage?: (err: any) => void;
+  /**
+   * Callback when input is focused
+   * @returns
+   */
   onInputFocused?: () => void;
+  /**
+   * Callback when input is blurred
+   * @returns
+   */
   onInputBlurred?: () => void;
+  /**
+   * Function that takes in virtualId and additional metadata to return runner access token
+   * @returns runner access token
+   */
   initAccessToken?: (
     virtualId: number | string,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
+  /**
+   * Callback on audio playback error
+   * @returns
+   */
   onAudioErr?: () => void;
+  /**
+   * Validate if user is allowed to send message
+   * @returns true if can send message, else false
+   */
   validateMessageCapability?: () => boolean;
+  /**
+   * Override the 3D model URL
+   */
   overrideModelUrl?: string;
+  /**
+   * Function to transform raw model URL
+   * @param modelUrl Raw model URL
+   * @returns Transformed model URL
+   */
   transformModelUrl?: (modelUrl: string) => string;
+  /**
+   * Callback when /prompt to runner encounters error
+   * @param error Error
+   * @returns
+   */
   onPromptError?: (error: any) => void;
+  /**
+   * Additional metadata to pass during initAccessToken
+   */
   metadata?: { [id: string]: any };
+  /**
+   * Override default loading text
+   */
   loadingText?: string;
+  /**
+   * Additinal configurations to send during prompting
+   */
   configs?: ConfigType;
+  /**
+   * Callback on 3D model loading progress change
+   * @param v Progerss in percentage (0-100)
+   * @returns
+   */
   onProgressChange?: (v: number) => void;
+  /**
+   * Callback when 3D model loading encounters error
+   * @param err Error
+   * @returns
+   */
   onLoadErr?: (err: any) => void;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   virtualName,
   userName,
-  onSendMessage,
   hideVoice,
   inputClassName,
   inputStyle,
@@ -259,11 +358,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     const text = inputText.trim();
     if (!text) return;
     setInputText("");
-
-    if (!!onSendMessage) {
-      await onSendMessage(text);
-      return;
-    }
 
     const audio = new Audio();
     const audioContext = new AudioContext();

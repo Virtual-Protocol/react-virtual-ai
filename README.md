@@ -1,14 +1,14 @@
 # Introduction
 
-`@virtual-protocol/react-virtual-ai` is a NextJS client SDK that offers a collection of React UI components to easily integrate with VIRTUAL to spawn 3D AI character with messaging feature.
+`@virtual-protocol/react-virtual-ai` is a React client SDK that offers a collection of React UI components to easily integrate with VIRTUAL. For non-React frontend frameworks, we also provide several JavaScript helper functions and services to help ease the integration.
 
-Read the documentation at: https://virtualprotocol.gitbook.io/whitepaper/technical-documentation/modular-consensus-framework/inference-by-dapps
+Gitbook: https://virtualprotocol.gitbook.io/whitepaper/technical-documentation/modular-consensus-framework/inference-by-dapps
 
 ## Features
 
-1. **Integration with VIRTUAL**: Integrate conversational AI 3D models into your NextJS applications by utilizing the customizable component.
+1. **Plug-and-Play Integration with VIRTUAL**: Integrate conversational AI 3D models into your React applications by utilizing the customizable components.
 
-2. **Customizable Components and Hooks**: `@virtual-protocol/react-virtual-ai` provides a customizable UI component to render animated 3D AI character for you. For complete customizability, you can use the `useVirtualAI` hook to build your own components that integrate with VIRTUAL.
+2. **Customizable Services and Hooks**: To implement own components, you can use the `useVirtual` hook and other helper functions and classes to build your own components that integrate with VIRTUAL.
 
 ## Usage
 
@@ -26,13 +26,15 @@ or
 yarn add @virtual-protocol/react-virtual-ai
 ```
 
-### Step 2: Obtain Your API Key
+### Step 2: Obtain Your API Key and Secret
 
-Follow the VIRTUAL documentation on setting up API key and server to obtain access token.
+Follow the VIRTUAL documentation on creating API key and secret.
 
 ### Step 3: Implement `initAccessToken` function
 
-This function communicates with your access token API and returns an VIRTUAL-specific access token.
+`initAccessToken` prop is available for `CharacterRoom` and `useVirtual` hooks. When using the components in production environment, please keep the API Key and Secret privately in your backend server and override this function to request from your server instead.
+
+By default, the function is implemented by assuming the API key and secret are passed to the metadata parameter.
 
 Sample implementation:
 
@@ -47,7 +49,7 @@ export const initAccessToken = async (
   let cachedRunnerToken = localStorage.getItem(`runnerToken${virtualId}`) ?? "";
   // Fetch a new runner token if expired
   if (!cachedRunnerToken || !validateJwt(cachedRunnerToken)) {
-    // Get runner token via dapp server
+    // Get runner token via your own dapp server
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) return "";
     const resp = await fetch(
@@ -72,7 +74,9 @@ export const initAccessToken = async (
 };
 ```
 
-### Step 4: Put the `CharacterRoom` component
+### Step 4: Insert the `CharacterRoom` component
+
+There
 
 ```jsx
 import { CharacterRoom } from "@virtual-protocol/react-virtual-ai";
@@ -81,156 +85,69 @@ return (
   <CharacterRoom
     userName="User"
     virtualName="Virtual Name"
-    virtualId={1} // unique virtual id in number / string
-    initAccessToken={initAccessToken}
+    virtualId={1} // unique virtual id in number / string that will define the
   />
 );
 ```
 
-If you prefer implementing own components, use the `useVirtualAI` hook as follows:
+## Other Usages
+
+### useVirtual hook
+
+If you prefer implementing own components, use the `useVirtual` hook as follows:
 
 ```javascript
-const { modelUrl, createPrompt, runnerUrl } = useVirtualAI({
-  virtualId,
-  userName,
-  virtualName,
-  initAccessToken,
+const { modelUrl, createPrompt, getTTSResponse, getLLMResponse } = useVirtual({
+  virtualId: 1,
+  userName: "",
+  virtualName: "",
+  initAccessToken: undefined,
+  onPromptError: undefined,
+  metadata: undefined,
 });
 ```
 
+### Utils
+
+There are several util functions provided, you may utilize separately for specific cases.
+
+`UNSAFE_initAccessToken`: Default function to generate access token. DO NOT use this in production.
+
+`validateJwt`: Validate JWT token expiry
+
+`getVirtualRunnerUrl`: Get virtual runner URL via JWT token
+
+`getQuotedTexts`: Get quoted texts as list via string input
+
+`loadAnimation`: Load VMD / Mixamo FBX animation into VRM model
+
+`fadeByEmotion`: Fade in facial expression for the VRM model
+
+`blink`: Blink the VRM model's eyes
+
+### Components
+
+`AICharacter`: 3D Character with PresentationControl. Must wrap inside ThreeJS Canvas. Utilized in CharacterScene.
+
+`CharacterScene`: 3D Character with Scene. May use this for displaying 3D model and animations. Utilized in CharacterRoom.
+
+`CharacterInput`: Input component for prompting. Utilized in CharacterRoom.
+
+`CharacterRoom`: Full component for React Virtual AI.
+
+### Services
+
+`VirtualService`: VirtualService contains all operations required to send prompt to the VIRTUAL.
+
+`VrmService`: VrmService provides functions to load VRM model and fade to animations.
+
+## Examples
+
+Examples are available in the "examples" folder of the repository.
+
 ## API References
 
-### useVirtualAI
-
-`virtualId?: number | string`: Unique identifier for the virtual, this value will be passed to initAccessToken function when react-virtual-ai requests for new runner tokens.
-
-`userName?: string`: User's name
-
-`virtualName?: string`: Virtual's name
-
-`initAccessToken: (virtualId: number | string, metadata?: { [id: string]: any }) => Promise<string>`: Function that will return runner access token based on virtual ID and additional metadata. Sample implementation is attached at `Step 3`
-
-`onPromptError?: (error: any) => void`: Callback function when prompt fails.
-
-`metadata?: { [id: string]: any }`: Additional parameters that will be passed to initAccessToken function.
-
-### CharacterRoom
-
-`userName?: string`: User's name
-
-`virtualName?: string`: Virtual's name
-
-`onSendMessage?: Function`: Callback when text message is submitted
-
-`hideVoice?: boolean`: Hide voice input button
-
-`inputClassName?: string`: Input button additional class names
-
-`inputStyle?: CSSProperties`: Input button additional styles
-
-`hideInput?: boolean`: Hide input fields
-
-`zoom?: number`: ThreeJS zoom amount (default 2)
-
-`position?: number[]`: 3D model position (default [0, -10, 0])
-
-`virtualId?: number | string`: virtualId for initAccessToken
-
-`aside?: boolean`: Whether to put 3D model camera aside
-
-`onUserMessageCreated?: (content: any) => Promise<void>`: Callback when user message is created
-
-`onVirtualMessageCreated?: (content: any) => Promise<void>`: Callback when virtual message is created
-
-`onBeforeSendMessage?: () => void`: Callback before sending text or voice message
-
-`onErrorSendingMessage?: (err: any) => void`: Callback when error sending text or voice message
-
-`onInputFocused?: () => void`: Callback when input field is focused
-
-`onInputBlurred?: () => void`: Callback when input field is blurred
-
-`initAccessToken: (virtualId: number | string, metadata?: { [id: string]: any }) => Promise<string>`: Function that returns runner access token, details are in `Step 3`
-
-`onAudioErr?: () => void`: Callback when audio playback error
-
-`validateMessageCapability?: () => boolean`: Validate if user is allowed to send message, return `false` to prohibit user sending message
-
-`overrideModelUrl?: string`: Custom 3D Model URL
-
-`transformModelUrl?: (modelUrl: string) => string`: Function to preprocess model URL and returns a new URL
-
-`onPromptError?: (error: any) => void`: Callback when prompting failed
-
-`metadata?: { [id: string]: any }`: Metadata to attach in initAccessToken function
-
-`loadingText?: string`: Text to show when loading 3D model, default is "Your Virtual is Dressing Up..."
-
-### CharacterScene
-
-`animation: string`: Animation URL, supports .vmd and mixamo .fbx
-
-`modelUrl?: string`: 3D Model URL, supports .vrm
-
-`onAudioEnd?: Function`: Callback when audio playback error happens
-
-`aside?: boolean`: Whether to set 3D model camera aside
-
-`speakCount?: number`: Trigger audio playback when this value changes
-
-`emotion?: "idle" | "think" | "anger" | "disgust" | "fear" | "joy" | "neutral" | "sadness" | "surprise"`: Emotion to play
-
-`zoom?: number`: Camera zoom, default is 2
-
-`position?: number[]`: 3D model position (default [0, -10, 0])
-
-`loadingText?: string`: Text to show when loading 3D model, default is "Your Virtual is Dressing Up..."
-
-`stiffness?: number`: 3D model stiffness, default is 6
-
-### AICharacter
-
-`animation: string`: Animation URL, supports .vmd and mixamo .fbx
-
-`url?: string`: 3D Model URL, supports .vrm
-
-`onAudioEnd?: Function`: Callback when audio playback error happens
-
-`onLoad?: Function`: Callback when 3D model is loaded
-
-`aside?: boolean`: Whether to set 3D model camera aside
-
-`speakCount?: number`: Trigger audio playback when this value changes
-
-`emotion?: "idle" | "think" | "anger" | "disgust" | "fear" | "joy" | "neutral" | "sadness" | "surprise"`: Emotion to play
-
-`position?: number[]`: 3D model position (default [0, -10, 0])
-
-`stiffness?: number`: 3D model stiffness, default is 6
-
-### Input
-
-`value: string`: Text input value
-
-`onChange: ChangeEventHandler<HTMLTextAreaElement>`: On text input value change
-
-`onSubmit: Function`: Callback when submit button is pressed
-
-`disabled?: boolean`: Whether the input field is disabled
-
-`onSubmitVoice: (b: Blob) => void`: Callback on voice submitted
-
-`hideVoice?: boolean`: Whether to hide voice button
-
-`onFocus?: Function`: Callback on input focus
-
-`className?: string`: Additional class names for input field
-
-`Toolbar?: ReactElement`: Additional component above input field
-
-`onBlur?: Function`: Callback on input blur
-
-`style?: CSSProperties`: Additional styles for input field
+JSDocs comments are available in the components, classes and functions. Kindly follow the comments for more details.
 
 ## Contributing
 
