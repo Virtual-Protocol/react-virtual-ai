@@ -1,4 +1,4 @@
-export { useVirtualAI } from "./hooks/useVirtualAI";
+export { useVirtual } from "./hooks/useVirtual";
 export { UNSAFE_initAccessToken } from "./utils/initAccessToken";
 export { validateJwt, getVirtualRunnerUrl } from "./utils/jwt";
 export { getQuotedTexts } from "./utils/string";

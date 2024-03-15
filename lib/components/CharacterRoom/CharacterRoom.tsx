@@ -5,7 +5,7 @@ import { CharacterInput } from "../CharacterInput/CharacterInput";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { startLipSync } from "../../utils/audio";
-import { useVirtualAI } from "../../main";
+import { useVirtual } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
 import { PromptType } from "../../types/PromptType";
 import "../../index.css";
@@ -84,7 +84,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const [anim, setAnim] = useState(
     "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
   );
-  const { modelUrl, createPrompt, getVoiceUrl } = useVirtualAI({
+  const { modelUrl, createPrompt, getTTSResponse } = useVirtual({
     virtualId,
     userName,
     virtualName,
@@ -232,7 +232,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             audioUid: prompt.audioUid,
           });
         setLatestBotMessage(prompt);
-        const audioUid = await getVoiceUrl(
+        const audioUid = await getTTSResponse(
           getQuotedTexts(prompt.text ?? "").join(" ")
         );
         setLatestBotMessage((prev) => {

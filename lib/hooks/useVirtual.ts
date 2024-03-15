@@ -4,7 +4,7 @@ import {
 } from "../services/VirtualService";
 import { useEffect, useState } from "react";
 
-export type VirtualAIProps = {
+export type VirtualProps = {
   virtualId?: number | string;
   userName?: string;
   virtualName?: string;
@@ -16,14 +16,14 @@ export type VirtualAIProps = {
   metadata?: { [id: string]: any };
 };
 
-export const useVirtualAI = ({
+export const useVirtual = ({
   virtualId,
   userName,
   virtualName,
   initAccessToken,
   onPromptError,
   metadata,
-}: VirtualAIProps) => {
+}: VirtualProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
   const [modelUrl, setModelUrl] = useState("");
   const [virtualService, setVirtualService] = useState(defaultVirtualService);
@@ -71,6 +71,7 @@ export const useVirtualAI = ({
     runnerUrl,
     modelUrl,
     createPrompt: virtualService.createPrompt,
-    getVoiceUrl: virtualService.getVoiceUrl,
+    getTTSResponse: virtualService.getTTSResponse,
+    getLLMResponse: virtualService.getLLMResponse,
   };
 };

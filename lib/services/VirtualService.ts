@@ -3,21 +3,61 @@ import { PromptType } from "../types/PromptType";
 import { UNSAFE_initAccessToken } from "../utils/initAccessToken";
 import { getVirtualRunnerUrl } from "../utils/jwt";
 
+/**
+ * VirtualService configurations
+ */
 export type VirtualServiceConfigs = {
+  /**
+   * Unique virtualId, this ID will be used as the reference when creating memory for users
+   */
   virtualId?: number | string;
+  /**
+   * User's name to address when VIRTUAL replies
+   */
   userName?: string;
+  /**
+   * Virtual's name that user addresses
+   */
   virtualName?: string;
+  /**
+   * Function that returns runner access token.
+   * YOU MUST override this function to avoid accidentally leaking API Key and Secret using the default sample function. For more information, read {@link UNSAFE_initAccessToken} function
+   * @param virtualId virtualId that decides virtual's memory
+   * @param metadata additional metadata when requesting access token
+   * @returns runner access token
+   */
   initAccessToken?: (
     virtualId: number | string,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
+  /**
+   * Callback when prompt throws error
+   * @param error Error
+   * @returns void
+   */
   onPromptError?: (error: any) => void;
+  /**
+   * Additional metadata to pass to initAccessToken function
+   */
   metadata?: { [id: string]: any };
 };
 
+/**
+ * VirtualService contains all operations required to send prompt to the VIRTUAL.
+ * If you are using React, consider using the {@link useVirtual} hook to automatically switch between VIRTUALs.
+ */
 export class VirtualService {
+  /**
+   * Configurations for VirtualService prompting
+   */
   configs: VirtualServiceConfigs;
+  /**
+   * 3D Model URL
+   */
   modelUrl: string;
+  /**
+   * Runner URL
+   */
   runnerUrl: string;
 
   constructor(configs: VirtualServiceConfigs) {
@@ -26,6 +66,9 @@ export class VirtualService {
     this.runnerUrl = "";
   }
 
+  /**
+   * Function to initialize modelUrl and runnerUrl.
+   */
   async initVirtual() {
     let cachedRunnerToken =
       localStorage.getItem(`runnerToken${this.configs.virtualId}`) ?? "";
@@ -46,6 +89,11 @@ export class VirtualService {
     this.modelUrl = modelRespJson?.data?.model ?? "";
   }
 
+  /**
+   * Function to initialize user session by virtual id
+   * @param vid virtualId
+   * @param retry function will retry for 3 times, to prevent this behavior, set to a number above 3
+   */
   async initSession(vid: number | string, retry: number = 0) {
     try {
       if (!!vid) {
@@ -66,6 +114,14 @@ export class VirtualService {
     }
   }
 
+  /**
+   * Function to send prompt to the runner service and get Virtual response.
+   * @param content text / audio blob contents
+   * @param configs additional configuration during prompting
+   * @param onPromptReceived callback when prompt is received from the runner service
+   * @param retry function will retry for 3 times, to prevent this behavior, set to a number above 3
+   * @returns Prompt object
+   */
   async createPrompt(
     content: string | Blob,
     configs?: ConfigType,
@@ -148,7 +204,13 @@ export class VirtualService {
     }
   }
 
-  async getVoiceUrl(content: string, retry?: number): Promise<string> {
+  /**
+   * Text-to-speech function
+   * @param content text content
+   * @param retry function will retry for 3 times, to prevent this behavior, set to a number above 3
+   * @returns audio in URL
+   */
+  async getTTSResponse(content: string, retry?: number): Promise<string> {
     try {
       if (!this.configs.virtualId) throw new Error("Virtual not found");
       const initToken = !!this.configs.initAccessToken
@@ -172,7 +234,7 @@ export class VirtualService {
       if (resp.status !== 200 && (retry ?? 0) < 3) {
         localStorage.removeItem(`runnerToken${this.configs.virtualId}`);
         await this.initSession(this.configs.virtualId);
-        return (await this.getVoiceUrl(content, (retry ?? 0) + 1)) as string;
+        return (await this.getTTSResponse(content, (retry ?? 0) + 1)) as string;
       } else if (resp.status !== 200) {
         this.configs.onPromptError?.(resp);
       }
@@ -184,7 +246,55 @@ export class VirtualService {
       return (respJson?.audioUid ?? "") as string;
     } catch (err: any) {
       if ((retry ?? 0) < 3)
-        return (await this.getVoiceUrl(content, (retry ?? 0) + 1)) as string;
+        return (await this.getTTSResponse(content, (retry ?? 0) + 1)) as string;
+      this.configs.onPromptError?.(err);
+      return "";
+    }
+  }
+
+  /**
+   * LLM function (Will not keep user memory)
+   * @param content text content
+   * @param retry function will retry for 3 times, to prevent this behavior, set to a number above 3
+   * @returns audio in URL
+   */
+  async getLLMResponse(content: string, retry?: number): Promise<string> {
+    try {
+      if (!this.configs.virtualId) throw new Error("Virtual not found");
+      const initToken = !!this.configs.initAccessToken
+        ? this.configs.initAccessToken
+        : UNSAFE_initAccessToken;
+      const cachedRunnerToken = await initToken(
+        this.configs.virtualId ?? -1,
+        this.configs.metadata
+      );
+      const resp = await fetch(`${this.runnerUrl}/llm`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cachedRunnerToken}`,
+        },
+        body: JSON.stringify({
+          text: content,
+        }),
+      });
+      // if encountered error, retry after init access token
+      if (resp.status !== 200 && (retry ?? 0) < 3) {
+        localStorage.removeItem(`runnerToken${this.configs.virtualId}`);
+        await this.initSession(this.configs.virtualId);
+        return (await this.getLLMResponse(content, (retry ?? 0) + 1)) as string;
+      } else if (resp.status !== 200) {
+        this.configs.onPromptError?.(resp);
+      }
+
+      const respJson = await resp.json();
+      if (!!respJson?.error) {
+        throw new Error(respJson.error);
+      }
+      return (respJson?.text ?? "") as string;
+    } catch (err: any) {
+      if ((retry ?? 0) < 3)
+        return (await this.getLLMResponse(content, (retry ?? 0) + 1)) as string;
       this.configs.onPromptError?.(err);
       return "";
     }

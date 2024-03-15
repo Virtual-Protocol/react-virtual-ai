@@ -5,7 +5,6 @@ import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import { Vector3 } from "three";
 import "../../index.css";
-import { AICharacterWithoutAnimation } from "../AICharacterWithoutAnimation/AICharacterWithoutAnimation";
 import { VRM } from "@pixiv/three-vrm";
 
 type CharacterSceneType = {
@@ -45,7 +44,6 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   zoom,
   position,
   loadingText,
-  multiple,
   stiffness,
   currentVrm,
   setCurrentVrm,
@@ -85,38 +83,24 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
           linear
           flat
         >
-          {!!modelUrl &&
-            (multiple ? (
-              <AICharacterWithoutAnimation
-                animation={animation}
-                url={modelUrl}
-                speakCount={speakCount}
-                onAudioEnd={onAudioEnd}
-                onLoad={() => {
-                  setProgress(100);
-                }}
-                aside={aside}
-                emotion={emotion}
-                position={position}
-              />
-            ) : (
-              <AICharacter
-                animation={animation}
-                url={modelUrl}
-                speakCount={speakCount}
-                onAudioEnd={onAudioEnd}
-                onLoad={(v) => {
-                  setProgress(v);
-                }}
-                aside={aside}
-                emotion={emotion}
-                position={position}
-                stiffness={stiffness}
-                currentVrm={!!currentVrm ? currentVrm : localVrm}
-                setCurrentVrm={!!setCurrentVrm ? setCurrentVrm : setLocalVrm}
-                onLoadErr={onLoadErr}
-              />
-            ))}
+          {!!modelUrl && (
+            <AICharacter
+              animation={animation}
+              url={modelUrl}
+              speakCount={speakCount}
+              onAudioEnd={onAudioEnd}
+              onLoad={(v) => {
+                setProgress(v);
+              }}
+              aside={aside}
+              emotion={emotion}
+              position={position}
+              stiffness={stiffness}
+              currentVrm={!!currentVrm ? currentVrm : localVrm}
+              setCurrentVrm={!!setCurrentVrm ? setCurrentVrm : setLocalVrm}
+              onLoadErr={onLoadErr}
+            />
+          )}
           <directionalLight
             color="#FFFFFF"
             intensity={1.5294117647058822}

@@ -189,13 +189,6 @@ export const loadVMDAsync = async (url: string) => {
 export const loadAnimation = async (url: string, vrm?: VRM) => {
   if (!url || !vrm) return;
 
-  // console.log("boneMap", boneMap);
-  // console.log("bones", vrm.humanoid.rawHumanBones);
-  // console.log("humanBones", vrm.humanoid.humanBones);
-  // console.log("normalizedHumanBones", vrm.humanoid.normalizedHumanBones);
-  // console.log("boneSample", vrm.humanoid.getNormalizedBoneNode("chest"));
-  // console.log("rawRestPose", vrm.humanoid.rawRestPose);
-
   let rslt: any;
 
   try {
