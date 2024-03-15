@@ -29,6 +29,10 @@ export const useVirtual = ({
   const [virtualService, setVirtualService] = useState(defaultVirtualService);
 
   useEffect(() => {
+    console.log("metadata has changed", metadata);
+  }, [metadata]);
+
+  useEffect(() => {
     console.log("Initialized virtual service", {
       virtualId,
       userName,
