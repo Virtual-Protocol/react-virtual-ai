@@ -178,6 +178,14 @@ export const loadVMDAsync = async (url: string) => {
   });
 };
 
+/**
+ * Helper function to load VMD / Mixamo FBX animation
+ * Please take note that other animation formats are not supported at the moment
+ *
+ * @param url VMD / Mixamo FBX animations
+ * @param vrm VRM instance
+ * @returns AnimationClip
+ */
 export const loadAnimation = async (url: string, vrm?: VRM) => {
   if (!url || !vrm) return;
 
@@ -460,11 +468,33 @@ export const fadeByExpressionName = async (
   playMotion(currentVrm, name, 0.0, unique);
 };
 
+/**
+ * Function to blink VRM model's eyes
+ * @param currentVrm VRM instance
+ */
 export const blink = async (currentVrm: VRM) => {
   await fadeByExpressionName(currentVrm, "blink", undefined, undefined);
 };
 
-export const fadeByEmotion = async (currentVrm: VRM, emotion: string) => {
+/**
+ * Function to fade VRM model's facial expression
+ * @param currentVrm VRM instance
+ * @param emotion Target emotion to fade
+ * @returns void
+ */
+export const fadeByEmotion = async (
+  currentVrm: VRM,
+  emotion:
+    | "idle"
+    | "think"
+    | "anger"
+    | "disgust"
+    | "fear"
+    | "joy"
+    | "neutral"
+    | "sadness"
+    | "surprise"
+) => {
   const target = emotionMap?.[emotion] ?? "";
   if (!target) return;
   await fadeByExpressionName(currentVrm, target, 3000);

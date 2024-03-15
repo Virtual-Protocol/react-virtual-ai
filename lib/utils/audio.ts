@@ -2,8 +2,21 @@ import { VRM } from "@pixiv/three-vrm";
 // @ts-ignore
 import { LipSync } from "./lipsync";
 
+/**
+ * lipsyncService cache on memory
+ */
 let lipsyncService: any | undefined;
 
+/**
+ *
+ * @param currentVrm
+ * @param audio
+ * @param audioContext
+ * @param onAudioStart
+ * @param onAudioEnd
+ * @param onAudioErr
+ * @returns
+ */
 export const startLipSync = async (
   currentVrm: VRM | undefined,
   audio: HTMLAudioElement,

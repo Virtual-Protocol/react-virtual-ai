@@ -182,7 +182,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               await onVirtualMessageCreated({
                 prompt: prompt.prompt,
                 text: prompt.text,
-                expression: prompt.expression,
                 body: prompt.body,
                 audioUid: prompt.audioUid,
               });
@@ -229,7 +228,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           await onVirtualMessageCreated({
             prompt: prompt.prompt,
             text: prompt.text,
-            expression: prompt.expression,
             body: prompt.body,
             audioUid: prompt.audioUid,
           });

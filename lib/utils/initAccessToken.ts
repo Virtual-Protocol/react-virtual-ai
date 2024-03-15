@@ -3,7 +3,7 @@ import { validateJwt } from "./jwt";
 /**
  * This function is just an example implementation to get runner access token via Virtual Protocol backend.
  * In production, you would not want to expose API key and secret to the client-side applications.
- * Pass in apiKey, apiSecret, userName, userUid as part of metadata
+ * It is mandatory to pass in apiKey, apiSecret, userName, userUid as part of metadata
  *
  * @param virtualId unique identifiers for virtuals. It can be any number / string. Different virtualId will result in separate memory.
  * @param metadata additional metadata to put as part of the runner access token claims.

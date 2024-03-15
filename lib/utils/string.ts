@@ -1,3 +1,8 @@
+/**
+ * Helper function to extract quoted texts from a string
+ * @param text raw text
+ * @returns list of texts within double quotes
+ */
 export const getQuotedTexts = (text: string) => {
   const pattern = /".*?"/g;
 

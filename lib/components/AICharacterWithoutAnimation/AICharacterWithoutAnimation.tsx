@@ -160,7 +160,19 @@ export const AICharacterWithoutAnimation: React.FC<AICharacterType> = ({
 
   useEffect(() => {
     if (!emotion || !currentVrm) return;
-    fadeByEmotion(currentVrm, emotion);
+    fadeByEmotion(
+      currentVrm,
+      emotion as
+        | "idle"
+        | "think"
+        | "anger"
+        | "disgust"
+        | "fear"
+        | "joy"
+        | "neutral"
+        | "sadness"
+        | "surprise"
+    );
   }, [emotion, speakCount]);
 
   if (!currentVrm?.scene) return <></>;

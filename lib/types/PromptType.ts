@@ -7,10 +7,5 @@ export type PromptType = {
     sentiment: string;
     url: string;
   };
-  expression: {
-    uid: string;
-    name: string;
-    url: string;
-  };
   audioUid?: string;
 };
