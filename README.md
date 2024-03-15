@@ -1,6 +1,6 @@
 # Introduction
 
-`@virtual-protocol/next-virtual` is a NextJS client SDK that offers a collection of React UI components to easily integrate with VIRTUAL to spawn 3D AI character with messaging feature.
+`@virtual-protocol/react-virtual-ai` is a NextJS client SDK that offers a collection of React UI components to easily integrate with VIRTUAL to spawn 3D AI character with messaging feature.
 
 Read the documentation at: https://virtualprotocol.gitbook.io/whitepaper/technical-documentation/modular-consensus-framework/inference-by-dapps
 
@@ -8,22 +8,22 @@ Read the documentation at: https://virtualprotocol.gitbook.io/whitepaper/technic
 
 1. **Integration with VIRTUAL**: Integrate conversational AI 3D models into your NextJS applications by utilizing the customizable component.
 
-2. **Customizable Components and Hooks**: `@virtual-protocol/next-virtual` provides a customizable UI component to render animated 3D AI character for you. For complete customizability, you can use the `useVirtualAI` hook to build your own components that integrate with VIRTUAL.
+2. **Customizable Components and Hooks**: `@virtual-protocol/react-virtual-ai` provides a customizable UI component to render animated 3D AI character for you. For complete customizability, you can use the `useVirtualAI` hook to build your own components that integrate with VIRTUAL.
 
 ## Usage
 
-To install `@virtual-protocol/next-virtual` in your React project, follow these simple steps:
+To install `@virtual-protocol/react-virtual-ai` in your React project, follow these simple steps:
 
 ### Step 1: Install the Package
 
 ```bash
-npm install @virtual-protocol/next-virtual --save
+npm install @virtual-protocol/react-virtual-ai --save
 ```
 
 or
 
 ```bash
-yarn add @virtual-protocol/next-virtual
+yarn add @virtual-protocol/react-virtual-ai
 ```
 
 ### Step 2: Obtain Your API Key
@@ -75,7 +75,7 @@ export const initAccessToken = async (
 ### Step 4: Put the `CharacterRoom` component
 
 ```jsx
-import { CharacterRoom } from "@virtual-protocol/next-virtual";
+import { CharacterRoom } from "@virtual-protocol/react-virtual-ai";
 
 return (
   <CharacterRoom
@@ -102,7 +102,7 @@ const { modelUrl, createPrompt, runnerUrl } = useVirtualAI({
 
 ### useVirtualAI
 
-`virtualId?: number | string`: Unique identifier for the virtual, this value will be passed to initAccessToken function when next-virtual requests for new runner tokens.
+`virtualId?: number | string`: Unique identifier for the virtual, this value will be passed to initAccessToken function when react-virtual-ai requests for new runner tokens.
 
 `userName?: string`: User's name
 
