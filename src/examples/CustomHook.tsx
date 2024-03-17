@@ -1,4 +1,4 @@
-import { useVirtual } from "../main";
+import { useVirtual } from "../../lib/main";
 
 export const CustomHook = () => {
   const { createPrompt, getTTSResponse } = useVirtual({

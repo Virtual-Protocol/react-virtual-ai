@@ -1,5 +1,5 @@
-import { CharacterRoom } from "../components/CharacterRoom/CharacterRoom";
-import { UNSAFE_initAccessToken } from "../utils/initAccessToken";
+import { CharacterRoom } from "../../lib/components/CharacterRoom/CharacterRoom";
+import { UNSAFE_initAccessToken } from "../../lib/utils/initAccessToken";
 
 export const CharacterRoomOnly = () => {
   return (

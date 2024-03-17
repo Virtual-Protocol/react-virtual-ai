@@ -6,7 +6,7 @@ Gitbook: https://virtualprotocol.gitbook.io/whitepaper/technical-documentation/m
 
 ## Examples
 
-Examples are available here: https://github.com/Virtual-Protocol/react-virtual-ai/tree/main/lib/examples
+Examples are available here: https://github.com/Virtual-Protocol/react-virtual-ai/tree/main/src/examples
 
 ## Features
 

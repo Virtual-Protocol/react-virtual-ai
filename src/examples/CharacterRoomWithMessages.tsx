@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { CharacterRoom } from "../components/CharacterRoom/CharacterRoom";
-import { UNSAFE_initAccessToken } from "../utils/initAccessToken";
+import { CharacterRoom } from "../../lib/components/CharacterRoom/CharacterRoom";
+import { UNSAFE_initAccessToken } from "../../lib/utils/initAccessToken";
 
 const formatMessage = (msg: any, virtualName: string): any => {
   return {
