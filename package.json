@@ -1,6 +1,6 @@
 {
   "name": "@virtual-protocol/react-virtual-ai",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "type": "module",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
