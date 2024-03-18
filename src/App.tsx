@@ -101,14 +101,13 @@ function App() {
           alert(e);
         }}
         metadata={{
-          apiKey: "NsIH8CSaTz22faE1Z1S1",
-          apiSecret: "Y237Dlb3LSd9H3ywzgXyCy7tBlpA0E5lNsb",
+          apiKey: "igWTNOBUg6M2IVZpiUyD",
+          apiSecret: "onFEp4c1Hrbb4Xfg5njnzKHSME7j7Uq2pfB",
           userUid: "1",
           userName: "Jia Xiong",
         }}
         configs={{ skipTTS: true }}
         initAccessToken={UNSAFE_initAccessToken}
-        overrideModelUrl={urls[selected]}
       ></CharacterRoom>
       <div
         className={`virtual-w-[95%] virtual-lg:w-[80%] virtual-max-h-[60vh] virtual-absolute virtual-left-1/2 virtual-bottom-[148px] virtual--translate-x-1/2 virtual-flex virtual-flex-col virtual-messages-outer`}

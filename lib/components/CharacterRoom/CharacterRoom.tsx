@@ -183,7 +183,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const [anim, setAnim] = useState(
     "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
   );
-  const { modelUrl, createPrompt, getTTSResponse } = useVirtual({
+  const { modelUrl, virtualService } = useVirtual({
     virtualId,
     userName,
     virtualName,
@@ -236,7 +236,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           });
       }
       setLatestBotMessage(undefined);
-      const prompt = await createPrompt(content, configs);
+      const prompt = await virtualService.createPrompt(content, configs);
 
       // on prompt received, create new chat message object for the waifu
       if (typeof content !== "string") {
@@ -331,7 +331,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             audioUid: prompt.audioUid,
           });
         setLatestBotMessage(prompt);
-        const audioUid = await getTTSResponse(
+        const audioUid = await virtualService.getTTSResponse(
           getQuotedTexts(prompt.text ?? "").join(" ")
         );
         setLatestBotMessage((prev) => {

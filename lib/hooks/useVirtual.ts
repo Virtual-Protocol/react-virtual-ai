@@ -71,8 +71,6 @@ export const useVirtual = ({
   return {
     runnerUrl,
     modelUrl,
-    createPrompt: virtualService.createPrompt,
-    getTTSResponse: virtualService.getTTSResponse,
-    getLLMResponse: virtualService.getLLMResponse,
+    virtualService,
   };
 };

@@ -1,7 +1,7 @@
 import { useVirtual } from "../../lib/main";
 
 export const CustomHook = () => {
-  const { createPrompt, getTTSResponse } = useVirtual({
+  const { virtualService } = useVirtual({
     virtualId: 1,
     userName: "Name",
     virtualName: "Virtual",
@@ -16,7 +16,7 @@ export const CustomHook = () => {
     <div>
       <button
         onClick={() => {
-          createPrompt?.(
+          virtualService.createPrompt?.(
             "What is your name?",
             {
               skipTTS: true,
@@ -32,7 +32,7 @@ export const CustomHook = () => {
       </button>
       <button
         onClick={() => {
-          getTTSResponse?.("Hello World").then((v) => {
+          virtualService.getTTSResponse?.("Hello World").then((v) => {
             const audio = new Audio(v);
             audio.load();
             audio.play();
