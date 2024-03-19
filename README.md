@@ -115,10 +115,10 @@ There are also other services and functions that you can explore to customize yo
 
 ### useVirtual hook
 
-This hook is a wrapper to the `VirtualService` class that allows you to communicate with Virtual with the functions returned such as `createPrompt`, `getTTSResponse` and `getLLMResponse`.
+This hook is a wrapper to the `VirtualService` class that allows you to communicate with Virtual with the functions returned such as `createPrompt` and `virtualService.getTTSResponse`.
 
 ```javascript
-const { modelUrl, createPrompt, getTTSResponse, getLLMResponse } = useVirtual({
+const { modelUrl, createPrompt, virtualService } = useVirtual({
   virtualId: 1,
   userName: "",
   virtualName: "",

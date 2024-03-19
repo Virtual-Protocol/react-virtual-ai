@@ -223,7 +223,7 @@ export class VirtualService {
         this.configs.virtualId ?? -1,
         this.configs.metadata
       );
-      const resp = await fetch(`${this.runnerUrl}/voice`, {
+      const resp = await fetch(`${this.runnerUrl}/prompts/voice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -250,54 +250,6 @@ export class VirtualService {
     } catch (err: any) {
       if ((retry ?? 0) < 3)
         return (await this.getTTSResponse(content, (retry ?? 0) + 1)) as string;
-      this.configs.onPromptError?.(err);
-      return "";
-    }
-  }
-
-  /**
-   * LLM function (Will not keep user memory)
-   * @param content text content
-   * @param retry function will retry for 3 times, to prevent this behavior, set to a number above 3
-   * @returns audio in URL
-   */
-  async getLLMResponse(content: string, retry?: number): Promise<string> {
-    try {
-      if (!this.configs.virtualId) throw new Error("Virtual not found");
-      const initToken = !!this.configs.initAccessToken
-        ? this.configs.initAccessToken
-        : UNSAFE_initAccessToken;
-      const cachedRunnerToken = await initToken(
-        this.configs.virtualId ?? -1,
-        this.configs.metadata
-      );
-      const resp = await fetch(`${this.runnerUrl}/llm`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cachedRunnerToken}`,
-        },
-        body: JSON.stringify({
-          text: content,
-        }),
-      });
-      // if encountered error, retry after init access token
-      if (resp.status !== 200 && (retry ?? 0) < 3) {
-        localStorage.removeItem(`runnerToken${this.configs.virtualId}`);
-        await this.initSession(this.configs.virtualId);
-        return (await this.getLLMResponse(content, (retry ?? 0) + 1)) as string;
-      } else if (resp.status !== 200) {
-        this.configs.onPromptError?.(resp);
-      }
-
-      const respJson = await resp.json();
-      if (!!respJson?.error) {
-        throw new Error(respJson.error);
-      }
-      return (respJson?.text ?? "") as string;
-    } catch (err: any) {
-      if ((retry ?? 0) < 3)
-        return (await this.getLLMResponse(content, (retry ?? 0) + 1)) as string;
       this.configs.onPromptError?.(err);
       return "";
     }
