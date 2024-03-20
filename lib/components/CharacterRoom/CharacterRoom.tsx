@@ -47,6 +47,10 @@ type Props = {
    * 3D model position in [x,y,z] (default [0, -10, 0])
    */
   position?: number[];
+  /**
+   * 3D model scale in number (default 10)
+   */
+  scale?: number;
   debugging?: boolean;
   /**
    * virtualId that will decide user memory
@@ -178,6 +182,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   configs,
   onProgressChange,
   onLoadErr,
+  scale,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -490,6 +495,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       )}
       <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
+          scale={scale}
           onProgressChange={(v) => {
             if (v < 100) {
               setAnim(

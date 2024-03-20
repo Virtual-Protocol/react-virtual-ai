@@ -32,6 +32,7 @@ type AICharacterType = {
   stiffness?: number;
   currentVrm?: VRM;
   setCurrentVrm: (v?: VRM) => void;
+  scale?: number;
 };
 
 export const AICharacter: React.FC<AICharacterType> = ({
@@ -47,6 +48,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   currentVrm,
   setCurrentVrm,
   onLoadErr,
+  scale,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
   const [progress, setProgress] = useState(0);
@@ -179,7 +181,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
       <primitive
         object={currentVrm.scene}
         position={position ?? [0, -10, 0]}
-        scale={10}
+        scale={scale ?? 10}
       />
     </PresentationControls>
   );

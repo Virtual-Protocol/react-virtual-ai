@@ -32,6 +32,7 @@ type CharacterSceneType = {
   setCurrentVrm?: (v?: VRM) => void;
   onProgressChange?: (v: number) => void;
   onLoadErr?: (err: any) => void;
+  scale?: number;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -49,6 +50,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   setCurrentVrm,
   onProgressChange,
   onLoadErr,
+  scale,
 }) => {
   const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
@@ -105,6 +107,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
               currentVrm={!!currentVrm ? currentVrm : localVrm}
               setCurrentVrm={!!setCurrentVrm ? setCurrentVrm : setLocalVrm}
               onLoadErr={onLoadErr}
+              scale={scale}
             />
           )}
           <directionalLight
