@@ -549,7 +549,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           className={inputClassName}
           style={inputStyle}
           Toolbar={
-            !!latestBotMessage && !hideInput ? (
+            !!latestBotMessage?.audioUid && !hideInput ? (
               <IconButton
                 aria-label="Play / Pause"
                 icon={

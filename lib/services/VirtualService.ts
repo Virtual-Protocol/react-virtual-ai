@@ -78,17 +78,21 @@ export class VirtualService {
     const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
     const url = !!runnerUrl ? runnerUrl : "https://runner.virtuals.gg";
     this.runnerUrl = url;
-    // initialize model url
-    const modelResp = await fetch(`${url}/model`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${cachedRunnerToken}`,
-      },
-    });
-    if (modelResp.status !== 200) throw new Error("Fetch virtual failed");
-    const modelRespJson = await modelResp.json();
-    this.modelUrl = modelRespJson?.data?.model ?? "";
+    try {
+      // initialize model url
+      const modelResp = await fetch(`${url}/model`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cachedRunnerToken}`,
+        },
+      });
+      if (modelResp.status !== 200) throw new Error("Fetch model failed");
+      const modelRespJson = await modelResp.json();
+      this.modelUrl = modelRespJson?.data?.model ?? "";
+    } catch (err: any) {
+      this.modelUrl = "";
+    }
   }
 
   /**
@@ -210,10 +214,9 @@ export class VirtualService {
   /**
    * Text-to-speech function
    * @param content text content
-   * @param retry function will retry for 3 times, to prevent this behavior, set to a number above 3
    * @returns audio in URL
    */
-  async getTTSResponse(content: string, retry?: number): Promise<string> {
+  async getTTSResponse(content: string): Promise<string> {
     try {
       if (!this.configs.virtualId) throw new Error("Virtual not found");
       const initToken = !!this.configs.initAccessToken
@@ -233,24 +236,16 @@ export class VirtualService {
           text: content,
         }),
       });
-      // if encountered error, retry after init access token
-      if (resp.status !== 200 && (retry ?? 0) < 3) {
-        localStorage.removeItem(`runnerToken${this.configs.virtualId}`);
-        await this.initSession(this.configs.virtualId);
-        return (await this.getTTSResponse(content, (retry ?? 0) + 1)) as string;
-      } else if (resp.status !== 200) {
-        this.configs.onPromptError?.(resp);
-      }
-
       const respJson = await resp.json();
       if (!!respJson?.error) {
         throw new Error(respJson.error);
       }
+      if (resp.status !== 200) {
+        return "";
+      }
       return (respJson?.audioUid ?? "") as string;
     } catch (err: any) {
-      if ((retry ?? 0) < 3)
-        return (await this.getTTSResponse(content, (retry ?? 0) + 1)) as string;
-      this.configs.onPromptError?.(err);
+      console.log("Audio error", err);
       return "";
     }
   }

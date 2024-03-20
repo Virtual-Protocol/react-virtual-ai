@@ -65,7 +65,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
     >
       <div
         className={`virtual-absolute virtual-top-1/2 virtual-left-1/2 virtual--translate-x-1/2 virtual--translate-y-1/2 virtual-rounded-2xl virtual-px-4 virtual-py-2 virtual-bg-black/30 virtual-flex virtual-items-center virtual-justify-center virtual-pointer-events-none virtual-flex-col ${
-          progress >= 100 ? "virtual-fadeOut" : ""
+          modelUrl === "" || progress >= 100 ? "virtual-fadeOut" : ""
         }`}
       >
         <p
