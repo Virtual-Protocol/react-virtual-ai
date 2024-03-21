@@ -225,6 +225,19 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     audioEl: HTMLAudioElement,
     audioContext: AudioContext
   ) => {
+    if (configs?.ttsMode && typeof content === "string") {
+      try {
+        // if tts mode, just use the getTTSPrompt function to get the text to speech result
+        const url = await virtualService.getTTSResponse(content);
+        const audio = new Audio(url);
+        audio.load();
+        await audio.play();
+      } catch (err: any) {
+        console.log("tts err", err);
+        if (!!onPromptError) onPromptError(err);
+      }
+      return;
+    }
     setTalking(false);
     const canSendMessage = !!validateMessageCapability
       ? validateMessageCapability()
