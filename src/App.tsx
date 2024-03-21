@@ -5,7 +5,17 @@ import { ChatMessageDto } from "./types/ChatMessageDto";
 import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
 
-const urls = ["/models/gaia.vrm", "/models/ignis.vrm", "/models/seraphina.vrm"];
+const urls = [
+  "/models/rin.vrm",
+  "/models/vampirechan.vrm",
+  "/models/wolfvtuber.vrm",
+];
+const scales = [8, 10, 10];
+const positions = [
+  [0, -12, 0],
+  [0, -10, 0],
+  [0, -12, 0],
+];
 
 function App() {
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -104,8 +114,10 @@ function App() {
           userUid: "1",
           userName: "Jia Xiong",
         }}
-        hideVoice
-        configs={{ skipTTS: true, ttsMode: true }}
+        configs={{ skipTTS: true }}
+        overrideModelUrl={urls[selected]}
+        scale={scales[selected]}
+        position={positions[selected]}
       ></CharacterRoom>
       <div
         className={`virtual-w-[95%] virtual-lg:w-[80%] virtual-max-h-[60vh] virtual-absolute virtual-left-1/2 virtual-bottom-[148px] virtual--translate-x-1/2 virtual-flex virtual-flex-col virtual-messages-outer`}

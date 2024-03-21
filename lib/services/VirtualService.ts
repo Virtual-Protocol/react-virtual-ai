@@ -59,11 +59,16 @@ export class VirtualService {
    * Runner URL
    */
   runnerUrl: string;
+  /**
+   * Runner supported cores
+   */
+  cores: string[];
 
   constructor(configs: VirtualServiceConfigs) {
     this.configs = configs;
     this.modelUrl = "";
     this.runnerUrl = "";
+    this.cores = [];
     console.log("VirtualService is initialized.");
   }
 
@@ -92,6 +97,21 @@ export class VirtualService {
       this.modelUrl = modelRespJson?.data?.model ?? "";
     } catch (err: any) {
       this.modelUrl = "";
+    }
+    try {
+      // initialize model url
+      const coresResp = await fetch(`${url}/cores`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${cachedRunnerToken}`,
+        },
+      });
+      if (coresResp.status !== 200) throw new Error("Fetch cores failed");
+      const coresRespJson = await coresResp.json();
+      this.cores = coresRespJson?.data ?? [];
+    } catch (err: any) {
+      this.cores = [];
     }
   }
 

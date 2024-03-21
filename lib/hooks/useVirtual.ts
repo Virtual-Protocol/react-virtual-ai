@@ -26,6 +26,7 @@ export const useVirtual = ({
 }: VirtualProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
   const [modelUrl, setModelUrl] = useState("");
+  const [cores, setCores] = useState<string[]>([]);
   const [virtualService, setVirtualService] = useState(defaultVirtualService);
 
   useEffect(() => {
@@ -55,12 +56,14 @@ export const useVirtual = ({
       // reset previous values
       setRunnerUrl("");
       setModelUrl("");
+      setCores([]);
       // init session
       virtualService
         .initSession(virtualId)
         .then(() => {
           setRunnerUrl(virtualService.runnerUrl);
           setModelUrl(virtualService.modelUrl);
+          setCores(virtualService.cores);
         })
         .catch((err: any) => {
           console.log("Error initializing session", err);
@@ -72,5 +75,6 @@ export const useVirtual = ({
     runnerUrl,
     modelUrl,
     virtualService,
+    cores,
   };
 };

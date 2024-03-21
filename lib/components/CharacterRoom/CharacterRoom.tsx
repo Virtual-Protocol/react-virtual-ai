@@ -1,6 +1,12 @@
 "use client";
 
-import { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
+import {
+  CSSProperties,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { CharacterInput } from "../CharacterInput/CharacterInput";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
@@ -188,7 +194,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const [anim, setAnim] = useState(
     "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
   );
-  const { modelUrl, virtualService } = useVirtual({
+  const { modelUrl, virtualService, cores } = useVirtual({
     virtualId,
     userName,
     virtualName,
@@ -215,6 +221,12 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   >(undefined);
   const [talking, setTalking] = useState(false);
   const [currentVrm, setCurrentVrm] = useState<VRM | undefined>();
+  const isLLMSupported = useMemo(() => {
+    return cores.includes("llm");
+  }, [cores]);
+  const isTTSSupported = useMemo(() => {
+    return cores.includes("tts");
+  }, [cores]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
@@ -225,7 +237,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     audioEl: HTMLAudioElement,
     audioContext: AudioContext
   ) => {
-    if (configs?.ttsMode && typeof content === "string") {
+    if ((configs?.ttsMode || !isLLMSupported) && typeof content === "string") {
       try {
         // if tts mode, just use the getTTSPrompt function to get the text to speech result
         const url = await virtualService.getTTSResponse(content);
@@ -545,14 +557,14 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           position={position}
         />
       </div>
-      {!hideInput && (
+      {!hideInput && (isLLMSupported || isTTSSupported) && (
         <CharacterInput
           value={inputText}
           onChange={handleInputChange}
           onSubmit={handleSendClick}
           disabled={anim === "think"}
           onSubmitVoice={handleSendVoice}
-          hideVoice={hideVoice}
+          hideVoice={hideVoice || !isLLMSupported}
           onFocus={() => {
             if (!!onInputFocused) onInputFocused();
           }}
