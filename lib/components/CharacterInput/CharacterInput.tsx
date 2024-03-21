@@ -142,7 +142,7 @@ export const CharacterInput: React.FC<InputProps> = ({
     return (
       <ChakraProvider>
         <div
-          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] virtual-lg:w-[600px] ${className}`}
+          className={`${className} virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] virtual-lg:w-[600px]`}
         >
           {!!Toolbar && Toolbar}
           <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
@@ -181,7 +181,7 @@ export const CharacterInput: React.FC<InputProps> = ({
     return (
       <ChakraProvider>
         <div
-          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] virtual-lg:w-[600px] ${className}`}
+          className={`${className} virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] virtual-lg:w-[600px]`}
         >
           {!!Toolbar && Toolbar}
           <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
@@ -217,7 +217,7 @@ export const CharacterInput: React.FC<InputProps> = ({
   return (
     <ChakraProvider>
       <div
-        className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] ${className}`}
+        className={`${className} virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px]`}
       >
         {!!Toolbar && Toolbar}
         <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
