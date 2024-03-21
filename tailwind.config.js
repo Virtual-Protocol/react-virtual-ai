@@ -8,6 +8,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     "./lib/**/*.{js,ts,jsx,tsx}",
   ],
+  important: true,
   theme: {
     extend: {
       fontFamily: {

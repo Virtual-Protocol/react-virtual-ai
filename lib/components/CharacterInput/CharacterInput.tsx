@@ -78,7 +78,7 @@ export const CharacterInput: React.FC<InputProps> = ({
     return (
       <ChakraProvider>
         <div
-          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-lg:w-[600px] virtual-bottom-[88px] ${className}`}
+          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-lg:w-[600px] virtual-bottom-[24px] ${className}`}
           style={style}
         >
           {!!Toolbar && Toolbar}
@@ -94,7 +94,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                   className="virtual-text-red-400 virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full virtual-hover:bg-red-400/50"
+              className="virtual-rounded-full hover:virtual-bg-red-400/50 virtual-bg-transparent"
               onClick={() => {
                 setAllowedToSendVoice(false);
               }}
@@ -110,7 +110,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                   audioEl.play();
                 }
               }}
-              className={`virtual-text-base virtual-rounded-xl virtual-w-full virtual-px-4 virtual-py-2 virtual-hover:opacity-50 virtual-text-center virtual-font-wenhei virtual-text-white`}
+              className={`virtual-text-base virtual-rounded-xl virtual-w-full virtual-px-4 virtual-py-2 hover:virtual-opacity-50 virtual-text-center virtual-font-wenhei virtual-text-white`}
             >
               {isPlaying ? "Stop" : "Play"}
             </button>
@@ -123,7 +123,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                   className="virtual-text-white virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full virtual-w-10 virtual-h-10"
+              className="virtual-rounded-full virtual-w-10 virtual-h-10 virtual-bg-transparent hover:virtual-bg-[#b9c3ff]/50"
               onClick={async () => {
                 onSubmitVoice(recordingBlob);
                 // Reset states
@@ -142,7 +142,7 @@ export const CharacterInput: React.FC<InputProps> = ({
     return (
       <ChakraProvider>
         <div
-          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[88px] virtual-lg:w-[600px] ${className}`}
+          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] virtual-lg:w-[600px] ${className}`}
         >
           {!!Toolbar && Toolbar}
           <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
@@ -154,7 +154,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                   className="virtual-text-red-400 virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full virtual-hover:bg-red-400/50"
+              className="virtual-rounded-full hover:virtual-bg-red-400/50 virtual-bg-transparent"
               onClick={() => {
                 stopRecording();
                 setAllowedToSendVoice(false);
@@ -165,7 +165,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                 stopRecording();
                 setAllowedToSendVoice(true);
               }}
-              className="virtual-font-wenhei virtual-flex virtual-flex-row virtual-justify-between virtual-text-base virtual-text-white virtual-bg-transparent virtual-rounded-xl virtual-w-full virtual-px-4 virtual-py-2 virtual-hover:opacity-50 virtual-text-center"
+              className="virtual-font-wenhei virtual-flex virtual-flex-row virtual-justify-between virtual-text-base virtual-text-white virtual-bg-transparent virtual-rounded-xl virtual-w-full virtual-px-4 virtual-py-2 hover:virtual-opacity-50 virtual-text-center"
             >
               Recording...
               <p>{secondsToTimeStr(recordingTime)}</p>
@@ -181,7 +181,7 @@ export const CharacterInput: React.FC<InputProps> = ({
     return (
       <ChakraProvider>
         <div
-          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[88px] virtual-lg:w-[600px] ${className}`}
+          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] virtual-lg:w-[600px] ${className}`}
         >
           {!!Toolbar && Toolbar}
           <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
@@ -190,7 +190,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                 startRecording();
                 setAllowedToSendVoice(false);
               }}
-              className="virtual-font-wenhei virtual-text-base virtual-text-white virtual-bg-transparent virtual-rounded-xl virtual-w-full virtual-py-2 virtual-hover:opacity-50 virtual-text-center"
+              className="virtual-font-wenhei virtual-text-base virtual-text-white virtual-bg-transparent virtual-rounded-xl virtual-w-full virtual-py-2 hover:virtual-opacity-50 virtual-text-center"
             >
               Tap to record
             </button>
@@ -203,7 +203,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                   className="virtual-text-white virtual-text-lg"
                 />
               }
-              className="virtual-rounded-full virtual-hover:bg-[#b9c3ff]/50"
+              className="virtual-rounded-full hover:virtual-bg-[#b9c3ff]/50 virtual-bg-transparent"
               onClick={() => {
                 setIsVoice(false);
               }}
@@ -217,7 +217,7 @@ export const CharacterInput: React.FC<InputProps> = ({
   return (
     <ChakraProvider>
       <div
-        className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[88px] ${className}`}
+        className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-bottom-[24px] ${className}`}
       >
         {!!Toolbar && Toolbar}
         <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
@@ -252,7 +252,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                   className="virtual-text-white virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full virtual-w-10 virtual-h-10"
+              className="virtual-rounded-full virtual-bg-transparent hover:virtual-bg-[#b9c3ff]/50"
             />
           )}
           {!value.trim() && !hideVoice && (
@@ -265,7 +265,7 @@ export const CharacterInput: React.FC<InputProps> = ({
                   className="virtual-text-white virtual-text-lg"
                 />
               }
-              className="virtual-rounded-full virtual-hover:bg-[#b9c3ff]/50"
+              className="virtual-rounded-full virtual-bg-transparent hover:virtual-bg-[#b9c3ff]/50"
               onClick={() => {
                 setIsVoice(true);
               }}

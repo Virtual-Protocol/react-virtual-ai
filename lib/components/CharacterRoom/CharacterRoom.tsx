@@ -558,7 +558,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     className="virtual-text-white virtual-text-xl"
                   />
                 }
-                className={`virtual-rounded-full virtual-w-10 virtual-h-10 virtual-bg-black/30 virtual-hover:bg-black/30 virtual-backdrop-blur-xl virtual-z-40 virtual-self-end`}
+                className={`virtual-rounded-full virtual-w-10 virtual-h-10 virtual-bg-black/30 hover:virtual-bg-black/30 virtual-backdrop-blur-xl virtual-z-40 virtual-self-end`}
                 isDisabled={talking || !latestBotMessage.audioUid}
                 onClick={async () => {
                   setTalking(true);

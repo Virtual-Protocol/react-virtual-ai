@@ -20,7 +20,7 @@
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
     "release": "standard-version && git push --follow-tags && npm publish",
-    "build-tailwind": "NODE_ENV=production npx tailwindcss -i ./src/index.css -o ./dist/index.css --postcss --minify"
+    "build-tailwind": "NODE_ENV=production npx tailwindcss -i ./src/index.css -o ./dist/assets/index.css --postcss --minify"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
