@@ -78,7 +78,7 @@ export const CharacterInput: React.FC<InputProps> = ({
     return (
       <ChakraProvider>
         <div
-          className={`virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-lg:w-[600px] virtual-bottom-[24px] ${className}`}
+          className={`${className} virtual-z-10 virtual-w-full virtual-flex virtual-flex-col virtual-p-3 virtual-gap-3 virtual-items-center virtual-fixed virtual-lg:w-[600px] virtual-bottom-[24px]`}
           style={style}
         >
           {!!Toolbar && Toolbar}
