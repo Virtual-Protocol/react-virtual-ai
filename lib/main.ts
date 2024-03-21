@@ -9,3 +9,4 @@ export { CharacterScene } from "./components/CharacterScene/CharacterScene";
 export { CharacterInput } from "./components/CharacterInput/CharacterInput";
 export { VirtualService } from "./services/VirtualService";
 export { VrmService } from "./services/VrmService";
+export { startLipSync } from "./utils/audio";
