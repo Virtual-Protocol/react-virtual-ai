@@ -162,11 +162,11 @@ export class VrmService {
     if (!clip) return;
 
     if (this.isAnimating && !loop) {
-      console.log("is animating, skipping", clip.name);
+      // console.log("is animating, skipping", clip.name);
       return;
     }
     if (!!this.activeAction && this.activeAction.getClip().name === clipName) {
-      console.log("same name, skipping", clipName);
+      // console.log("same name, skipping", clipName);
       return;
     }
 
@@ -174,7 +174,7 @@ export class VrmService {
       !!this.previousAction &&
       this.previousAction.getClip().name !== clipName
     ) {
-      console.log("fading out", this.previousAction.getClip().name);
+      // console.log("fading out", this.previousAction.getClip().name);
       this.previousAction.fadeOut(0.5);
       this.previousAction = undefined;
       delay(() => {
@@ -189,7 +189,7 @@ export class VrmService {
     this.activeAction = mixerAction;
     this.activeAction.clampWhenFinished = true;
 
-    console.log("fading to", url, loop);
+    // console.log("fading to", url, loop);
     if (loop) {
       this.isAnimating = false;
       this.activeAction

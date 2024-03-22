@@ -66,7 +66,7 @@ export const useVirtual = ({
           setCores(virtualService.cores);
         })
         .catch((err: any) => {
-          console.log("Error initializing session", err);
+          // console.log("Error initializing session", err);
         });
     }
   }, [virtualId, virtualService]);

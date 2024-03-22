@@ -118,6 +118,7 @@ function App() {
         overrideModelUrl={urls[selected]}
         scale={scales[selected]}
         position={positions[selected]}
+        zoom={2}
       ></CharacterRoom>
       <div
         className={`virtual-w-[95%] virtual-lg:w-[80%] virtual-max-h-[60vh] virtual-absolute virtual-left-1/2 virtual-bottom-[148px] virtual--translate-x-1/2 virtual-flex virtual-flex-col virtual-messages-outer`}

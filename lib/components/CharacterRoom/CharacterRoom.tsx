@@ -245,7 +245,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         audio.load();
         await audio.play();
       } catch (err: any) {
-        console.log("tts err", err);
+        // console.log("tts err", err);
         if (!!onPromptError) onPromptError(err);
       }
       return;
@@ -319,7 +319,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           },
           () => {
             setTalking(false);
-            console.log("Resetting audio and animation");
+            // console.log("Resetting audio and animation");
             setAnim(
               "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
             );
@@ -328,7 +328,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           () => {
             if (!!onAudioErr) onAudioErr();
             setTalking(false);
-            console.log("Resetting audio and animation");
+            // console.log("Resetting audio and animation");
             setAnim(
               "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
             );
@@ -397,7 +397,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     audioContext.createGain();
     await audioContext.resume();
     await audio.play();
-    console.log("audioContext state", audioContext.state);
+    // console.log("audioContext state", audioContext.state);
   };
 
   const handleSendVoice = async (blob: Blob) => {
@@ -409,7 +409,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     audioContext.createGain();
     await audioContext.resume();
     await audio.play();
-    console.log("audioContext state", audioContext.state);
+    // console.log("audioContext state", audioContext.state);
   };
 
   useEffect(() => {
@@ -546,7 +546,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           }
           speakCount={speakCount}
           onAudioEnd={() => {
-            console.log("Resetting audio and animation");
+            // console.log("Resetting audio and animation");
             setAnim(
               "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
             );
@@ -618,7 +618,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     },
                     () => {
                       setTalking(false);
-                      console.log("Resetting audio and animation");
+                      // console.log("Resetting audio and animation");
                       setAnim(
                         "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
                       );
@@ -633,7 +633,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   await audioContext.resume();
                   audio.preload = "metadata";
                   audio.play();
-                  console.log("audioContext state", audioContext.state);
+                  // console.log("audioContext state", audioContext.state);
                 }}
               />
             ) : (

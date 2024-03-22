@@ -69,14 +69,14 @@ export class VirtualService {
     this.modelUrl = "";
     this.runnerUrl = "";
     this.cores = [];
-    console.log("VirtualService is initialized.");
+    // console.log("VirtualService is initialized.");
   }
 
   /**
    * Function to initialize modelUrl and runnerUrl.
    */
   async initVirtual() {
-    console.log("initVirtual is invoked");
+    // console.log("initVirtual is invoked");
     let cachedRunnerToken =
       localStorage.getItem(`runnerToken${this.configs.virtualId}`) ?? "";
 
@@ -121,7 +121,7 @@ export class VirtualService {
    * @param retry function will retry for 3 times, to prevent this behavior, set to a number above 3
    */
   async initSession(vid: number | string, retry: number = 0) {
-    console.log("initSession is invoked", vid, retry);
+    // console.log("initSession is invoked", vid, retry);
     try {
       if (!!vid) {
         const initToken = !!this.configs.initAccessToken
@@ -132,7 +132,7 @@ export class VirtualService {
       }
       await this.initVirtual();
     } catch (err: any) {
-      console.log("Error fetching data", err);
+      // console.log("Error fetching data", err);
       if (retry >= 3) {
         throw err;
       }
@@ -265,7 +265,7 @@ export class VirtualService {
       }
       return (respJson?.audioUid ?? "") as string;
     } catch (err: any) {
-      console.log("Audio error", err);
+      // console.log("Audio error", err);
       return "";
     }
   }

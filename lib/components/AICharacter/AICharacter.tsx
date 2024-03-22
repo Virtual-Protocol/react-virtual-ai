@@ -33,6 +33,7 @@ type AICharacterType = {
   currentVrm?: VRM;
   setCurrentVrm: (v?: VRM) => void;
   scale?: number;
+  zoom?: number;
 };
 
 export const AICharacter: React.FC<AICharacterType> = ({
@@ -48,6 +49,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   currentVrm,
   setCurrentVrm,
   onLoadErr,
+  zoom,
   scale,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
@@ -70,6 +72,13 @@ export const AICharacter: React.FC<AICharacterType> = ({
       });
     }
   }, [aside]);
+
+  useEffect(() => {
+    if (!camera) return;
+    const c = camera as THREE.PerspectiveCamera;
+    c.zoom = zoom ?? 2;
+    c.updateProjectionMatrix();
+  }, [camera, zoom]);
 
   useEffect(() => {
     if (!!onLoad) onLoad(progress);
@@ -172,7 +181,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
       cursor={false} // Whether to toggle cursor style on drag
       snap={false} // Snap-back to center (can also be a spring config)
       speed={2} // Speed factor
-      zoom={1} // Zoom factor when half the polar-max is reached
+      zoom={zoom ?? 1} // Zoom factor when half the polar-max is reached
       rotation={[0, 0, 0]} // Default rotation
       polar={[-Math.PI / 2, Math.PI / 2]} // Vertical limits
       azimuth={[-Infinity, Infinity]} // Horizontal limits

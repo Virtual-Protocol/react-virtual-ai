@@ -41,7 +41,7 @@ export const startLipSync = async (
       onAudioEnd
     );
   } catch (err) {
-    console.log("lipsync error, falling back to playing audio", err);
+    // console.log("lipsync error, falling back to playing audio", err);
     try {
       audio.currentTime = 0;
       await audio.play();
@@ -51,7 +51,7 @@ export const startLipSync = async (
         onAudioEnd();
       }, 3000);
     } catch (err: any) {
-      console.log("Audio playback failed, err");
+      // console.log("Audio playback failed, err");
       onAudioErr();
     }
   }
