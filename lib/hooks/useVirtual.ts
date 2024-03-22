@@ -65,7 +65,7 @@ export const useVirtual = ({
           setModelUrl(virtualService.modelUrl);
           setCores(virtualService.cores);
         })
-        .catch((err: any) => {
+        .catch(() => {
           // console.log("Error initializing session", err);
         });
     }
