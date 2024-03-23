@@ -507,13 +507,16 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
               className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
                 setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Talking_384b16a4d2.fbx"
+                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Motion+(So+They+Say).vmd"
                 );
-                setEmotion("neutral");
+                // setAnim(
+                //   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Talking_384b16a4d2.fbx"
+                // );
+                // setEmotion("neutral");
                 setSpeakCount((prev) => prev + 1);
               }}
             >
-              Talking
+              Dancing
             </button>
           </div>
         </div>

@@ -100,7 +100,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
               onLoad={(v) => {
                 setProgress(v);
               }}
-              zoom={zoom ?? 1}
+              zoom={zoom ?? 2}
               aside={aside}
               emotion={emotion}
               position={position}

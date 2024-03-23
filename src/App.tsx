@@ -12,7 +12,7 @@ const urls = [
 ];
 const scales = [8, 10, 10];
 const positions = [
-  [0, -12, 0],
+  [0, -13, 0],
   [0, -10, 0],
   [0, -12, 0],
 ];
