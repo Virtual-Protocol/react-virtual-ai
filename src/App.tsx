@@ -59,7 +59,7 @@ function App() {
         Change
       </button>
       <CharacterRoom
-        showSettings
+        debugging
         userName="User"
         virtualName="Virtual"
         virtualId={1}
