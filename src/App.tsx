@@ -10,10 +10,10 @@ const urls = [
   "/models/vampirechan.vrm",
   "/models/wolfvtuber.vrm",
 ];
-const scales = [8, 10, 10];
+const scales = [10, 10, 10];
 const positions = [
-  [0, -13, 0],
-  [0, -10, 0],
+  [0, -11, 0],
+  [0, -11, 0],
   [0, -12, 0],
 ];
 
@@ -59,7 +59,7 @@ function App() {
         Change
       </button>
       <CharacterRoom
-        debugging
+        showSettings
         userName="User"
         virtualName="Virtual"
         virtualId={1}
@@ -101,7 +101,6 @@ function App() {
         onErrorSendingMessage={() => {
           setThinking(false);
         }}
-        aside={false}
         onInputFocused={() => {}}
         onInputBlurred={() => {}}
         onAudioErr={() => {}}

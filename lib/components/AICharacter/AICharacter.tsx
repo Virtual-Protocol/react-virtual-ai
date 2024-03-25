@@ -29,7 +29,13 @@ type AICharacterType = {
     | "sadness"
     | "surprise";
   position?: number[];
-  stiffness?: number;
+  modelConfigs?: {
+    [boneName: string]: {
+      stiffness?: number;
+      dragForce?: number;
+      hitRadius?: number;
+    };
+  };
   currentVrm?: VRM;
   setCurrentVrm: (v?: VRM) => void;
   scale?: number;
@@ -39,7 +45,7 @@ type AICharacterType = {
 export const AICharacter: React.FC<AICharacterType> = ({
   animation,
   url,
-  stiffness,
+  modelConfigs,
   onAudioEnd,
   onLoad,
   aside,
@@ -96,7 +102,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
     const newVrmService = new VrmService({
       vrmUrl: url,
       camera: camera,
-      stiffness: stiffness,
+      modelConfigs: modelConfigs,
       onLoad: (vrm) => {
         setCurrentVrm(vrm);
       },
@@ -110,6 +116,11 @@ export const AICharacter: React.FC<AICharacterType> = ({
     setVrmService(newVrmService);
     newVrmService.loadModel();
   }, [url, camera]);
+
+  useEffect(() => {
+    if (!modelConfigs || !vrmService) return;
+    vrmService.updateModelConfigs(modelConfigs);
+  }, [modelConfigs, vrmService]);
 
   useFrame((_, delta) => {
     currentVrm?.update(delta);

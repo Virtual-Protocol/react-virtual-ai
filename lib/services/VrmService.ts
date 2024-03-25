@@ -29,9 +29,15 @@ type VrmServiceConfigs = {
    */
   onLoadProgress?: (progressInPercentage: number) => void;
   /**
-   * 3D Model stiffness
+   * 3D Model config
    */
-  stiffness?: number;
+  modelConfigs?: {
+    [boneName: string]: {
+      stiffness?: number;
+      dragForce?: number;
+      hitRadius?: number;
+    };
+  };
   /**
    * VRM URL
    */
@@ -64,6 +70,26 @@ export class VrmService {
     this.loader = loader;
   }
 
+  updateModelConfigs(modelConfigs: {
+    [boneName: string]: {
+      stiffness?: number;
+      dragForce?: number;
+      hitRadius?: number;
+    };
+  }) {
+    if (!this.currentVrm) return;
+    // patch 3d configs
+    this.currentVrm.springBoneManager?.joints.forEach((e) => {
+      const currentConfig = modelConfigs?.[e.bone.name];
+      if (!!currentConfig?.stiffness)
+        e.settings.stiffness = currentConfig.stiffness;
+      if (!!currentConfig?.dragForce)
+        e.settings.dragForce = currentConfig.dragForce;
+      if (!!currentConfig?.hitRadius)
+        e.settings.hitRadius = currentConfig.hitRadius;
+    });
+  }
+
   /**
    * Load VRM model
    */
@@ -93,15 +119,15 @@ export class VrmService {
 
         this.currentVrm = v;
 
-        // restrict stiffness
+        // patch 3d configs
         v.springBoneManager?.joints.forEach((e) => {
-          if (e.bone.name.includes("Skirt")) {
-            e.settings.stiffness = 5;
-            e.settings.dragForce = 0.2;
-            e.settings.hitRadius = 1;
-            return;
-          }
-          e.settings.stiffness = this.configs?.stiffness ?? 6;
+          const currentConfig = this.configs.modelConfigs?.[e.bone.name];
+          if (!!currentConfig?.stiffness)
+            e.settings.stiffness = currentConfig.stiffness;
+          if (!!currentConfig?.dragForce)
+            e.settings.dragForce = currentConfig.dragForce;
+          if (!!currentConfig?.hitRadius)
+            e.settings.hitRadius = currentConfig.hitRadius;
         });
 
         if (!!this.configs?.onLoad) this.configs?.onLoad(v);

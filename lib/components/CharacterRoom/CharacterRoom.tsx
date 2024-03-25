@@ -19,6 +19,7 @@ import { UNSAFE_initAccessToken } from "../../utils/initAccessToken";
 import { ConfigType } from "../../types/ConfigType";
 import { getQuotedTexts } from "../../utils/string";
 import { VRM } from "@pixiv/three-vrm";
+import { ModelConfigs } from "../ModelConfigs/ModelConfigs";
 
 type Props = {
   /**
@@ -157,6 +158,14 @@ type Props = {
    * @returns
    */
   onLoadErr?: (err: any) => void;
+  showSettings?: boolean;
+  modelConfigs?: {
+    [boneName: string]: {
+      stiffness?: number;
+      dragForce?: number;
+      hitRadius?: number;
+    };
+  };
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -189,6 +198,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onProgressChange,
   onLoadErr,
   scale,
+  showSettings,
+  modelConfigs,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -227,6 +238,16 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const isTTSSupported = useMemo(() => {
     return cores.includes("tts");
   }, [cores]);
+  const [localModelConfigs, setLocalModelConfigs] = useState<
+    | {
+        [boneName: string]: {
+          stiffness?: number;
+          dragForce?: number;
+          hitRadius?: number;
+        };
+      }
+    | undefined
+  >();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
@@ -428,6 +449,13 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         handleSendClick();
       }}
     >
+      {showSettings && (
+        <ModelConfigs
+          vrm={currentVrm}
+          configs={localModelConfigs}
+          setConfigs={setLocalModelConfigs}
+        />
+      )}
       {debugging && (
         <div className="virtual-flex virtual-flex-col virtual-items-center virtual-gap-1 virtual-fixed virtual-top-2 virtual-left-1/2 virtual--translate-x-1/2 virtual-z-40">
           <div className="virtual-flex virtual-flex-row virtual-items-center virtual-gap-2 virtual-flex-wrap">
@@ -558,6 +586,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           aside={aside}
           emotion={emotion}
           position={position}
+          modelConfigs={localModelConfigs ?? modelConfigs}
         />
       </div>
       {!hideInput && (isLLMSupported || isTTSSupported) && (

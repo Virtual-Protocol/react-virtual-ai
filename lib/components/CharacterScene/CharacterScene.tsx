@@ -27,7 +27,13 @@ type CharacterSceneType = {
   position?: number[];
   loadingText?: string;
   multiple?: boolean;
-  stiffness?: number;
+  modelConfigs?: {
+    [boneName: string]: {
+      stiffness?: number;
+      dragForce?: number;
+      hitRadius?: number;
+    };
+  };
   currentVrm?: VRM;
   setCurrentVrm?: (v?: VRM) => void;
   onProgressChange?: (v: number) => void;
@@ -45,7 +51,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   zoom,
   position,
   loadingText,
-  stiffness,
+  modelConfigs,
   currentVrm,
   setCurrentVrm,
   onProgressChange,
@@ -104,7 +110,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
               aside={aside}
               emotion={emotion}
               position={position}
-              stiffness={stiffness}
+              modelConfigs={modelConfigs}
               currentVrm={!!currentVrm ? currentVrm : localVrm}
               setCurrentVrm={!!setCurrentVrm ? setCurrentVrm : setLocalVrm}
               onLoadErr={onLoadErr}
