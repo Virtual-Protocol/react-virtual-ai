@@ -1,5 +1,5 @@
 import { VRM } from "@pixiv/three-vrm";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 type Props = {
   vrm?: VRM;
@@ -20,6 +20,43 @@ type Props = {
 };
 
 export const ModelConfigs: React.FC<Props> = ({ vrm, configs, setConfigs }) => {
+  const defaultConfigs: {
+    [boneName: string]: {
+      stiffness?: number;
+      dragForce?: number;
+      hitRadius?: number;
+    };
+  } = useMemo(() => {
+    if (!vrm?.springBoneManager?.joints) return {};
+    const conf: {
+      [boneName: string]: {
+        stiffness?: number;
+        dragForce?: number;
+        hitRadius?: number;
+      };
+    } = {};
+    vrm.springBoneManager.joints.forEach((e) => {
+      if (e.bone.name.includes("Skirt")) {
+        conf[e.bone.name] = {
+          stiffness: 5,
+          dragForce: 0.2,
+          hitRadius: 1,
+        };
+        return;
+      }
+      conf[e.bone.name] = {
+        stiffness: 6,
+        dragForce: 0.2,
+        hitRadius: 1,
+      };
+    });
+    return conf;
+  }, [vrm?.springBoneManager?.joints]);
+
+  useEffect(() => {
+    if (!!setConfigs) setConfigs(defaultConfigs);
+  }, [defaultConfigs]);
+
   const bones: {
     name: string;
     stiffness: number;
