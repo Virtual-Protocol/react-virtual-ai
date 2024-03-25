@@ -9,6 +9,7 @@ import {
   convert as convertVMD,
   bindToVRM as bindVMD2VRM,
 } from "../utils/vendors/models/loaders/vmdtovrmbinding";
+import VRMIKHandler from "../utils/vendors/models/vrm-ik-handler";
 
 /**
  * VrmService configurations
@@ -64,6 +65,7 @@ export class VrmService {
   loader: GLTFLoader;
   currentVrm: VRM | undefined;
   mixer: THREE.AnimationMixer | undefined;
+  ik: VRMIKHandler | undefined;
 
   constructor(configs: VrmServiceConfigs) {
     this.configs = configs;
@@ -122,6 +124,10 @@ export class VrmService {
         }
 
         this.currentVrm = v;
+
+        // initialize ik
+        const ik = VRMIKHandler.get(this.currentVrm);
+        this.ik = ik;
 
         // patch 3d configs
         v.springBoneManager?.joints.forEach((e) => {
