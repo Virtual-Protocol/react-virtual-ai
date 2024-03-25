@@ -70,7 +70,7 @@ function App() {
         Change
       </button>
       <CharacterRoom
-        // debugging
+        debugging
         // showSettings
         userName="User"
         virtualName="Virtual"
