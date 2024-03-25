@@ -5,6 +5,10 @@ import { VRM, VRMLoaderPlugin, VRMUtils } from "@pixiv/three-vrm";
 import { delay } from "framer-motion";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { loadAnimation } from "../utils/model";
+import {
+  convert as convertVMD,
+  bindToVRM as bindVMD2VRM,
+} from "../utils/vendors/models/loaders/vmdtovrmbinding";
 
 /**
  * VrmService configurations
@@ -182,7 +186,16 @@ export class VrmService {
   async fadeToAnimationUrl(url: string, loop?: boolean) {
     if (!this.mixer || !this.currentVrm || !this.configs?.vrmUrl) return;
 
-    const clip = await loadAnimation(url, this.currentVrm);
+    let clip: THREE.AnimationClip;
+    if (url.includes(".fbx")) {
+      clip = await loadAnimation(url, this.currentVrm);
+    } else {
+      const data = await fetch(url);
+      clip = bindVMD2VRM(
+        convertVMD(await data.arrayBuffer(), this.currentVrm),
+        this.currentVrm
+      );
+    }
     const clipName = `${url}_${this.configs.vrmUrl}`;
     clip.name = clipName;
     if (!clip) return;

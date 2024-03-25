@@ -12,14 +12,6 @@
 // import { shareReplay, take, takeUntil } from "rxjs/operators";
 // import { WorkerMessageService } from "./worker-message-service-shim";
 
-// const gltfLoader = new GLTFLoader().register(
-//   (parser) =>
-//     new VRMCoreLoaderPlugin(parser, {
-//       helperRoot: scene,
-//       autoUpdateHumanBones: true,
-//     })
-// );
-
 // let currentModel: VRM | undefined;
 
 // const vrmLoadSubject = new Subject<VRM>();
@@ -52,18 +44,3 @@
 //   }
 //   await lastValueFrom(deltaTimeObservable.pipe(take(2)));
 // }
-
-// export async function loadVRM(data: ArrayBufferLike | string) {
-//   const gltf = await gltfLoader.parseAsync(data, "");
-//   console.log(gltf.userData);
-//   const { vrmCore } = gltf.userData;
-//   VRMUtils.rotateVRM0(vrmCore);
-//   VRMUtils.removeUnnecessaryJoints(gltf.scene);
-//   return vrmCore as VRM;
-// }
-
-// function notifyMeta(model: VRM) {
-//   WorkerMessageService.host.call("displayMeta", model.meta);
-// }
-
-// WorkerMessageService.host.on({ loadModel: load });
