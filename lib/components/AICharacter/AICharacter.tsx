@@ -1,7 +1,7 @@
 "use client";
 
 import * as THREE from "three";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PresentationControls } from "@react-three/drei";
 import { VRM } from "@pixiv/three-vrm";
@@ -62,6 +62,39 @@ export const AICharacter: React.FC<AICharacterType> = ({
   const [progress, setProgress] = useState(0);
   const [vrmService, setVrmService] = useState<VrmService | undefined>();
 
+  const defaultModelConfigs: {
+    [boneName: string]: {
+      stiffness?: number;
+      dragForce?: number;
+      hitRadius?: number;
+    };
+  } = useMemo(() => {
+    if (!currentVrm?.springBoneManager?.joints) return {};
+    const conf: {
+      [boneName: string]: {
+        stiffness?: number;
+        dragForce?: number;
+        hitRadius?: number;
+      };
+    } = {};
+    currentVrm.springBoneManager.joints.forEach((e) => {
+      if (e.bone.name.includes("Skirt")) {
+        conf[e.bone.name] = {
+          stiffness: 5,
+          dragForce: 0.2,
+          hitRadius: 1,
+        };
+        return;
+      }
+      conf[e.bone.name] = {
+        stiffness: 6,
+        dragForce: 0.2,
+        hitRadius: 1,
+      };
+    });
+    return conf;
+  }, [currentVrm?.springBoneManager?.joints]);
+
   useThree(({ camera: c }) => {
     if (!camera) setCamera(c);
   });
@@ -118,9 +151,9 @@ export const AICharacter: React.FC<AICharacterType> = ({
   }, [url, camera]);
 
   useEffect(() => {
-    if (!modelConfigs || !vrmService) return;
-    vrmService.updateModelConfigs(modelConfigs);
-  }, [modelConfigs, vrmService]);
+    if (!vrmService) return;
+    vrmService.updateModelConfigs(modelConfigs ?? defaultModelConfigs);
+  }, [modelConfigs, vrmService, defaultModelConfigs]);
 
   useFrame((_, delta) => {
     currentVrm?.update(delta);
