@@ -10,6 +10,7 @@ import {
   bindToVRM as bindVMD2VRM,
 } from "../utils/vendors/models/loaders/vmdtovrmbinding";
 import VRMIKHandler from "../utils/vendors/models/vrm-ik-handler";
+import VRMModelNoise from "../utils/vendors/models/vrm-model-noise";
 
 /**
  * VrmService configurations
@@ -66,6 +67,7 @@ export class VrmService {
   currentVrm: VRM | undefined;
   mixer: THREE.AnimationMixer | undefined;
   ik: VRMIKHandler | undefined;
+  noise: VRMModelNoise | undefined;
 
   constructor(configs: VrmServiceConfigs) {
     this.configs = configs;
@@ -128,6 +130,10 @@ export class VrmService {
         // initialize ik
         const ik = VRMIKHandler.get(this.currentVrm);
         this.ik = ik;
+
+        // initialize noise
+        const noise = VRMModelNoise.get(this.currentVrm);
+        this.noise = noise;
 
         // patch 3d configs
         v.springBoneManager?.joints.forEach((e) => {
@@ -206,10 +212,10 @@ export class VrmService {
     clip.name = clipName;
     if (!clip) return;
 
-    if (this.isAnimating && !loop) {
-      // console.log("is animating, skipping", clip.name);
-      return;
-    }
+    // if (this.isAnimating && !loop) {
+    //   // console.log("is animating, skipping", clip.name);
+    //   return;
+    // }
     if (!!this.activeAction && this.activeAction.getClip().name === clipName) {
       // console.log("same name, skipping", clipName);
       return;
@@ -220,11 +226,11 @@ export class VrmService {
       this.previousAction.getClip().name !== clipName
     ) {
       // console.log("fading out", this.previousAction.getClip().name);
-      this.previousAction.fadeOut(0.5);
+      this.previousAction.fadeOut(1);
       this.previousAction = undefined;
       delay(() => {
         this.fadeToAnimationUrl(url, loop);
-      }, 500);
+      }, 0);
       return;
     }
 

@@ -171,7 +171,11 @@ export const AICharacter: React.FC<AICharacterType> = ({
       if (!!vrmService) vrmService.lastCloseTime = new Date();
     }
 
-    if (!!currentVrm?.lookAt && !!camera) {
+    if (
+      !!currentVrm?.lookAt &&
+      !!camera &&
+      !animation?.toLowerCase().includes("dance")
+    ) {
       const headBone = currentVrm.humanoid.getNormalizedBoneNode("head");
       if (headBone) {
         const lookAt = new THREE.Vector3();

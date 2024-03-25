@@ -205,6 +205,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const [anim, setAnim] = useState(
     "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
   );
+  const [testAnim, setTestAnim] = useState("");
   const { modelUrl, virtualService, cores } = useVirtual({
     virtualId,
     userName,
@@ -458,6 +459,13 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       )}
       {debugging && (
         <div className="virtual-flex virtual-flex-col virtual-items-center virtual-gap-1 virtual-fixed virtual-top-2 virtual-left-1/2 virtual--translate-x-1/2 virtual-z-40">
+          <input
+            type="text"
+            value={testAnim}
+            onChange={(e) => {
+              setTestAnim(e.target.value);
+            }}
+          />
           <div className="virtual-flex virtual-flex-row virtual-items-center virtual-gap-2 virtual-flex-wrap">
             <button
               className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
@@ -510,14 +518,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             <button
               className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
               onClick={() => {
-                setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Happy_Idle_5c47e63d71.fbx"
-                );
-                setEmotion("joy");
+                setAnim(testAnim);
                 setSpeakCount((prev) => prev + 1);
               }}
             >
-              Happy Idle
+              Load Custom
             </button>
             <button
               className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
