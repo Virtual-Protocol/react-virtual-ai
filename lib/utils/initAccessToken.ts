@@ -30,7 +30,11 @@ export const UNSAFE_initAccessToken = async (
   if (!cachedRunnerToken || !validateJwt(cachedRunnerToken)) {
     // Get runner token via protocol server
     const resp = await fetch(
-      `${import.meta.env.VITE_PROTOCOL_API_URL}/api/access/token`,
+      `${
+        metadata?.env === "development"
+          ? import.meta.env.VITE_PROTOCOL_API_DEV_URL
+          : import.meta.env.VITE_PROTOCOL_API_URL
+      }/api/access/token`,
       {
         method: "POST",
         headers: {
