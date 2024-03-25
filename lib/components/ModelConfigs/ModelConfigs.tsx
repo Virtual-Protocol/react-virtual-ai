@@ -54,8 +54,8 @@ export const ModelConfigs: React.FC<Props> = ({ vrm, configs, setConfigs }) => {
   }, [vrm?.springBoneManager?.joints]);
 
   useEffect(() => {
-    if (!!setConfigs) setConfigs(defaultConfigs);
-  }, [defaultConfigs]);
+    if (!!setConfigs && !configs) setConfigs(defaultConfigs);
+  }, [configs, defaultConfigs]);
 
   const bones: {
     name: string;

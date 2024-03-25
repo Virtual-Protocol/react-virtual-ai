@@ -4,6 +4,11 @@ import { ChatMessages } from "./components/ChatMessages/ChatMessages";
 import { ChatMessageDto } from "./types/ChatMessageDto";
 import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
+import {
+  defaultRinModelConfigs,
+  defaultVampireModelConfigs,
+  // defaultWolfModelConfigs,
+} from "./constants/defaultModelConfigs";
 
 const urls = [
   "/models/rin.vrm",
@@ -15,6 +20,12 @@ const positions = [
   [0, -11, 0],
   [0, -11, 0],
   [0, -12, 0],
+];
+const modelConfigs = [
+  defaultRinModelConfigs,
+  defaultVampireModelConfigs,
+  // defaultWolfModelConfigs,
+  undefined,
 ];
 
 function App() {
@@ -59,7 +70,8 @@ function App() {
         Change
       </button>
       <CharacterRoom
-        debugging
+        // debugging
+        // showSettings
         userName="User"
         virtualName="Virtual"
         virtualId={1}
@@ -118,6 +130,7 @@ function App() {
         scale={scales[selected]}
         position={positions[selected]}
         zoom={2}
+        modelConfigs={modelConfigs[selected]}
       ></CharacterRoom>
       <div
         className={`virtual-w-[95%] virtual-lg:w-[80%] virtual-max-h-[60vh] virtual-absolute virtual-left-1/2 virtual-bottom-[148px] virtual--translate-x-1/2 virtual-flex virtual-flex-col virtual-messages-outer`}
