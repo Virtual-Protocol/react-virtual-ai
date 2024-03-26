@@ -158,7 +158,6 @@ export const AICharacter: React.FC<AICharacterType> = ({
   useFrame((_, delta) => {
     currentVrm?.update(delta);
     vrmService?.mixer?.update(delta);
-    console.log("animation", animation);
     if (animation?.toLowerCase()?.includes("dance")) vrmService?.ik?.update();
 
     // blink eyes every 5 seconds
