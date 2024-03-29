@@ -3,6 +3,12 @@ import { PromptType } from "../types/PromptType";
 import { UNSAFE_initAccessToken } from "../utils/initAccessToken";
 import { getVirtualRunnerUrl } from "../utils/jwt";
 
+export enum Core {
+  VISUAL,
+  VOICE,
+  COGNITIVE,
+}
+
 /**
  * VirtualService configurations
  */
@@ -40,6 +46,12 @@ export type VirtualServiceConfigs = {
    * Additional metadata to pass to initAccessToken function
    */
   metadata?: { [id: string]: any };
+  /**
+   * Callback when init is completed
+   * @param cores array of supported cores
+   * @returns void
+   */
+  onInitCompleted?: (cores: Core[]) => void;
 };
 
 /**
@@ -110,9 +122,31 @@ export class VirtualService {
       if (coresResp.status !== 200) throw new Error("Fetch cores failed");
       const coresRespJson = await coresResp.json();
       this.cores = coresRespJson?.data ?? [];
+      this.initComplete();
     } catch (err: any) {
       this.cores = [];
     }
+  }
+
+  /**
+   * Function when init completed
+   */
+  async initComplete() {
+    const supportedCores: Core[] = [];
+
+    if (this.modelUrl) {
+      supportedCores.push(Core.VISUAL);
+    }
+
+    if (this.cores.includes("tts")) {
+      supportedCores.push(Core.VOICE);
+    }
+
+    if (this.cores.includes("llm")) {
+      supportedCores.push(Core.COGNITIVE);
+    }
+
+    this.configs.onInitCompleted?.(supportedCores);
   }
 
   /**
@@ -176,20 +210,20 @@ export class VirtualService {
         headers:
           typeof content === "string"
             ? {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${cachedRunnerToken}`,
-              }
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${cachedRunnerToken}`,
+            }
             : {
-                Authorization: `Bearer ${cachedRunnerToken}`,
-              },
+              Authorization: `Bearer ${cachedRunnerToken}`,
+            },
         body:
           typeof content === "string"
             ? JSON.stringify({
-                text: content,
-                skipTTS: configs?.skipTTS,
-                userName: this.configs.userName,
-                botName: this.configs.virtualName,
-              })
+              text: content,
+              skipTTS: configs?.skipTTS,
+              userName: this.configs.userName,
+              botName: this.configs.virtualName,
+            })
             : formData,
       });
       // if encountered error, retry after init access token
