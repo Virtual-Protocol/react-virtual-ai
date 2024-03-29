@@ -20,6 +20,7 @@ import { ConfigType } from "../../types/ConfigType";
 import { getQuotedTexts } from "../../utils/string";
 import { VRM } from "@pixiv/three-vrm";
 import { ModelConfigs } from "../ModelConfigs/ModelConfigs";
+import { Core } from "../../services/VirtualService";
 
 type Props = {
   /**
@@ -135,6 +136,12 @@ type Props = {
    */
   onPromptError?: (error: any) => void;
   /**
+   * Callback when init is completed
+   * @param cores array of supported cores
+   * @returns void
+   */
+  onInitCompleted?: (cores: Core[]) => void;
+  /**
    * Additional metadata to pass during initAccessToken
    */
   metadata?: { [id: string]: any };
@@ -192,6 +199,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   overrideModelUrl,
   transformModelUrl,
   onPromptError,
+  onInitCompleted,
   metadata,
   loadingText,
   configs,
@@ -215,6 +223,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       : UNSAFE_initAccessToken,
     onPromptError,
     metadata,
+    onInitCompleted,
   });
   const [speakCount, setSpeakCount] = useState(0);
   const [emotion, setEmotion] = useState<

@@ -1,4 +1,5 @@
 import {
+  Core,
   VirtualService,
   defaultVirtualService,
 } from "../services/VirtualService";
@@ -14,6 +15,7 @@ export type VirtualProps = {
   ) => Promise<string>;
   onPromptError?: (error: any) => void;
   metadata?: { [id: string]: any };
+  onInitCompleted?: (cores: Core[]) => void;
 };
 
 export const useVirtual = ({
@@ -23,6 +25,7 @@ export const useVirtual = ({
   initAccessToken,
   onPromptError,
   metadata,
+  onInitCompleted,
 }: VirtualProps) => {
   const [runnerUrl, setRunnerUrl] = useState("");
   const [modelUrl, setModelUrl] = useState("");
@@ -36,7 +39,7 @@ export const useVirtual = ({
       userName === virtualService.configs.userName &&
       virtualName === virtualService.configs.virtualName &&
       JSON.stringify(virtualService.configs.metadata ?? {}) ===
-        JSON.stringify(metadata ?? {})
+      JSON.stringify(metadata ?? {})
     )
       return;
     setVirtualService(
@@ -47,6 +50,7 @@ export const useVirtual = ({
         initAccessToken,
         onPromptError,
         metadata,
+        onInitCompleted
       })
     );
   }, [virtualId, userName, virtualName, metadata, virtualService]);
