@@ -20,6 +20,17 @@ To install `@virtual-protocol/react-virtual-ai` in your React project, follow th
 
 ### Step 1: Install the Package
 
+Kindly follow the steps as follows to create a GitHub classic personal access token with "read packages" credentials turned on: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+
+Add a file called `.npmrc` with contents:
+
+```
+//npm.pkg.github.com/:_authToken=YOUR_TOKEN
+@virtual-protocol:registry=https://npm.pkg.github.com
+```
+
+Next, install the package via npm or yarn:
+
 ```bash
 npm install @virtual-protocol/react-virtual-ai --save
 ```
@@ -29,6 +40,8 @@ or
 ```bash
 yarn add @virtual-protocol/react-virtual-ai
 ```
+
+Reference: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry
 
 ### Step 2: Obtain Your API Key and Secret
 
