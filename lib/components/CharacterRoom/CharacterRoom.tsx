@@ -299,7 +299,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       setLatestBotMessage(undefined);
       const prompt = await virtualService.createPrompt(content, configs);
 
-      // on prompt received, create new chat message object for the waifu
+      // on prompt received, create new chat message object
       if (typeof content !== "string") {
         if (!!onUserMessageCreated)
           await onUserMessageCreated({
@@ -308,9 +308,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       }
       if (!!prompt.audioUid) {
         audioEl.src = prompt.audioUid;
-        // const audio = new Audio(
-        //   `https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/audios/bdf8a7a4-127e-4f8c-aa26-645a273a2b6e.wav`
-        // );
         await startLipSync(
           currentVrm,
           audioEl,
@@ -626,10 +623,10 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                 icon={
                   <Icon
                     as={HiSpeakerWave}
-                    className="virtual-text-white virtual-text-xl"
+                    className="!virtual-text-white !virtual-text-xl"
                   />
                 }
-                className={`virtual-rounded-full virtual-w-10 virtual-h-10 virtual-bg-black/30 hover:virtual-bg-black/30 virtual-backdrop-blur-xl virtual-z-40 virtual-self-end`}
+                className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
                 isDisabled={talking || !latestBotMessage.audioUid}
                 onClick={async () => {
                   setTalking(true);

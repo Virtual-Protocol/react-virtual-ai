@@ -91,10 +91,10 @@ export const CharacterInput: React.FC<InputProps> = ({
               icon={
                 <Icon
                   as={IoMdCloseCircle}
-                  className="virtual-text-red-400 virtual-text-sm"
+                  className="!virtual-text-red-400 !virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full hover:virtual-bg-red-400/50 virtual-bg-transparent"
+              className="!virtual-rounded-full hover:!virtual-bg-red-400/50 !virtual-bg-transparent"
               onClick={() => {
                 setAllowedToSendVoice(false);
               }}
@@ -120,10 +120,10 @@ export const CharacterInput: React.FC<InputProps> = ({
               icon={
                 <Icon
                   as={IoMdSend}
-                  className="virtual-text-white virtual-text-sm"
+                  className="!virtual-text-white !virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full virtual-w-10 virtual-h-10 virtual-bg-transparent hover:virtual-bg-[#b9c3ff]/50"
+              className="!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-transparent hover:!virtual-bg-[#b9c3ff]/50"
               onClick={async () => {
                 onSubmitVoice(recordingBlob);
                 // Reset states
@@ -151,10 +151,10 @@ export const CharacterInput: React.FC<InputProps> = ({
               icon={
                 <Icon
                   as={IoMdCloseCircle}
-                  className="virtual-text-red-400 virtual-text-sm"
+                  className="!virtual-text-red-400 !virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full hover:virtual-bg-red-400/50 virtual-bg-transparent"
+              className="!virtual-rounded-full hover:!virtual-bg-red-400/50 !virtual-bg-transparent"
               onClick={() => {
                 stopRecording();
                 setAllowedToSendVoice(false);
@@ -200,10 +200,10 @@ export const CharacterInput: React.FC<InputProps> = ({
               icon={
                 <Icon
                   as={FaKeyboard}
-                  className="virtual-text-white virtual-text-lg"
+                  className="!virtual-text-white !virtual-text-lg"
                 />
               }
-              className="virtual-rounded-full hover:virtual-bg-[#b9c3ff]/50 virtual-bg-transparent"
+              className="!virtual-rounded-full hover:!virtual-bg-[#b9c3ff]/50 !virtual-bg-transparent"
               onClick={() => {
                 setIsVoice(false);
               }}
@@ -223,7 +223,7 @@ export const CharacterInput: React.FC<InputProps> = ({
         <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
           <Textarea
             placeholder="Start typing..."
-            className="virtual-font-wenhei virtual-text-white virtual-text-sm virtual-w-full virtual-border-0 virtual-bg-transparent"
+            className="!virtual-font-wenhei !virtual-text-white !virtual-text-sm !virtual-w-full !virtual-border-0 !virtual-bg-transparent"
             value={value}
             onChange={onChange}
             onKeyUp={(e) => {
@@ -249,10 +249,10 @@ export const CharacterInput: React.FC<InputProps> = ({
               icon={
                 <Icon
                   as={IoMdSend}
-                  className="virtual-text-white virtual-text-sm"
+                  className="!virtual-text-white !virtual-text-sm"
                 />
               }
-              className="virtual-rounded-full virtual-bg-transparent hover:virtual-bg-[#b9c3ff]/50"
+              className="!virtual-rounded-full !virtual-bg-transparent hover:!virtual-bg-[#b9c3ff]/50"
             />
           )}
           {!value.trim() && !hideVoice && (
@@ -262,10 +262,10 @@ export const CharacterInput: React.FC<InputProps> = ({
               icon={
                 <Icon
                   as={FaMicrophone}
-                  className="virtual-text-white virtual-text-lg"
+                  className="!virtual-text-white !virtual-text-lg"
                 />
               }
-              className="virtual-rounded-full virtual-bg-transparent hover:virtual-bg-[#b9c3ff]/50"
+              className="!virtual-rounded-full !virtual-bg-transparent hover:!virtual-bg-[#b9c3ff]/50"
               onClick={() => {
                 setIsVoice(true);
               }}
