@@ -59,7 +59,6 @@ type Props = {
    * 3D model scale in number (default 10)
    */
   scale?: number;
-  debugging?: boolean;
   /**
    * virtualId that will decide user memory
    */
@@ -184,7 +183,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   hideInput,
   zoom,
   position,
-  debugging,
   virtualId,
   onUserMessageCreated,
   onVirtualMessageCreated,
@@ -211,9 +209,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
-    "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+    "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
   );
-  const [testAnim, setTestAnim] = useState("");
   const { modelUrl, virtualService, cores } = useVirtual({
     virtualId,
     userName,
@@ -349,7 +346,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             setTalking(false);
             // console.log("Resetting audio and animation");
             setAnim(
-              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+              "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
             );
             setEmotion("idle");
           },
@@ -358,7 +355,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             setTalking(false);
             // console.log("Resetting audio and animation");
             setAnim(
-              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+              "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
             );
             setEmotion("idle");
           }
@@ -405,7 +402,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       }
     } catch (err: any) {
       setAnim(
-        "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+        "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
       );
       setEmotion("idle");
       if (!!onErrorSendingMessage) onErrorSendingMessage(err);
@@ -463,110 +460,13 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           setConfigs={setLocalModelConfigs}
         />
       )}
-      {debugging && (
-        <div className="virtual-flex virtual-flex-col virtual-items-center virtual-gap-1 virtual-fixed virtual-top-2 virtual-left-1/2 virtual--translate-x-1/2 virtual-z-40">
-          <input
-            type="text"
-            value={testAnim}
-            onChange={(e) => {
-              setTestAnim(e.target.value);
-            }}
-          />
-          <div className="virtual-flex virtual-flex-row virtual-items-center virtual-gap-2 virtual-flex-wrap">
-            <button
-              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
-              onClick={() => {
-                setEmotion("anger");
-                setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/anger/Frustrated_y_179.vmd"
-                );
-                setSpeakCount((prev) => prev + 1);
-              }}
-            >
-              Angry
-            </button>
-            <button
-              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
-              onClick={() => {
-                setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/mixamo/Joyful+Jump.fbx"
-                );
-                setEmotion("joy");
-                setSpeakCount((prev) => prev + 1);
-              }}
-            >
-              Joyful Jump
-            </button>
-            <button
-              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
-              onClick={() => {
-                setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/mixamo/Crying.fbx"
-                );
-                setEmotion("sadness");
-                setSpeakCount((prev) => prev + 1);
-              }}
-            >
-              Sad
-            </button>
-            <button
-              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
-              onClick={() => {
-                setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Happy_7bb121f971.fbx"
-                );
-                setEmotion("joy");
-                setSpeakCount((prev) => prev + 1);
-              }}
-            >
-              Happy
-            </button>
-            <button
-              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
-              onClick={() => {
-                setAnim(testAnim);
-                setSpeakCount((prev) => prev + 1);
-              }}
-            >
-              Load Custom
-            </button>
-            <button
-              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
-              onClick={() => {
-                setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Thinking_8971a6cf3f.fbx"
-                );
-                setEmotion("neutral");
-                setSpeakCount((prev) => prev + 1);
-              }}
-            >
-              Thinking
-            </button>
-            <button
-              className="virtual-bg-white virtual-px-2 virtual-py-1 virtual-rounded-2xl"
-              onClick={() => {
-                setAnim(
-                  "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Motion+(So+They+Say).vmd"
-                );
-                // setAnim(
-                //   "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/Talking_384b16a4d2.fbx"
-                // );
-                // setEmotion("neutral");
-                setSpeakCount((prev) => prev + 1);
-              }}
-            >
-              Dancing
-            </button>
-          </div>
-        </div>
-      )}
       <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
           scale={scale}
           onProgressChange={(v) => {
             if (v < 100) {
               setAnim(
-                "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+                "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
               );
               setEmotion("idle");
             }
@@ -590,7 +490,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           onAudioEnd={() => {
             // console.log("Resetting audio and animation");
             setAnim(
-              "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+              "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
             );
             setEmotion("idle");
           }}
@@ -644,7 +544,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                       setSpeakCount((prev) => prev + 1);
                       setAnim(
                         latestBotMessage.body?.url ??
-                          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+                          "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
                       );
                       setEmotion(
                         (latestBotMessage.body?.sentiment ?? "idle") as
@@ -663,7 +563,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                       setTalking(false);
                       // console.log("Resetting audio and animation");
                       setAnim(
-                        "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd"
+                        "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
                       );
                       setEmotion("idle");
                     },

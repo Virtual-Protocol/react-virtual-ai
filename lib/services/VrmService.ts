@@ -157,13 +157,13 @@ export class VrmService {
           }, 1000);
 
           this.fadeToAnimationUrl(
-            "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+            "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd",
             true
           );
         });
 
         this.fadeToAnimationUrl(
-          "https://s3.ap-southeast-1.amazonaws.com/waifu-cdn.virtuals.gg/vmds/a_idle_neutral_loop_88.vmd",
+          "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd",
           true
         );
 
