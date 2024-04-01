@@ -18,18 +18,7 @@ Examples are available here: https://github.com/Virtual-Protocol/react-virtual-a
 
 To install `@virtual-protocol/react-virtual-ai` in your React project, follow these simple steps:
 
-### Step 1: Install the Package
-
-Kindly follow the steps as follows to create a GitHub classic personal access token with "read packages" credentials turned on: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-
-Add a file called `.npmrc` with contents:
-
-```
-//npm.pkg.github.com/:_authToken=YOUR_TOKEN
-@virtual-protocol:registry=https://npm.pkg.github.com
-```
-
-Next, install the package via npm or yarn:
+### Step 1: Installation
 
 ```bash
 npm install @virtual-protocol/react-virtual-ai --save
@@ -49,11 +38,22 @@ Follow the VIRTUAL documentation on creating API key and secret.
 
 ### Step 3: Implement `initAccessToken` function
 
-`initAccessToken` prop is available for `CharacterRoom` and `useVirtual` hooks. When using the components in production environment, please keep the API Key and Secret privately in your backend server and override this function to request from your server instead.
+`initAccessToken` prop is available for `CharacterRoom` component and `useVirtual` hook. The access token returned via this function will be used as the authorization of the runner service.
 
-By default, the function is implemented by assuming the API key and secret are passed to the metadata parameter.
+> **_IMPORTANT NOTE:_** By default, the `UNSAFE_initAccessToken` is implemented as an example implementation, please do not use it in production as exposing API key and secret is unsafe. To enable `UNSAFE_initAccessToken`, pass in metadata props to the `CharacterRoom` or `useVirtual` hook.
 
-Sample implementation:
+Sample metadata payload when using `UNSAFE_initAccessToken` function:
+
+```javascript
+metadata={{
+  apiKey: "<YOUR VIRTUAL API KEY>",
+  apiSecret: "<YOUR VIRTUAL API SECRET>",
+  userUid: "1", // any unique user identifier that will be used for runner memory core to remember conversations
+  userName: "User", // user's name that the Virtual will address as
+  }}
+```
+
+Recommended implementation of initAccessToken function:
 
 ```javascript
 // This function fetches runner access token and keep in cache
@@ -69,20 +69,17 @@ export const initAccessToken = async (
     // Get runner token via your own dapp server
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) return "";
-    const resp = await fetch(
-      `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/token`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          virtualId: virtualId,
-          metadata: metadata,
-        }),
-      }
-    );
+    const resp = await fetch(`${YOUR_BACKEND_URL}/api/auth/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        virtualId: virtualId,
+        metadata: metadata,
+      }),
+    });
     const respJson = await resp.json();
     cachedRunnerToken = respJson.runnerToken ?? "";
     localStorage.setItem(`runnerToken${virtualId}`, cachedRunnerToken);
