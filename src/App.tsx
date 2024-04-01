@@ -33,14 +33,12 @@ function App() {
   }, [messages, thinking]);
 
   return (
-    <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-black/70">
+    <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-cyan-700">
       <CharacterRoom
-        // showSettings
         userName="User"
         virtualName="Virtual"
         virtualId={1}
         onLoadErr={(v) => {
-          // alert(v);
           console.log("err", v);
         }}
         onUserMessageCreated={async (content) => {
@@ -84,10 +82,11 @@ function App() {
           alert(e);
         }}
         metadata={{
-          apiKey: "igWTNOBUg6M2IVZpiUyD",
-          apiSecret: "onFEp4c1Hrbb4Xfg5njnzKHSME7j7Uq2pfB",
+          apiKey: "64i4HuDASGailjIDQ3cl",
+          apiSecret: "Q1QjdajZSnHgOOkD0STn05QCwhMkfDZdYBa",
           userUid: "1",
           userName: "User",
+          env: "development",
         }}
         configs={{ skipTTS: true }}
         zoom={2}

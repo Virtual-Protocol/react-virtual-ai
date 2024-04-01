@@ -47,7 +47,6 @@ export const CharacterRoomWithMessages = () => {
   return (
     <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-black/70">
       <CharacterRoom
-        debugging
         userName="User"
         virtualName="Virtual"
         virtualId={1}

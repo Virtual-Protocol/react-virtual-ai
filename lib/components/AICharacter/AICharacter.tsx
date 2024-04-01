@@ -89,7 +89,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
       conf[e.bone.name] = {
         stiffness: 6,
         dragForce: 0.2,
-        hitRadius: 1,
+        // hitRadius: 0.5,
       };
     });
     return conf;

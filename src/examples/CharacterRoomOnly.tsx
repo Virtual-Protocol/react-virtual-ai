@@ -26,7 +26,7 @@ export const CharacterRoomOnly = () => {
           apiKey: "NsIH8CSaTz22faE1Z1S1",
           apiSecret: "Y237Dlb3LSd9H3ywzgXyCy7tBlpA0E5lNsb",
           userUid: "1",
-          userName: "Jia Xiong",
+          userName: "User Name",
         }}
         configs={{ skipTTS: true }}
         initAccessToken={UNSAFE_initAccessToken}
