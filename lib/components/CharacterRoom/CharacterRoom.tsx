@@ -83,7 +83,7 @@ type Props = {
    * Callback before sending message
    * @returns
    */
-  onBeforeSendMessage?: () => void;
+  onBeforeSendMessage?: (content: string | Blob) => Promise<string | Blob>;
   /**
    * Callback when sending message encounters error
    * @param err Error
@@ -261,14 +261,17 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   };
 
   const sendPrompt = async (
-    content: string | Blob,
+    rawContent: string | Blob,
     audioEl: HTMLAudioElement,
     audioContext: AudioContext
   ) => {
-    if ((configs?.ttsMode || !isLLMSupported) && typeof content === "string") {
+    if (
+      (configs?.ttsMode || !isLLMSupported) &&
+      typeof rawContent === "string"
+    ) {
       try {
         // if tts mode, just use the getTTSPrompt function to get the text to speech result
-        const url = await virtualService.getTTSResponse(content);
+        const url = await virtualService.getTTSResponse(rawContent);
         const audio = new Audio(url);
         audio.load();
         await audio.play();
@@ -285,13 +288,16 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     if (!canSendMessage) {
       return;
     }
-    if (!!onBeforeSendMessage) onBeforeSendMessage();
+    let content = rawContent;
     try {
       if (typeof content === "string") {
         if (!!onUserMessageCreated)
           await onUserMessageCreated({
             text: content,
           });
+      }
+      if (!!onBeforeSendMessage) {
+        content = await onBeforeSendMessage(rawContent);
       }
       setLatestBotMessage(undefined);
       const prompt = await virtualService.createPrompt(content, configs);

@@ -82,8 +82,9 @@ export const CharacterRoomWithMessages = () => {
           });
           setThinking(false);
         }}
-        onBeforeSendMessage={() => {
+        onBeforeSendMessage={async (v) => {
           setThinking(true);
+          return v;
         }}
         onErrorSendingMessage={() => {
           setThinking(false);

@@ -69,8 +69,9 @@ function App() {
           });
           setThinking(false);
         }}
-        onBeforeSendMessage={() => {
+        onBeforeSendMessage={async (v) => {
           setThinking(true);
+          return v;
         }}
         onErrorSendingMessage={() => {
           setThinking(false);
