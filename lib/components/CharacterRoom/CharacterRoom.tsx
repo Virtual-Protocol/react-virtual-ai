@@ -172,6 +172,7 @@ type Props = {
       hitRadius?: number;
     };
   };
+  lang?: "en" | "zh-CN";
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -206,6 +207,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   scale,
   showSettings,
   modelConfigs,
+  lang,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -508,6 +510,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       </div>
       {!hideInput && (isLLMSupported || isTTSSupported) && (
         <CharacterInput
+          lang={lang}
           value={inputText}
           onChange={handleInputChange}
           onSubmit={handleSendClick}

@@ -23,6 +23,7 @@ type InputProps = {
   Toolbar?: ReactElement;
   onBlur?: Function;
   style?: CSSProperties;
+  lang?: "en" | "zh-CN";
 };
 
 export const CharacterInput: React.FC<InputProps> = ({
@@ -37,6 +38,7 @@ export const CharacterInput: React.FC<InputProps> = ({
   className,
   Toolbar,
   onBlur,
+  lang,
 }) => {
   const [isVoice, setIsVoice] = useState(false);
   const [allowedToSendVoice, setAllowedToSendVoice] = useState(false);
@@ -112,7 +114,13 @@ export const CharacterInput: React.FC<InputProps> = ({
               }}
               className={`virtual-text-base virtual-rounded-xl virtual-w-full virtual-px-4 virtual-py-2 hover:virtual-opacity-50 virtual-text-center virtual-font-wenhei virtual-text-white`}
             >
-              {isPlaying ? "Stop" : "Play"}
+              {isPlaying
+                ? lang === "zh-CN"
+                  ? "停止"
+                  : "Stop"
+                : lang === "zh-CN"
+                ? "播放"
+                : "Play"}
             </button>
             <IconButton
               aria-label="Send Message"
@@ -167,7 +175,7 @@ export const CharacterInput: React.FC<InputProps> = ({
               }}
               className="virtual-font-wenhei virtual-flex virtual-flex-row virtual-justify-between virtual-text-base virtual-text-white virtual-bg-transparent virtual-rounded-xl virtual-w-full virtual-px-4 virtual-py-2 hover:virtual-opacity-50 virtual-text-center"
             >
-              Recording...
+              {lang === "zh-CN" ? "正在录音..." : "Recording..."}
               <p>{secondsToTimeStr(recordingTime)}</p>
             </button>
           </div>
@@ -192,7 +200,7 @@ export const CharacterInput: React.FC<InputProps> = ({
               }}
               className="virtual-font-wenhei virtual-text-base virtual-text-white virtual-bg-transparent virtual-rounded-xl virtual-w-full virtual-py-2 hover:virtual-opacity-50 virtual-text-center"
             >
-              Tap to record
+              {lang === "zh-CN" ? "点击录音" : "Tap to record"}
             </button>
             <IconButton
               aria-label="Change Keyboard"
@@ -222,7 +230,7 @@ export const CharacterInput: React.FC<InputProps> = ({
         {!!Toolbar && Toolbar}
         <div className="virtual-w-full virtual-relative virtual-backdrop-blur-xl virtual-flex virtual-flex-row virtual-items-center virtual-gap-1 virtual-px-2 virtual-py-1 virtual-rounded-2xl virtual-bg-black/20">
           <Textarea
-            placeholder="Start typing..."
+            placeholder={lang === "zh-CN" ? "开始输入..." : "Start typing..."}
             className="!virtual-font-wenhei !virtual-text-white !virtual-text-sm !virtual-w-full !virtual-border-0 !virtual-bg-transparent"
             value={value}
             onChange={onChange}
