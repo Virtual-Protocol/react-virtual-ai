@@ -42,6 +42,7 @@ type CharacterSceneType = {
   sceneConfigs?: {
     linear: boolean;
     flat: boolean;
+    shadows: boolean;
   };
 };
 
@@ -101,6 +102,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
           }}
           linear={sceneConfigs?.linear ?? true}
           flat={sceneConfigs?.flat ?? true}
+          shadows={sceneConfigs?.shadows ?? true}
         >
           {!!modelUrl && (
             <AICharacter
@@ -125,9 +127,14 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
           <directionalLight
             color="#FFFFFF"
             intensity={1.5294117647058822}
-            position={new Vector3(2, 0, 3)}
+            position={new Vector3(2, 10, 3)}
+            castShadow
           />
-          <ambientLight intensity={1.6666666666666665} color="#FFF" />
+          <ambientLight
+            intensity={1.6666666666666665}
+            color="#FFF"
+            castShadow
+          />
         </Canvas>
       </Suspense>
     </div>

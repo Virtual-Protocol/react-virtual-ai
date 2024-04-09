@@ -9,6 +9,7 @@ import { blink, fadeByEmotion } from "../../utils/model";
 import gsap from "gsap";
 import { VrmService } from "../../services/VrmService";
 import "../../index.css";
+import { degToRad } from "three/src/math/MathUtils.js";
 
 type AICharacterType = {
   animation: string;
@@ -138,6 +139,13 @@ export const AICharacter: React.FC<AICharacterType> = ({
       modelConfigs: modelConfigs,
       onLoad: (vrm) => {
         setCurrentVrm(vrm);
+        vrm.scene.castShadow = true;
+        vrm.scene.traverse((child) => {
+          // @ts-ignore
+          if (child.isMesh) {
+            child.castShadow = true;
+          }
+        });
       },
       onLoadProgress: (p) => {
         setProgress(p);
@@ -240,7 +248,21 @@ export const AICharacter: React.FC<AICharacterType> = ({
         object={currentVrm.scene}
         position={position ?? [0, -10, 0]}
         scale={scale ?? 10}
+        castShadow
       />
+      <mesh
+        receiveShadow
+        rotation={[degToRad(-90), 0, 0]}
+        scale={[20, 20, 1]}
+        position={[0, -10, 0]}
+      >
+        <planeGeometry />
+        <meshStandardMaterial
+          shadowSide={THREE.DoubleSide}
+          color="white"
+          transparent
+        />
+      </mesh>
     </PresentationControls>
   );
 };

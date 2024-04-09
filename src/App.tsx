@@ -95,7 +95,7 @@ function App() {
           env: "development",
         }}
         configs={{ skipTTS: true }}
-        zoom={2}
+        zoom={1}
       ></CharacterRoom>
       <div
         className={`virtual-w-[95%] virtual-lg:w-[80%] virtual-max-h-[60vh] virtual-absolute virtual-left-1/2 virtual-bottom-[148px] virtual--translate-x-1/2 virtual-flex virtual-flex-col virtual-messages-outer`}
