@@ -399,9 +399,12 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             audioUid: prompt.audioUid,
           });
         setLatestBotMessage(prompt);
-        const audioUid = await virtualService.getTTSResponse(
-          getQuotedTexts(prompt.text ?? "").join(" ")
-        );
+        let audioUid = "";
+        if (isTTSSupported && !!getQuotedTexts(prompt.text ?? "").join(" ")) {
+          audioUid = await virtualService.getTTSResponse(
+            getQuotedTexts(prompt.text ?? "").join(" ")
+          );
+        }
         setLatestBotMessage((prev) => {
           if (!prev) {
             return undefined;
