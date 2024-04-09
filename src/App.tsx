@@ -44,6 +44,7 @@ function App() {
         sceneConfigs={{
           linear: false,
           flat: true,
+          shadows: true,
         }}
         overrideModelUrl="/models/Character_01.vrm"
         onUserMessageCreated={async (content) => {

@@ -176,6 +176,7 @@ type Props = {
   sceneConfigs?: {
     linear: boolean;
     flat: boolean;
+    shadows: boolean;
   };
 };
 
