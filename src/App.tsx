@@ -33,7 +33,7 @@ function App() {
   }, [messages, thinking]);
 
   return (
-    <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-cyan-700">
+    <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-white">
       <CharacterRoom
         userName="User"
         virtualName="Virtual"
@@ -41,6 +41,11 @@ function App() {
         onLoadErr={(v) => {
           console.log("err", v);
         }}
+        sceneConfigs={{
+          linear: false,
+          flat: true,
+        }}
+        overrideModelUrl="/models/Character_01.vrm"
         onUserMessageCreated={async (content) => {
           const newMessage = {
             uid: crypto.randomUUID(),

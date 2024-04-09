@@ -173,6 +173,10 @@ type Props = {
     };
   };
   lang?: "en" | "zh-CN";
+  sceneConfigs?: {
+    linear: boolean;
+    flat: boolean;
+  };
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -208,6 +212,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   showSettings,
   modelConfigs,
   lang,
+  sceneConfigs,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(
@@ -470,6 +475,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       )}
       <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
+          sceneConfigs={sceneConfigs}
           scale={scale}
           onProgressChange={(v) => {
             if (v < 100) {

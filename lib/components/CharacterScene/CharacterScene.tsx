@@ -39,6 +39,10 @@ type CharacterSceneType = {
   onProgressChange?: (v: number) => void;
   onLoadErr?: (err: any) => void;
   scale?: number;
+  sceneConfigs?: {
+    linear: boolean;
+    flat: boolean;
+  };
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -57,6 +61,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   onProgressChange,
   onLoadErr,
   scale,
+  sceneConfigs,
 }) => {
   const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
@@ -94,8 +99,8 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
             position: [0, 3, 15],
             zoom: zoom ? zoom : 2,
           }}
-          linear
-          flat
+          linear={sceneConfigs?.linear ?? true}
+          flat={sceneConfigs?.flat ?? true}
         >
           {!!modelUrl && (
             <AICharacter
