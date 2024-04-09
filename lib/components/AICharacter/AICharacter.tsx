@@ -263,6 +263,13 @@ export const AICharacter: React.FC<AICharacterType> = ({
           transparent
         />
       </mesh>
+      <directionalLight
+        color="#FFFFFF"
+        intensity={1.5294117647058822}
+        position={new THREE.Vector3(2, 10, 3)}
+        castShadow
+      />
+      <ambientLight intensity={1.6666666666666665} color="#FFF" castShadow />
     </PresentationControls>
   );
 };

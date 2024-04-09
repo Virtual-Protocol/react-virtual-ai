@@ -3,7 +3,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
-import { Vector3 } from "three";
 import "../../index.css";
 import { VRM } from "@pixiv/three-vrm";
 
@@ -124,17 +123,6 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
               scale={scale}
             />
           )}
-          <directionalLight
-            color="#FFFFFF"
-            intensity={1.5294117647058822}
-            position={new Vector3(2, 10, 3)}
-            castShadow
-          />
-          <ambientLight
-            intensity={1.6666666666666665}
-            color="#FFF"
-            castShadow
-          />
         </Canvas>
       </Suspense>
     </div>
