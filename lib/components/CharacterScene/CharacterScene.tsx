@@ -105,6 +105,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
         >
           {!!modelUrl && (
             <AICharacter
+              sceneConfigs={sceneConfigs}
               animation={animation}
               url={modelUrl}
               speakCount={speakCount}

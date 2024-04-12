@@ -41,6 +41,11 @@ type AICharacterType = {
   setCurrentVrm: (v?: VRM) => void;
   scale?: number;
   zoom?: number;
+  sceneConfigs?: {
+    linear: boolean;
+    flat: boolean;
+    shadows: boolean;
+  };
 };
 
 export const AICharacter: React.FC<AICharacterType> = ({
@@ -58,6 +63,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   onLoadErr,
   zoom,
   scale,
+  sceneConfigs,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
   const [progress, setProgress] = useState(0);
@@ -250,19 +256,21 @@ export const AICharacter: React.FC<AICharacterType> = ({
         scale={scale ?? 10}
         castShadow
       />
-      <mesh
-        receiveShadow
-        rotation={[degToRad(-90), 0, 0]}
-        scale={[20, 20, 1]}
-        position={[0, -10, 0]}
-      >
-        <planeGeometry />
-        <meshStandardMaterial
-          shadowSide={THREE.DoubleSide}
-          color="white"
-          transparent
-        />
-      </mesh>
+      {sceneConfigs?.shadows && (
+        <mesh
+          receiveShadow
+          rotation={[degToRad(-90), 0, 0]}
+          scale={[20, 20, 1]}
+          position={[0, -10, 0]}
+        >
+          <planeGeometry />
+          <meshStandardMaterial
+            shadowSide={THREE.DoubleSide}
+            color="white"
+            transparent
+          />
+        </mesh>
+      )}
       <directionalLight
         color="#FFFFFF"
         intensity={1.5294117647058822}
