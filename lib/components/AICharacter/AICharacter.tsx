@@ -215,7 +215,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
 
   useEffect(() => {
     if (!animation || !vrmService || !url) return;
-    vrmService.fadeToAnimationUrl(animation);
+    vrmService.fadeToAnimationUrl(animation, animation?.includes("idle.vmd"));
   }, [animation, speakCount, url, vrmService]);
 
   useEffect(() => {
@@ -277,7 +277,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
         position={new THREE.Vector3(2, 10, 3)}
         castShadow
       />
-      <ambientLight intensity={1.6666666666666665} color="#FFF" castShadow />
+      <ambientLight intensity={1.6666666666666665} color="#FFF" />
     </PresentationControls>
   );
 };

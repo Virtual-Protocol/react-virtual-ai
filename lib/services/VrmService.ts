@@ -223,10 +223,13 @@ export class VrmService {
     ) {
       // console.log("fading out", this.previousAction.getClip().name);
       this.previousAction.fadeOut(1);
+      const delayTime = this.previousAction.getClip().name.includes("dance.vmd")
+        ? 1000
+        : 0;
       this.previousAction = undefined;
       delay(() => {
         this.fadeToAnimationUrl(url, loop);
-      }, 0);
+      }, delayTime);
       return;
     }
 
