@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.114](https://github.com/Virtual-Protocol/react-virtual-ai/compare/v0.0.113...v0.0.114) (2024-04-12)
+
 ### [0.0.113](https://github.com/Virtual-Protocol/react-virtual-ai/compare/v0.0.112...v0.0.113) (2024-04-09)
 
 ### [0.0.112](https://github.com/Virtual-Protocol/react-virtual-ai/compare/v0.0.111...v0.0.112) (2024-04-09)
