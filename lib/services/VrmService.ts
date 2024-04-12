@@ -11,6 +11,8 @@ import {
 } from "../utils/vendors/models/loaders/vmdtovrmbinding";
 import VRMIKHandler from "../utils/vendors/models/vrm-ik-handler";
 import VRMModelNoise from "../utils/vendors/models/vrm-model-noise";
+// @ts-ignore
+import idleUrl from "../assets/idle.vmd";
 
 /**
  * VrmService configurations
@@ -156,16 +158,10 @@ export class VrmService {
             this.isAnimating = false;
           }, 1000);
 
-          this.fadeToAnimationUrl(
-            "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd",
-            true
-          );
+          this.fadeToAnimationUrl(idleUrl, true);
         });
 
-        this.fadeToAnimationUrl(
-          "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd",
-          true
-        );
+        this.fadeToAnimationUrl(idleUrl, true);
 
         // set timeout 1 second to prevent model glitching
         setTimeout(() => {

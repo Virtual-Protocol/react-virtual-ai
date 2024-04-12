@@ -9,6 +9,7 @@ import { glob } from "glob";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), libInjectCss(), dts({ include: ["lib"] })],
+  assetsInclude: "**/*.vmd",
   build: {
     lib: {
       entry: resolve(__dirname, "lib/main.ts"),

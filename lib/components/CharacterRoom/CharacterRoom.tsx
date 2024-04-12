@@ -21,6 +21,8 @@ import { getQuotedTexts } from "../../utils/string";
 import { VRM } from "@pixiv/three-vrm";
 import { ModelConfigs } from "../ModelConfigs/ModelConfigs";
 import { Core } from "../../services/VirtualService";
+// @ts-ignore
+import idleUrl from "../../assets/idle.vmd";
 
 type Props = {
   /**
@@ -216,9 +218,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   sceneConfigs,
 }) => {
   const [inputText, setInputText] = useState("");
-  const [anim, setAnim] = useState(
-    "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-  );
+  const [anim, setAnim] = useState(idleUrl);
   const { modelUrl, virtualService, cores } = useVirtual({
     virtualId,
     userName,
@@ -359,18 +359,14 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           () => {
             setTalking(false);
             // console.log("Resetting audio and animation");
-            setAnim(
-              "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-            );
+            setAnim(idleUrl);
             setEmotion("idle");
           },
           () => {
             if (!!onAudioErr) onAudioErr();
             setTalking(false);
             // console.log("Resetting audio and animation");
-            setAnim(
-              "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-            );
+            setAnim(idleUrl);
             setEmotion("idle");
           }
         );
@@ -418,9 +414,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         });
       }
     } catch (err: any) {
-      setAnim(
-        "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-      );
+      setAnim(idleUrl);
       setEmotion("idle");
       if (!!onErrorSendingMessage) onErrorSendingMessage(err);
     }
@@ -483,9 +477,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           scale={scale}
           onProgressChange={(v) => {
             if (v < 100) {
-              setAnim(
-                "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-              );
+              setAnim(idleUrl);
               setEmotion("idle");
             }
             if (!!onProgressChange) onProgressChange(v);
@@ -507,9 +499,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           speakCount={speakCount}
           onAudioEnd={() => {
             // console.log("Resetting audio and animation");
-            setAnim(
-              "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-            );
+            setAnim(idleUrl);
             setEmotion("idle");
           }}
           aside={aside}
@@ -561,10 +551,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     audioContext,
                     () => {
                       setSpeakCount((prev) => prev + 1);
-                      setAnim(
-                        latestBotMessage.body?.url ??
-                          "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-                      );
+                      setAnim(latestBotMessage.body?.url ?? idleUrl);
                       setEmotion(
                         (latestBotMessage.body?.sentiment ?? "idle") as
                           | "idle"
@@ -581,9 +568,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     () => {
                       setTalking(false);
                       // console.log("Resetting audio and animation");
-                      setAnim(
-                        "https://react-virtual-ai.s3.ap-southeast-1.amazonaws.com/idle.vmd"
-                      );
+                      setAnim(idleUrl);
                       setEmotion("idle");
                     },
                     () => {
