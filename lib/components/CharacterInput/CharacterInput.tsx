@@ -11,7 +11,7 @@ import { secondsToTimeStr } from "../../utils/time";
 import { ChangeEventHandler, ReactElement } from "react";
 import "../../index.css";
 
-type InputProps = {
+export type InputProps = {
   value: string;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
   onSubmit: Function;

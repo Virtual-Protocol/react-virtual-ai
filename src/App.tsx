@@ -37,6 +37,7 @@ function App() {
       <CharacterRoom
         userName="User"
         virtualName="Virtual"
+        LoadingComponent={<p>Loadinggggg</p>}
         virtualId={1}
         onLoadErr={(v) => {
           console.log("err", v);

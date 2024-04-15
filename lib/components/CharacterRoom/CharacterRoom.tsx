@@ -3,11 +3,12 @@
 import {
   CSSProperties,
   PropsWithChildren,
+  ReactNode,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { CharacterInput } from "../CharacterInput/CharacterInput";
+import { CharacterInput, InputProps } from "../CharacterInput/CharacterInput";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { startLipSync } from "../../utils/audio";
@@ -181,6 +182,8 @@ type Props = {
     shadows: boolean;
     enableZoom: boolean;
   };
+  Input?: React.FC<InputProps>;
+  LoadingComponent?: ReactNode;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -217,6 +220,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   modelConfigs,
   lang,
   sceneConfigs,
+  LoadingComponent,
+  Input,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(idleUrl);
@@ -476,6 +481,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         <CharacterScene
           sceneConfigs={sceneConfigs}
           scale={scale}
+          LoadingComponent={LoadingComponent}
           onProgressChange={(v) => {
             if (v < 100) {
               setAnim(idleUrl);
@@ -509,87 +515,173 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           modelConfigs={localModelConfigs ?? modelConfigs}
         />
       </div>
-      {!hideInput && (isLLMSupported || isTTSSupported) && (
-        <CharacterInput
-          lang={lang}
-          value={inputText}
-          onChange={handleInputChange}
-          onSubmit={handleSendClick}
-          disabled={anim === "think"}
-          onSubmitVoice={handleSendVoice}
-          hideVoice={hideVoice || !isLLMSupported}
-          onFocus={() => {
-            if (!!onInputFocused) onInputFocused();
-          }}
-          onBlur={() => {
-            if (!!onInputBlurred) onInputBlurred();
-          }}
-          className={inputClassName}
-          style={inputStyle}
-          Toolbar={
-            !!latestBotMessage?.audioUid && !hideInput ? (
-              <IconButton
-                aria-label="Play / Pause"
-                icon={
-                  <Icon
-                    as={HiSpeakerWave}
-                    className="!virtual-text-white !virtual-text-xl"
-                  />
-                }
-                className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
-                isDisabled={talking || !latestBotMessage.audioUid}
-                onClick={async () => {
-                  setTalking(true);
-                  if (!latestBotMessage.audioUid) {
-                    setTalking(false);
-                    return;
+      {!hideInput &&
+        (isLLMSupported || isTTSSupported) &&
+        (!!Input ? (
+          <Input
+            lang={lang}
+            value={inputText}
+            onChange={handleInputChange}
+            onSubmit={handleSendClick}
+            disabled={anim === "think"}
+            onSubmitVoice={handleSendVoice}
+            hideVoice={hideVoice || !isLLMSupported}
+            onFocus={() => {
+              if (!!onInputFocused) onInputFocused();
+            }}
+            onBlur={() => {
+              if (!!onInputBlurred) onInputBlurred();
+            }}
+            className={inputClassName}
+            style={inputStyle}
+            Toolbar={
+              !!latestBotMessage?.audioUid && !hideInput ? (
+                <IconButton
+                  aria-label="Play / Pause"
+                  icon={
+                    <Icon
+                      as={HiSpeakerWave}
+                      className="!virtual-text-white !virtual-text-xl"
+                    />
                   }
-                  const audio = new Audio(`${latestBotMessage.audioUid ?? ""}`);
-                  const audioContext = new AudioContext();
-                  await startLipSync(
-                    currentVrm,
-                    audio,
-                    audioContext,
-                    () => {
-                      setSpeakCount((prev) => prev + 1);
-                      setAnim(latestBotMessage.body?.url ?? idleUrl);
-                      setEmotion(
-                        (latestBotMessage.body?.sentiment ?? "idle") as
-                          | "idle"
-                          | "think"
-                          | "anger"
-                          | "disgust"
-                          | "fear"
-                          | "joy"
-                          | "neutral"
-                          | "sadness"
-                          | "surprise"
-                      );
-                    },
-                    () => {
+                  className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
+                  isDisabled={talking || !latestBotMessage.audioUid}
+                  onClick={async () => {
+                    setTalking(true);
+                    if (!latestBotMessage.audioUid) {
                       setTalking(false);
-                      // console.log("Resetting audio and animation");
-                      setAnim(idleUrl);
-                      setEmotion("idle");
-                    },
-                    () => {
-                      if (!!onAudioErr) onAudioErr();
-                      setTalking(false);
+                      return;
                     }
-                  );
-                  audioContext.createGain();
-                  await audioContext.resume();
-                  audio.preload = "metadata";
-                  audio.play();
-                  // console.log("audioContext state", audioContext.state);
-                }}
-              />
-            ) : (
-              <></>
-            )
-          }
-        />
-      )}
+                    const audio = new Audio(
+                      `${latestBotMessage.audioUid ?? ""}`
+                    );
+                    const audioContext = new AudioContext();
+                    await startLipSync(
+                      currentVrm,
+                      audio,
+                      audioContext,
+                      () => {
+                        setSpeakCount((prev) => prev + 1);
+                        setAnim(latestBotMessage.body?.url ?? idleUrl);
+                        setEmotion(
+                          (latestBotMessage.body?.sentiment ?? "idle") as
+                            | "idle"
+                            | "think"
+                            | "anger"
+                            | "disgust"
+                            | "fear"
+                            | "joy"
+                            | "neutral"
+                            | "sadness"
+                            | "surprise"
+                        );
+                      },
+                      () => {
+                        setTalking(false);
+                        // console.log("Resetting audio and animation");
+                        setAnim(idleUrl);
+                        setEmotion("idle");
+                      },
+                      () => {
+                        if (!!onAudioErr) onAudioErr();
+                        setTalking(false);
+                      }
+                    );
+                    audioContext.createGain();
+                    await audioContext.resume();
+                    audio.preload = "metadata";
+                    audio.play();
+                    // console.log("audioContext state", audioContext.state);
+                  }}
+                />
+              ) : (
+                <></>
+              )
+            }
+          />
+        ) : (
+          <CharacterInput
+            lang={lang}
+            value={inputText}
+            onChange={handleInputChange}
+            onSubmit={handleSendClick}
+            disabled={anim === "think"}
+            onSubmitVoice={handleSendVoice}
+            hideVoice={hideVoice || !isLLMSupported}
+            onFocus={() => {
+              if (!!onInputFocused) onInputFocused();
+            }}
+            onBlur={() => {
+              if (!!onInputBlurred) onInputBlurred();
+            }}
+            className={inputClassName}
+            style={inputStyle}
+            Toolbar={
+              !!latestBotMessage?.audioUid && !hideInput ? (
+                <IconButton
+                  aria-label="Play / Pause"
+                  icon={
+                    <Icon
+                      as={HiSpeakerWave}
+                      className="!virtual-text-white !virtual-text-xl"
+                    />
+                  }
+                  className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
+                  isDisabled={talking || !latestBotMessage.audioUid}
+                  onClick={async () => {
+                    setTalking(true);
+                    if (!latestBotMessage.audioUid) {
+                      setTalking(false);
+                      return;
+                    }
+                    const audio = new Audio(
+                      `${latestBotMessage.audioUid ?? ""}`
+                    );
+                    const audioContext = new AudioContext();
+                    await startLipSync(
+                      currentVrm,
+                      audio,
+                      audioContext,
+                      () => {
+                        setSpeakCount((prev) => prev + 1);
+                        setAnim(latestBotMessage.body?.url ?? idleUrl);
+                        setEmotion(
+                          (latestBotMessage.body?.sentiment ?? "idle") as
+                            | "idle"
+                            | "think"
+                            | "anger"
+                            | "disgust"
+                            | "fear"
+                            | "joy"
+                            | "neutral"
+                            | "sadness"
+                            | "surprise"
+                        );
+                      },
+                      () => {
+                        setTalking(false);
+                        // console.log("Resetting audio and animation");
+                        setAnim(idleUrl);
+                        setEmotion("idle");
+                      },
+                      () => {
+                        if (!!onAudioErr) onAudioErr();
+                        setTalking(false);
+                      }
+                    );
+                    audioContext.createGain();
+                    await audioContext.resume();
+                    audio.preload = "metadata";
+                    audio.play();
+                    // console.log("audioContext state", audioContext.state);
+                  }}
+                />
+              ) : (
+                <></>
+              )
+            }
+          />
+        ))}
     </form>
   );
 };

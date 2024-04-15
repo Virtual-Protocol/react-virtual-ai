@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect, useState } from "react";
+import { ReactNode, Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import "../../index.css";
 import { VRM } from "@pixiv/three-vrm";
@@ -45,6 +45,7 @@ type CharacterSceneType = {
     shadows: boolean;
     enableZoom: boolean;
   };
+  LoadingComponent?: ReactNode;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -64,6 +65,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   onLoadErr,
   scale,
   sceneConfigs,
+  LoadingComponent,
 }) => {
   const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
@@ -76,25 +78,31 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
     <div
       className={`virtual-lg:rounded-3xl virtual-flex virtual-relative virtual-items-center virtual-justify-center virtual-h-full virtual-w-full`}
     >
-      <div
-        className={`virtual-absolute virtual-top-1/2 virtual-left-1/2 virtual--translate-x-1/2 virtual--translate-y-1/2 virtual-rounded-2xl virtual-px-4 virtual-py-2 virtual-bg-black/30 virtual-flex virtual-items-center virtual-justify-center virtual-pointer-events-none virtual-flex-col ${
-          modelUrl === "" || progress >= 100 ? "virtual-fadeOut" : ""
-        }`}
-      >
-        <p
-          className={`virtual-font-wenhei virtual-text-lg virtual-text-white virtual-animate-flicker virtual-text-center virtual-w-fit`}
+      {!!LoadingComponent ? (
+        modelUrl === "" || progress >= 100 ? undefined : (
+          LoadingComponent
+        )
+      ) : (
+        <div
+          className={`virtual-absolute virtual-top-1/2 virtual-left-1/2 virtual--translate-x-1/2 virtual--translate-y-1/2 virtual-rounded-2xl virtual-px-4 virtual-py-2 virtual-bg-black/30 virtual-flex virtual-items-center virtual-justify-center virtual-pointer-events-none virtual-flex-col ${
+            modelUrl === "" || progress >= 100 ? "virtual-fadeOut" : ""
+          }`}
         >
-          {`${loadingText ?? "Your Virtual is Dressing Up..."}`}
-        </p>
-        <div className="virtual-bg-white/20 virtual-h-[4px] virtual-w-[80%] virtual-rounded-3xl virtual-mb-2 virtual-mt-4">
-          <div
-            className="virtual-bg-white virtual-h-[4px] virtual-rounded-3xl"
-            style={{
-              width: `${progress}%`,
-            }}
-          ></div>
+          <p
+            className={`virtual-font-wenhei virtual-text-lg virtual-text-white virtual-animate-flicker virtual-text-center virtual-w-fit`}
+          >
+            {`${loadingText ?? "Your Virtual is Dressing Up..."}`}
+          </p>
+          <div className="virtual-bg-white/20 virtual-h-[4px] virtual-w-[80%] virtual-rounded-3xl virtual-mb-2 virtual-mt-4">
+            <div
+              className="virtual-bg-white virtual-h-[4px] virtual-rounded-3xl"
+              style={{
+                width: `${progress}%`,
+              }}
+            ></div>
+          </div>
         </div>
-      </div>
+      )}
       <Suspense fallback={null}>
         <Canvas
           camera={{
