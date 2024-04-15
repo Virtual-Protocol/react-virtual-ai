@@ -184,6 +184,8 @@ type Props = {
   };
   Input?: React.FC<InputProps>;
   LoadingComponent?: ReactNode;
+  speakerStyle?: CSSProperties;
+  speakerContainerStyle?: CSSProperties;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -222,6 +224,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   sceneConfigs,
   LoadingComponent,
   Input,
+  speakerStyle,
+  speakerContainerStyle,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(idleUrl);
@@ -542,9 +546,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     <Icon
                       as={HiSpeakerWave}
                       className="!virtual-text-white !virtual-text-xl"
+                      style={speakerStyle}
                     />
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
+                  style={speakerContainerStyle}
                   isDisabled={talking || !latestBotMessage.audioUid}
                   onClick={async () => {
                     setTalking(true);
@@ -624,9 +630,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     <Icon
                       as={HiSpeakerWave}
                       className="!virtual-text-white !virtual-text-xl"
+                      style={speakerStyle}
                     />
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
+                  style={speakerContainerStyle}
                   isDisabled={talking || !latestBotMessage.audioUid}
                   onClick={async () => {
                     setTalking(true);
