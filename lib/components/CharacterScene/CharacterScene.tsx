@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import { AICharacter } from "../AICharacter/AICharacter";
 import "../../index.css";
 import { VRM } from "@pixiv/three-vrm";
+import { OrbitControls } from "@react-three/drei";
 
 type CharacterSceneType = {
   animation: string;
@@ -42,6 +43,7 @@ type CharacterSceneType = {
     linear: boolean;
     flat: boolean;
     shadows: boolean;
+    enableZoom: boolean;
   };
 };
 
@@ -103,6 +105,12 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
           flat={sceneConfigs?.flat ?? true}
           shadows={sceneConfigs?.shadows ?? true}
         >
+          <OrbitControls
+            makeDefault={sceneConfigs?.enableZoom ?? true}
+            enabled={sceneConfigs?.enableZoom ?? true}
+            maxDistance={40}
+            minDistance={5}
+          />
           {!!modelUrl && (
             <AICharacter
               sceneConfigs={sceneConfigs}

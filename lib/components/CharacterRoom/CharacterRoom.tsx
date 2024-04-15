@@ -179,6 +179,7 @@ type Props = {
     linear: boolean;
     flat: boolean;
     shadows: boolean;
+    enableZoom: boolean;
   };
 };
 

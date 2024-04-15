@@ -45,6 +45,7 @@ type AICharacterType = {
     linear: boolean;
     flat: boolean;
     shadows: boolean;
+    enableZoom: boolean;
   };
 };
 
