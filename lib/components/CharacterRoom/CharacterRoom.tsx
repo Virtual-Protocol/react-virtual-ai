@@ -546,11 +546,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     <Icon
                       as={HiSpeakerWave}
                       className="!virtual-text-white !virtual-text-xl"
-                      style={speakerStyle}
+                      sx={speakerStyle}
                     />
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
-                  style={speakerContainerStyle}
+                  sx={speakerContainerStyle}
                   isDisabled={talking || !latestBotMessage.audioUid}
                   onClick={async () => {
                     setTalking(true);
@@ -630,11 +630,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                     <Icon
                       as={HiSpeakerWave}
                       className="!virtual-text-white !virtual-text-xl"
-                      style={speakerStyle}
+                      sx={speakerStyle}
                     />
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
-                  style={speakerContainerStyle}
+                  sx={speakerContainerStyle}
                   isDisabled={talking || !latestBotMessage.audioUid}
                   onClick={async () => {
                     setTalking(true);
