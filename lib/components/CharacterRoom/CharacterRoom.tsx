@@ -551,7 +551,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
                   sx={speakerContainerStyle}
-                  isDisabled={talking || !latestBotMessage.audioUid}
+                  isDisabled={
+                    (!!modelUrl && talking) || !latestBotMessage.audioUid
+                  }
                   onClick={async () => {
                     setTalking(true);
                     if (!latestBotMessage.audioUid) {
@@ -635,7 +637,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
                   sx={speakerContainerStyle}
-                  isDisabled={talking || !latestBotMessage.audioUid}
+                  isDisabled={
+                    (!!modelUrl && talking) || !latestBotMessage.audioUid
+                  }
                   onClick={async () => {
                     setTalking(true);
                     if (!latestBotMessage.audioUid) {
