@@ -18,7 +18,6 @@ import { PromptType } from "../../types/PromptType";
 import "../../index.css";
 import { UNSAFE_initAccessToken } from "../../utils/initAccessToken";
 import { ConfigType } from "../../types/ConfigType";
-import { getQuotedTexts } from "../../utils/string";
 import { VRM } from "@pixiv/three-vrm";
 import { ModelConfigs } from "../ModelConfigs/ModelConfigs";
 import { Core } from "../../services/VirtualService";
@@ -255,7 +254,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   const [latestBotMessage, setLatestBotMessage] = useState<
     PromptType | undefined
   >(undefined);
-  const [talking, setTalking] = useState(false);
+  // const [talking, setTalking] = useState(false);
   const [currentVrm, setCurrentVrm] = useState<VRM | undefined>();
   const isLLMSupported = useMemo(() => {
     return cores.includes("llm");
@@ -273,16 +272,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       }
     | undefined
   >();
-
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(e.target.value);
   };
 
-  const sendPrompt = async (
-    rawContent: string | Blob,
-    audioEl: HTMLAudioElement,
-    audioContext: AudioContext
-  ) => {
+  const sendPrompt = async (rawContent: string | Blob) => {
     if (
       (configs?.ttsMode || !isLLMSupported) &&
       typeof rawContent === "string"
@@ -299,7 +293,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       }
       return;
     }
-    setTalking(false);
+    // setTalking(false);
     const canSendMessage = !!validateMessageCapability
       ? validateMessageCapability()
       : true;
@@ -328,76 +322,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           });
       }
       if (!!prompt.audioUid) {
-        audioEl.src = prompt.audioUid;
-        await startLipSync(
-          currentVrm,
-          audioEl,
-          audioContext,
-          async () => {
-            // let userAgent = navigator.userAgent || navigator.vendor;
-            // const isSafari =
-            //   !/chrome/i.test(userAgent) && /safari/i.test(userAgent);
-            // if (!isSafari) setTalking(true);
-            setTalking(true);
-            if (!!prompt.body?.url) {
-              setAnim(prompt.body.url);
-            }
-            if (!!prompt.body?.sentiment) {
-              setEmotion(
-                prompt.body.sentiment as
-                  | "idle"
-                  | "think"
-                  | "anger"
-                  | "disgust"
-                  | "fear"
-                  | "joy"
-                  | "neutral"
-                  | "sadness"
-                  | "surprise"
-              );
-            }
-            if (!!onVirtualMessageCreated)
-              await onVirtualMessageCreated({
-                prompt: prompt.prompt,
-                text: prompt.text,
-                body: prompt.body,
-                audioUid: prompt.audioUid,
-              });
-            setLatestBotMessage(prompt);
-            setSpeakCount((prev) => prev + 1);
-          },
-          () => {
-            setTalking(false);
-            // console.log("Resetting audio and animation");
-            setAnim(idleUrl);
-            setEmotion("idle");
-          },
-          () => {
-            if (!!onAudioErr) onAudioErr();
-            setTalking(false);
-            // console.log("Resetting audio and animation");
-            setAnim(idleUrl);
-            setEmotion("idle");
-          }
-        );
+        await playAudioAndAnimation(prompt);
       } else {
-        if (!!prompt.body?.url) {
-          setAnim(prompt.body.url);
-        }
-        if (!!prompt.body?.sentiment) {
-          setEmotion(
-            prompt.body.sentiment as
-              | "idle"
-              | "think"
-              | "anger"
-              | "disgust"
-              | "fear"
-              | "joy"
-              | "neutral"
-              | "sadness"
-              | "surprise"
-          );
-        }
         if (!!onVirtualMessageCreated)
           await onVirtualMessageCreated({
             prompt: prompt.prompt,
@@ -407,10 +333,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           });
         setLatestBotMessage(prompt);
         let audioUid = "";
-        if (isTTSSupported && !!getQuotedTexts(prompt.text ?? "").join(" ")) {
-          audioUid = await virtualService.getTTSResponse(
-            getQuotedTexts(prompt.text ?? "").join(" ")
-          );
+        if (isTTSSupported && !!prompt.text) {
+          audioUid = await virtualService.getTTSResponse(prompt.text);
         }
         setLatestBotMessage((prev) => {
           if (!prev) {
@@ -422,6 +346,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             };
           }
         });
+        await playAudioAndAnimation({ ...prompt, audioUid: audioUid });
       }
     } catch (err: any) {
       setAnim(idleUrl);
@@ -430,32 +355,66 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     }
   };
 
+  const playAudioAndAnimation = async (msg: PromptType) => {
+    try {
+      // setTalking(true);
+      if (!msg?.audioUid) {
+        // setTalking(false);
+        return;
+      }
+      const audio = new Audio(`${msg.audioUid ?? ""}`);
+      const audioContext = new AudioContext();
+      await startLipSync(
+        currentVrm,
+        audio,
+        audioContext,
+        () => {
+          setSpeakCount((prev) => prev + 1);
+          setAnim(msg.body?.url ?? idleUrl);
+          setEmotion(
+            (msg.body?.sentiment ?? "idle") as
+              | "idle"
+              | "think"
+              | "anger"
+              | "disgust"
+              | "fear"
+              | "joy"
+              | "neutral"
+              | "sadness"
+              | "surprise"
+          );
+        },
+        () => {
+          // setTalking(false);
+          // console.log("Resetting audio and animation");
+          setAnim(idleUrl);
+          setEmotion("idle");
+        },
+        () => {
+          if (!!onAudioErr) onAudioErr();
+          // setTalking(false);
+        }
+      );
+      // audioContext.createGain();
+      await audioContext.resume();
+      audio.preload = "metadata";
+      await audio.play();
+    } catch (err: any) {
+      console.log("play audio error", err);
+      // setTalking(false);
+    }
+  };
+
   const handleSendClick = async () => {
     const text = inputText.trim();
     if (!text) return;
     setInputText("");
 
-    const audio = new Audio();
-    const audioContext = new AudioContext();
-
-    await sendPrompt(text, audio, audioContext);
-
-    audioContext.createGain();
-    await audioContext.resume();
-    await audio.play();
-    // console.log("audioContext state", audioContext.state);
+    await sendPrompt(text);
   };
 
   const handleSendVoice = async (blob: Blob) => {
-    const audio = new Audio();
-    const audioContext = new AudioContext();
-
-    await sendPrompt(blob, audio, audioContext);
-
-    audioContext.createGain();
-    await audioContext.resume();
-    await audio.play();
-    // console.log("audioContext state", audioContext.state);
+    await sendPrompt(blob);
   };
 
   useEffect(() => {
@@ -551,55 +510,10 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
                   sx={speakerContainerStyle}
-                  isDisabled={
-                    (!!modelUrl && talking) || !latestBotMessage.audioUid
-                  }
+                  isDisabled={!latestBotMessage.audioUid}
                   onClick={async () => {
-                    setTalking(true);
-                    if (!latestBotMessage.audioUid) {
-                      setTalking(false);
-                      return;
-                    }
-                    const audio = new Audio(
-                      `${latestBotMessage.audioUid ?? ""}`
-                    );
-                    const audioContext = new AudioContext();
-                    await startLipSync(
-                      currentVrm,
-                      audio,
-                      audioContext,
-                      () => {
-                        setSpeakCount((prev) => prev + 1);
-                        setAnim(latestBotMessage.body?.url ?? idleUrl);
-                        setEmotion(
-                          (latestBotMessage.body?.sentiment ?? "idle") as
-                            | "idle"
-                            | "think"
-                            | "anger"
-                            | "disgust"
-                            | "fear"
-                            | "joy"
-                            | "neutral"
-                            | "sadness"
-                            | "surprise"
-                        );
-                      },
-                      () => {
-                        setTalking(false);
-                        // console.log("Resetting audio and animation");
-                        setAnim(idleUrl);
-                        setEmotion("idle");
-                      },
-                      () => {
-                        if (!!onAudioErr) onAudioErr();
-                        setTalking(false);
-                      }
-                    );
-                    audioContext.createGain();
-                    await audioContext.resume();
-                    audio.preload = "metadata";
-                    audio.play();
-                    // console.log("audioContext state", audioContext.state);
+                    if (!latestBotMessage?.audioUid) return;
+                    await playAudioAndAnimation(latestBotMessage);
                   }}
                 />
               ) : (
@@ -637,55 +551,10 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
                   }
                   className={`!virtual-rounded-full !virtual-w-10 !virtual-h-10 !virtual-bg-black/30 hover:!virtual-bg-black/30 !virtual-backdrop-blur-xl !virtual-z-40 !virtual-self-end`}
                   sx={speakerContainerStyle}
-                  isDisabled={
-                    (!!modelUrl && talking) || !latestBotMessage.audioUid
-                  }
+                  isDisabled={!latestBotMessage.audioUid}
                   onClick={async () => {
-                    setTalking(true);
-                    if (!latestBotMessage.audioUid) {
-                      setTalking(false);
-                      return;
-                    }
-                    const audio = new Audio(
-                      `${latestBotMessage.audioUid ?? ""}`
-                    );
-                    const audioContext = new AudioContext();
-                    await startLipSync(
-                      currentVrm,
-                      audio,
-                      audioContext,
-                      () => {
-                        setSpeakCount((prev) => prev + 1);
-                        setAnim(latestBotMessage.body?.url ?? idleUrl);
-                        setEmotion(
-                          (latestBotMessage.body?.sentiment ?? "idle") as
-                            | "idle"
-                            | "think"
-                            | "anger"
-                            | "disgust"
-                            | "fear"
-                            | "joy"
-                            | "neutral"
-                            | "sadness"
-                            | "surprise"
-                        );
-                      },
-                      () => {
-                        setTalking(false);
-                        // console.log("Resetting audio and animation");
-                        setAnim(idleUrl);
-                        setEmotion("idle");
-                      },
-                      () => {
-                        if (!!onAudioErr) onAudioErr();
-                        setTalking(false);
-                      }
-                    );
-                    audioContext.createGain();
-                    await audioContext.resume();
-                    audio.preload = "metadata";
-                    audio.play();
-                    // console.log("audioContext state", audioContext.state);
+                    if (!latestBotMessage?.audioUid) return;
+                    await playAudioAndAnimation(latestBotMessage);
                   }}
                 />
               ) : (
