@@ -87,12 +87,6 @@ type Props = {
    */
   onBeforeSendMessage?: (content: string | Blob) => Promise<string | Blob>;
   /**
-   * Callback when sending message encounters error
-   * @param err Error
-   * @returns
-   */
-  onErrorSendingMessage?: (err: any) => void;
-  /**
    * Callback when input is focused
    * @returns
    */
@@ -114,7 +108,7 @@ type Props = {
    * Callback on audio playback error
    * @returns
    */
-  onAudioErr?: () => void;
+  onAudioError?: (err: any) => void;
   /**
    * Validate if user is allowed to send message
    * @returns true if can send message, else false
@@ -161,11 +155,11 @@ type Props = {
    */
   onProgressChange?: (v: number) => void;
   /**
-   * Callback when 3D model loading encounters error
+   * Callback when model loading encounters error
    * @param err Error
    * @returns
    */
-  onLoadErr?: (err: any) => void;
+  onLoadError?: (err: any) => void;
   showSettings?: boolean;
   modelConfigs?: {
     [boneName: string]: {
@@ -182,7 +176,7 @@ type Props = {
     enableZoom: boolean;
   };
   Input?: React.FC<InputProps>;
-  LoadingComponent?: ReactNode;
+  renderLoadingComponent?: (progress: number) => ReactNode;
   speakerStyle?: CSSProperties;
   speakerContainerStyle?: CSSProperties;
 };
@@ -200,12 +194,11 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   onUserMessageCreated,
   onVirtualMessageCreated,
   onBeforeSendMessage,
-  onErrorSendingMessage,
   aside,
   onInputFocused,
   onInputBlurred,
   initAccessToken,
-  onAudioErr,
+  onAudioError,
   validateMessageCapability,
   overrideModelUrl,
   transformModelUrl,
@@ -215,13 +208,13 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   loadingText,
   configs,
   onProgressChange,
-  onLoadErr,
+  onLoadError,
   scale,
   showSettings,
   modelConfigs,
   lang,
   sceneConfigs,
-  LoadingComponent,
+  renderLoadingComponent,
   Input,
   speakerStyle,
   speakerContainerStyle,
@@ -238,6 +231,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     onPromptError,
     metadata,
     onInitCompleted,
+    onLoadError,
   });
   const [speakCount, setSpeakCount] = useState(0);
   const [emotion, setEmotion] = useState<
@@ -289,7 +283,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         await audio.play();
       } catch (err: any) {
         // console.log("tts err", err);
-        if (!!onPromptError) onPromptError(err);
       }
       return;
     }
@@ -322,7 +315,23 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           });
       }
       if (!!prompt.audioUid) {
-        await playAudioAndAnimation(prompt);
+        if (configs?.speakOnResponse) await playAudioAndAnimation(prompt);
+        else {
+          setSpeakCount((prev) => prev + 1);
+          setAnim(prompt.body?.url ?? idleUrl);
+          setEmotion(
+            (prompt.body?.sentiment ?? "idle") as
+              | "idle"
+              | "think"
+              | "anger"
+              | "disgust"
+              | "fear"
+              | "joy"
+              | "neutral"
+              | "sadness"
+              | "surprise"
+          );
+        }
       } else {
         if (!!onVirtualMessageCreated)
           await onVirtualMessageCreated({
@@ -346,12 +355,28 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             };
           }
         });
-        await playAudioAndAnimation({ ...prompt, audioUid: audioUid });
+        if (configs?.speakOnResponse)
+          await playAudioAndAnimation({ ...prompt, audioUid: audioUid });
+        else {
+          setSpeakCount((prev) => prev + 1);
+          setAnim(prompt.body?.url ?? idleUrl);
+          setEmotion(
+            (prompt.body?.sentiment ?? "idle") as
+              | "idle"
+              | "think"
+              | "anger"
+              | "disgust"
+              | "fear"
+              | "joy"
+              | "neutral"
+              | "sadness"
+              | "surprise"
+          );
+        }
       }
     } catch (err: any) {
       setAnim(idleUrl);
       setEmotion("idle");
-      if (!!onErrorSendingMessage) onErrorSendingMessage(err);
     }
   };
 
@@ -390,8 +415,8 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
           setAnim(idleUrl);
           setEmotion("idle");
         },
-        () => {
-          if (!!onAudioErr) onAudioErr();
+        (err: any) => {
+          if (!!onAudioError) onAudioError(err);
           // setTalking(false);
         }
       );
@@ -402,6 +427,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     } catch (err: any) {
       console.log("play audio error", err);
       // setTalking(false);
+      if (!!onAudioError) onAudioError(err);
     }
   };
 
@@ -444,7 +470,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         <CharacterScene
           sceneConfigs={sceneConfigs}
           scale={scale}
-          LoadingComponent={LoadingComponent}
+          renderLoadingComponent={renderLoadingComponent}
           onProgressChange={(v) => {
             if (v < 100) {
               setAnim(idleUrl);
@@ -452,7 +478,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
             }
             if (!!onProgressChange) onProgressChange(v);
           }}
-          onLoadErr={onLoadErr}
+          onLoadError={onLoadError}
           zoom={zoom}
           animation={anim}
           loadingText={loadingText}
@@ -479,7 +505,6 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         />
       </div>
       {!hideInput &&
-        (isLLMSupported || isTTSSupported) &&
         (!!Input ? (
           <Input
             lang={lang}

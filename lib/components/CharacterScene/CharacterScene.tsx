@@ -37,7 +37,7 @@ type CharacterSceneType = {
   currentVrm?: VRM;
   setCurrentVrm?: (v?: VRM) => void;
   onProgressChange?: (v: number) => void;
-  onLoadErr?: (err: any) => void;
+  onLoadError?: (err: any) => void;
   scale?: number;
   sceneConfigs?: {
     linear: boolean;
@@ -45,7 +45,7 @@ type CharacterSceneType = {
     shadows: boolean;
     enableZoom: boolean;
   };
-  LoadingComponent?: ReactNode;
+  renderLoadingComponent?: (progress: number) => ReactNode;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -62,10 +62,10 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   currentVrm,
   setCurrentVrm,
   onProgressChange,
-  onLoadErr,
+  onLoadError,
   scale,
   sceneConfigs,
-  LoadingComponent,
+  renderLoadingComponent,
 }) => {
   const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
@@ -78,9 +78,9 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
     <div
       className={`virtual-lg:rounded-3xl virtual-flex virtual-relative virtual-items-center virtual-justify-center virtual-h-full virtual-w-full`}
     >
-      {!!LoadingComponent ? (
+      {!!renderLoadingComponent ? (
         modelUrl === "" || progress >= 100 ? undefined : (
-          LoadingComponent
+          renderLoadingComponent(progress)
         )
       ) : (
         <div
@@ -136,7 +136,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
               modelConfigs={modelConfigs}
               currentVrm={!!currentVrm ? currentVrm : localVrm}
               setCurrentVrm={!!setCurrentVrm ? setCurrentVrm : setLocalVrm}
-              onLoadErr={onLoadErr}
+              onLoadError={onLoadError}
               scale={scale}
             />
           )}

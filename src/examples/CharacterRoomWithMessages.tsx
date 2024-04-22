@@ -51,7 +51,7 @@ export const CharacterRoomWithMessages = () => {
         virtualName="Virtual"
         virtualId={1}
         inputClassName="!virtual-bottom-[24px]"
-        onLoadErr={(v) => {
+        onLoadError={(v) => {
           alert(v);
         }}
         onUserMessageCreated={async (content) => {
@@ -86,14 +86,12 @@ export const CharacterRoomWithMessages = () => {
           setThinking(true);
           return v;
         }}
-        onErrorSendingMessage={() => {
-          setThinking(false);
-        }}
         aside={false}
         onInputFocused={() => {}}
         onInputBlurred={() => {}}
-        onAudioErr={() => {}}
+        onAudioError={() => {}}
         onPromptError={(e) => {
+          setThinking(false);
           alert(e);
         }}
         metadata={{
@@ -102,7 +100,7 @@ export const CharacterRoomWithMessages = () => {
           userUid: "1",
           userName: "Jia Xiong",
         }}
-        configs={{ skipTTS: true }}
+        configs={{ skipTTS: true, speakOnResponse: false }}
         initAccessToken={UNSAFE_initAccessToken}
       ></CharacterRoom>
       <div

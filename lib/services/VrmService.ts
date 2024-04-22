@@ -29,7 +29,7 @@ type VrmServiceConfigs = {
    * @param err Error
    * @returns
    */
-  onLoadErr?: (err: any) => void;
+  onLoadError?: (err: any) => void;
   /**
    * Callback when VRM model is loading
    * @param progressInPercentage percentage of loading from 0 to 100
@@ -179,7 +179,7 @@ export class VrmService {
       // called when loading has errors
       (error) => {
         console.error(error);
-        this.configs.onLoadErr?.(error);
+        this.configs.onLoadError?.(error);
         this.configs.onLoadProgress?.(0);
       }
     );

@@ -20,6 +20,7 @@ export const CustomHook = () => {
             "What is your name?",
             {
               skipTTS: true,
+              speakOnResponse: false,
             },
             (e) => {
               console.log("Response", e);

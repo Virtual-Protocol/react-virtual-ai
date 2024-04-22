@@ -14,6 +14,7 @@ export type VirtualProps = {
     metadata?: { [id: string]: any }
   ) => Promise<string>;
   onPromptError?: (error: any) => void;
+  onLoadError?: (error: any) => void;
   metadata?: { [id: string]: any };
   onInitCompleted?: (cores: Core[]) => void;
 };
@@ -24,6 +25,7 @@ export const useVirtual = ({
   virtualName,
   initAccessToken,
   onPromptError,
+  onLoadError,
   metadata,
   onInitCompleted,
 }: VirtualProps) => {
@@ -39,7 +41,7 @@ export const useVirtual = ({
       userName === virtualService.configs.userName &&
       virtualName === virtualService.configs.virtualName &&
       JSON.stringify(virtualService.configs.metadata ?? {}) ===
-      JSON.stringify(metadata ?? {})
+        JSON.stringify(metadata ?? {})
     )
       return;
     setVirtualService(
@@ -50,7 +52,7 @@ export const useVirtual = ({
         initAccessToken,
         onPromptError,
         metadata,
-        onInitCompleted
+        onInitCompleted,
       })
     );
   }, [virtualId, userName, virtualName, metadata, virtualService]);
@@ -69,8 +71,9 @@ export const useVirtual = ({
           setModelUrl(virtualService.modelUrl);
           setCores(virtualService.cores);
         })
-        .catch(() => {
+        .catch((err) => {
           // console.log("Error initializing session", err);
+          if (!!onLoadError) onLoadError(err);
         });
     }
   }, [virtualId, virtualService]);

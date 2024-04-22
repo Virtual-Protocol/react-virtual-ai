@@ -37,12 +37,6 @@ export type VirtualServiceConfigs = {
     metadata?: { [id: string]: any }
   ) => Promise<string>;
   /**
-   * Callback when prompt throws error
-   * @param error Error
-   * @returns void
-   */
-  onPromptError?: (error: any) => void;
-  /**
    * Additional metadata to pass to initAccessToken function
    */
   metadata?: { [id: string]: any };
@@ -52,6 +46,7 @@ export type VirtualServiceConfigs = {
    * @returns void
    */
   onInitCompleted?: (cores: Core[]) => void;
+  onPromptError?: (err: any) => void;
 };
 
 /**
@@ -93,11 +88,11 @@ export class VirtualService {
       localStorage.getItem(`runnerToken${this.configs.virtualId}`) ?? "";
 
     const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
-    const url = !!runnerUrl ? runnerUrl : "https://runner.virtuals.gg";
-    this.runnerUrl = url;
+    if (!runnerUrl) throw new Error("Runer URL not found");
+    this.runnerUrl = runnerUrl;
     try {
       // initialize model url
-      const modelResp = await fetch(`${url}/model`, {
+      const modelResp = await fetch(`${runnerUrl}/model`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +107,7 @@ export class VirtualService {
     }
     try {
       // initialize model url
-      const coresResp = await fetch(`${url}/cores`, {
+      const coresResp = await fetch(`${runnerUrl}/cores`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -210,20 +205,20 @@ export class VirtualService {
         headers:
           typeof content === "string"
             ? {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${cachedRunnerToken}`,
-            }
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${cachedRunnerToken}`,
+              }
             : {
-              Authorization: `Bearer ${cachedRunnerToken}`,
-            },
+                Authorization: `Bearer ${cachedRunnerToken}`,
+              },
         body:
           typeof content === "string"
             ? JSON.stringify({
-              text: content,
-              skipTTS: configs?.skipTTS,
-              userName: this.configs.userName,
-              botName: this.configs.virtualName,
-            })
+                text: content,
+                skipTTS: configs?.skipTTS,
+                userName: this.configs.userName,
+                botName: this.configs.virtualName,
+              })
             : formData,
       });
       // if encountered error, retry after init access token
@@ -234,12 +229,13 @@ export class VirtualService {
           content,
           {
             skipTTS: !!configs?.skipTTS,
+            speakOnResponse: !!configs?.speakOnResponse,
           },
           onPromptReceived,
           (retry ?? 0) + 1
         )) as PromptType;
       } else if (resp.status !== 200) {
-        this.configs.onPromptError?.(resp);
+        throw new Error("Failed to fetch prompt");
       }
 
       const respJson = await resp.json();
@@ -256,6 +252,7 @@ export class VirtualService {
           content,
           {
             skipTTS: !!configs?.skipTTS,
+            speakOnResponse: !!configs?.speakOnResponse,
           },
           onPromptReceived,
           (retry ?? 0) + 1
@@ -300,6 +297,7 @@ export class VirtualService {
       return (respJson?.audioUid ?? "") as string;
     } catch (err: any) {
       // console.log("Audio error", err);
+      if (!!this.configs.onPromptError) this.configs.onPromptError(err);
       return "";
     }
   }

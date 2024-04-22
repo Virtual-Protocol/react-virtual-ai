@@ -9,7 +9,7 @@ export const CharacterRoomOnly = () => {
         virtualName="Virtual"
         virtualId={1}
         inputClassName="!virtual-bottom-[24px]"
-        onLoadErr={(v) => {
+        onLoadError={(v) => {
           alert(v);
         }}
         validateMessageCapability={() => {
@@ -18,7 +18,7 @@ export const CharacterRoomOnly = () => {
         aside={false}
         onInputFocused={() => {}}
         onInputBlurred={() => {}}
-        onAudioErr={() => {}}
+        onAudioError={() => {}}
         onPromptError={(e) => {
           alert(e);
         }}
@@ -28,7 +28,7 @@ export const CharacterRoomOnly = () => {
           userUid: "1",
           userName: "User Name",
         }}
-        configs={{ skipTTS: true }}
+        configs={{ skipTTS: true, speakOnResponse: false }}
         initAccessToken={UNSAFE_initAccessToken}
       ></CharacterRoom>
     </div>

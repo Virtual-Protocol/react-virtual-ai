@@ -37,9 +37,8 @@ function App() {
       <CharacterRoom
         userName="User"
         virtualName="Virtual"
-        LoadingComponent={<p>Loadinggggg</p>}
         virtualId={1}
-        onLoadErr={(v) => {
+        onLoadError={(v) => {
           console.log("err", v);
         }}
         sceneConfigs={{
@@ -81,13 +80,11 @@ function App() {
           setThinking(true);
           return v;
         }}
-        onErrorSendingMessage={() => {
-          setThinking(false);
-        }}
         onInputFocused={() => {}}
         onInputBlurred={() => {}}
-        onAudioErr={() => {}}
+        onAudioError={() => {}}
         onPromptError={(e) => {
+          setThinking(false);
           alert(e);
         }}
         metadata={{
@@ -97,7 +94,7 @@ function App() {
           userName: "User",
           env: "development",
         }}
-        configs={{ skipTTS: true }}
+        configs={{ skipTTS: true, speakOnResponse: false }}
         zoom={2}
       ></CharacterRoom>
       <div

@@ -14,7 +14,7 @@ let lipsyncService: any | undefined;
  * @param audioContext
  * @param onAudioStart
  * @param onAudioEnd
- * @param onAudioErr
+ * @param onAudioError
  * @returns
  */
 export const startLipSync = async (
@@ -23,7 +23,7 @@ export const startLipSync = async (
   audioContext: AudioContext,
   onAudioStart: Function,
   onAudioEnd: Function,
-  onAudioErr: Function
+  onAudioError: Function
 ) => {
   if (!currentVrm) return;
 
@@ -52,7 +52,7 @@ export const startLipSync = async (
       }, 3000);
     } catch (err: any) {
       // console.log("Audio playback failed, err");
-      onAudioErr();
+      onAudioError(err);
     }
   }
 };

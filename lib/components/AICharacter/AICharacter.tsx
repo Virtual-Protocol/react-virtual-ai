@@ -16,7 +16,7 @@ type AICharacterType = {
   url?: string;
   onAudioEnd?: Function;
   onLoad?: (progress: number) => void;
-  onLoadErr?: (err: any) => void;
+  onLoadError?: (err: any) => void;
   aside?: boolean;
   speakCount?: number;
   emotion?:
@@ -61,7 +61,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   position,
   currentVrm,
   setCurrentVrm,
-  onLoadErr,
+  onLoadError,
   zoom,
   scale,
   sceneConfigs,
@@ -157,8 +157,8 @@ export const AICharacter: React.FC<AICharacterType> = ({
       onLoadProgress: (p) => {
         setProgress(p);
       },
-      onLoadErr: (error) => {
-        if (!!onLoadErr) onLoadErr(error);
+      onLoadError: (error) => {
+        if (!!onLoadError) onLoadError(error);
       },
     });
     setVrmService(newVrmService);
