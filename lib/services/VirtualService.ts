@@ -88,7 +88,7 @@ export class VirtualService {
       localStorage.getItem(`runnerToken${this.configs.virtualId}`) ?? "";
 
     const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
-    if (!runnerUrl) throw new Error("Runer URL not found");
+    if (!runnerUrl) throw new Error("Runner URL not found");
     this.runnerUrl = runnerUrl;
     try {
       // initialize model url
