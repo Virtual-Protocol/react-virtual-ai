@@ -39,7 +39,7 @@ function App() {
         virtualName="Virtual"
         virtualId={1}
         onLoadError={(v) => {
-          console.log("err", v);
+          console.log("on load error", v);
         }}
         sceneConfigs={{
           linear: false,
@@ -85,6 +85,7 @@ function App() {
         onAudioError={() => {}}
         onPromptError={(e) => {
           setThinking(false);
+          console.log("on prompt error");
           alert(e);
         }}
         metadata={{

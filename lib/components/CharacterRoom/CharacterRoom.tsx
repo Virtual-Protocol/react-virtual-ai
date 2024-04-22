@@ -231,6 +231,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     onPromptError,
     metadata,
     onInitCompleted,
+    onLoadError,
   });
   const [speakCount, setSpeakCount] = useState(0);
   const [emotion, setEmotion] = useState<
