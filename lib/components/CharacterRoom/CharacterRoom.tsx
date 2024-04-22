@@ -16,7 +16,6 @@ import { useVirtual } from "../../main";
 import { CharacterScene } from "../CharacterScene/CharacterScene";
 import { PromptType } from "../../types/PromptType";
 import "../../index.css";
-import { UNSAFE_initAccessToken } from "../../utils/initAccessToken";
 import { ConfigType } from "../../types/ConfigType";
 import { VRM } from "@pixiv/three-vrm";
 import { ModelConfigs } from "../ModelConfigs/ModelConfigs";
@@ -100,7 +99,7 @@ type Props = {
    * Function that takes in virtualId and additional metadata to return runner access token
    * @returns runner access token
    */
-  initAccessToken?: (
+  initAccessToken: (
     virtualId: number | string,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
@@ -225,9 +224,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
     virtualId,
     userName,
     virtualName,
-    initAccessToken: !!initAccessToken
-      ? initAccessToken
-      : UNSAFE_initAccessToken,
+    initAccessToken,
     onPromptError,
     metadata,
     onInitCompleted,
@@ -276,6 +273,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       typeof rawContent === "string"
     ) {
       try {
+        if (!virtualService) throw new Error("Virtual Service not available.");
         // if tts mode, just use the getTTSPrompt function to get the text to speech result
         const url = await virtualService.getTTSResponse(rawContent);
         const audio = new Audio(url);
@@ -305,6 +303,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         content = await onBeforeSendMessage(rawContent);
       }
       setLatestBotMessage(undefined);
+      if (!virtualService) throw new Error("Virtual Service not available.");
       const prompt = await virtualService.createPrompt(content, configs);
 
       // on prompt received, create new chat message object

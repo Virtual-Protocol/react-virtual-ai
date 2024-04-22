@@ -1,8 +1,4 @@
-import {
-  Core,
-  VirtualService,
-  defaultVirtualService,
-} from "../services/VirtualService";
+import { Core, VirtualService } from "../services/VirtualService";
 import { useEffect, useState } from "react";
 
 export type VirtualProps = {
@@ -32,11 +28,12 @@ export const useVirtual = ({
   const [runnerUrl, setRunnerUrl] = useState("");
   const [modelUrl, setModelUrl] = useState("");
   const [cores, setCores] = useState<string[]>([]);
-  const [virtualService, setVirtualService] = useState(defaultVirtualService);
+  const [virtualService, setVirtualService] = useState<VirtualService>();
 
   useEffect(() => {
     // skip if everything is same
     if (
+      !!virtualService &&
       virtualId === virtualService.configs.virtualId &&
       userName === virtualService.configs.userName &&
       virtualName === virtualService.configs.virtualName &&
@@ -44,6 +41,10 @@ export const useVirtual = ({
         JSON.stringify(metadata ?? {})
     )
       return;
+    if (!virtualId || !initAccessToken) {
+      setVirtualService(undefined);
+      return;
+    }
     setVirtualService(
       new VirtualService({
         virtualId,
@@ -55,7 +56,14 @@ export const useVirtual = ({
         onInitCompleted,
       })
     );
-  }, [virtualId, userName, virtualName, metadata, virtualService]);
+  }, [
+    virtualId,
+    userName,
+    virtualName,
+    metadata,
+    virtualService,
+    initAccessToken,
+  ]);
 
   useEffect(() => {
     if (!!virtualId && !!virtualService) {

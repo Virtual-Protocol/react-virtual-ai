@@ -1,6 +1,5 @@
 import { ConfigType } from "../types/ConfigType";
 import { PromptType } from "../types/PromptType";
-import { UNSAFE_initAccessToken } from "../utils/initAccessToken";
 import { getVirtualRunnerUrl } from "../utils/jwt";
 
 export enum Core {
@@ -27,7 +26,6 @@ export type VirtualServiceConfigs = {
   virtualName?: string;
   /**
    * Function that returns runner access token.
-   * YOU MUST override this function to avoid accidentally leaking API Key and Secret using the default sample function. For more information, read {@link UNSAFE_initAccessToken} function
    * @param virtualId virtualId that decides virtual's memory
    * @param metadata additional metadata when requesting access token
    * @returns runner access token
@@ -153,10 +151,12 @@ export class VirtualService {
     // console.log("initSession is invoked", vid, retry);
     try {
       if (!!vid) {
-        const initToken = !!this.configs.initAccessToken
-          ? this.configs.initAccessToken
-          : UNSAFE_initAccessToken;
-        const token = await initToken(vid, this.configs.metadata);
+        if (!this.configs.initAccessToken)
+          throw new Error("initAccessToken function is not implemented.");
+        const token = await this.configs.initAccessToken(
+          vid,
+          this.configs.metadata
+        );
         localStorage.setItem(`runnerToken${vid}`, token);
       }
       await this.initVirtual();
@@ -186,10 +186,9 @@ export class VirtualService {
   ): Promise<PromptType> {
     try {
       if (!this.configs.virtualId) throw new Error("Virtual not found");
-      const initToken = !!this.configs.initAccessToken
-        ? this.configs.initAccessToken
-        : UNSAFE_initAccessToken;
-      const cachedRunnerToken = await initToken(
+      if (!this.configs.initAccessToken)
+        throw new Error("initAccessToken function is not implemented.");
+      const cachedRunnerToken = await this.configs.initAccessToken(
         this.configs.virtualId ?? -1,
         this.configs.metadata
       );
@@ -270,10 +269,9 @@ export class VirtualService {
   async getTTSResponse(content: string): Promise<string> {
     try {
       if (!this.configs.virtualId) throw new Error("Virtual not found");
-      const initToken = !!this.configs.initAccessToken
-        ? this.configs.initAccessToken
-        : UNSAFE_initAccessToken;
-      const cachedRunnerToken = await initToken(
+      if (!this.configs.initAccessToken)
+        throw new Error("initAccessToken function is not implemented.");
+      const cachedRunnerToken = await this.configs.initAccessToken(
         this.configs.virtualId ?? -1,
         this.configs.metadata
       );

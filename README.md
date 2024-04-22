@@ -40,7 +40,7 @@ Follow the VIRTUAL documentation on creating API key and secret.
 
 `initAccessToken` prop is available for `CharacterRoom` component and `useVirtual` hook. The access token returned via this function will be used as the authorization of the runner service.
 
-> **_IMPORTANT NOTE:_** By default, the `UNSAFE_initAccessToken` is implemented as an example implementation, please do not use it in production as exposing API key and secret is unsafe. To enable `UNSAFE_initAccessToken`, pass in metadata props to the `CharacterRoom` or `useVirtual` hook.
+> **_IMPORTANT NOTE:_** The `UNSAFE_initAccessToken` function is provided as an example implementation, please do not use it in production as exposing API key and secret is unsafe. To enable `UNSAFE_initAccessToken`, pass in metadata props to the `CharacterRoom` or `useVirtual` hook.
 
 Sample metadata payload when using `UNSAFE_initAccessToken` function:
 
@@ -93,13 +93,17 @@ export const initAccessToken = async (
 There
 
 ```jsx
-import { CharacterRoom } from "@virtual-protocol/react-virtual-ai";
+import {
+  CharacterRoom,
+  UNSAFE_initAccessToken,
+} from "@virtual-protocol/react-virtual-ai";
 
 return (
   <CharacterRoom
     userName="User"
     virtualName="Virtual Name"
     virtualId={1} // unique virtual id in number / string that will define the
+    initAccessToken={UNSAFE_initAccessToken}
   />
 );
 ```

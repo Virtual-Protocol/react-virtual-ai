@@ -4,6 +4,7 @@ import { ChatMessages } from "./components/ChatMessages/ChatMessages";
 import { ChatMessageDto } from "./types/ChatMessageDto";
 import { formatMessage } from "./utils/utils";
 import { MessageType } from "./types/MessageType";
+import { UNSAFE_initAccessToken } from "../lib/main";
 
 function App() {
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -35,6 +36,7 @@ function App() {
   return (
     <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-white">
       <CharacterRoom
+        initAccessToken={UNSAFE_initAccessToken}
         userName="User"
         virtualName="Virtual"
         virtualId={1}
