@@ -374,6 +374,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
         }
       }
     } catch (err: any) {
+      if (!!onPromptError) onPromptError(err);
       setAnim(idleUrl);
       setEmotion("idle");
     }
