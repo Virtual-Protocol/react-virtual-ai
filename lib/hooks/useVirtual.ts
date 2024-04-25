@@ -5,7 +5,7 @@ export type VirtualProps = {
   virtualId?: number | string;
   userName?: string;
   virtualName?: string;
-  initAccessToken?: (
+  initAccessToken: (
     virtualId: number | string,
     forceRefetchToken?: boolean,
     metadata?: { [id: string]: any }
@@ -42,7 +42,7 @@ export const useVirtual = ({
         JSON.stringify(metadata ?? {})
     )
       return;
-    if (!virtualId || !initAccessToken) {
+    if (!virtualId) {
       setVirtualService(undefined);
       return;
     }

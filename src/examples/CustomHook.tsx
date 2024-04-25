@@ -1,11 +1,11 @@
-import { useVirtual } from "../../lib/main";
+import { UNSAFE_initAccessToken, useVirtual } from "../../lib/main";
 
 export const CustomHook = () => {
   const { virtualService } = useVirtual({
     virtualId: 1,
     userName: "Name",
     virtualName: "Virtual",
-    initAccessToken: undefined,
+    initAccessToken: UNSAFE_initAccessToken,
     onPromptError: (err) => {
       alert(err);
     },
