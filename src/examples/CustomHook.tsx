@@ -16,7 +16,7 @@ export const CustomHook = () => {
     <div>
       <button
         onClick={() => {
-          virtualService.createPrompt?.(
+          virtualService?.createPrompt?.(
             "What is your name?",
             {
               skipTTS: true,
@@ -33,7 +33,7 @@ export const CustomHook = () => {
       </button>
       <button
         onClick={() => {
-          virtualService.getTTSResponse?.("Hello World").then((v) => {
+          virtualService?.getTTSResponse?.("Hello World").then((v) => {
             const audio = new Audio(v);
             audio.load();
             audio.play();

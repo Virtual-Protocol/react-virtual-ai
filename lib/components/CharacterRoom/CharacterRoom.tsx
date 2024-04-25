@@ -101,6 +101,7 @@ type Props = {
    */
   initAccessToken: (
     virtualId: number | string,
+    forceRefetchToken?: boolean,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
   /**

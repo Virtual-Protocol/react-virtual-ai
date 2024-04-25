@@ -11,6 +11,7 @@ import { validateJwt } from "./jwt";
  */
 export const UNSAFE_initAccessToken = async (
   virtualId: number | string,
+  forceRefetchToken?: boolean,
   metadata?: { [id: string]: any }
 ): Promise<string> => {
   if (!virtualId) return "";
@@ -27,7 +28,11 @@ export const UNSAFE_initAccessToken = async (
   // runner token by bot is saved as runnerToken<virtualId> in localStorage
   let cachedRunnerToken = localStorage.getItem(`runnerToken${virtualId}`) ?? "";
   // Fetch a new runner token if expired
-  if (!cachedRunnerToken || !validateJwt(cachedRunnerToken)) {
+  if (
+    !cachedRunnerToken ||
+    !validateJwt(cachedRunnerToken) ||
+    forceRefetchToken
+  ) {
     // Get runner token via protocol server
     const resp = await fetch(
       `${

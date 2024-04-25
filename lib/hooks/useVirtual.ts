@@ -7,6 +7,7 @@ export type VirtualProps = {
   virtualName?: string;
   initAccessToken?: (
     virtualId: number | string,
+    forceRefetchToken?: boolean,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
   onPromptError?: (error: any) => void;

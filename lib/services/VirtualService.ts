@@ -32,6 +32,7 @@ export type VirtualServiceConfigs = {
    */
   initAccessToken?: (
     virtualId: number | string,
+    forceRefetchToken?: boolean,
     metadata?: { [id: string]: any }
   ) => Promise<string>;
   /**
@@ -155,6 +156,7 @@ export class VirtualService {
           throw new Error("initAccessToken function is not implemented.");
         const token = await this.configs.initAccessToken(
           vid,
+          retry > 0,
           this.configs.metadata
         );
         localStorage.setItem(`runnerToken${vid}`, token);
@@ -190,6 +192,7 @@ export class VirtualService {
         throw new Error("initAccessToken function is not implemented.");
       const cachedRunnerToken = await this.configs.initAccessToken(
         this.configs.virtualId ?? -1,
+        (retry ?? 0) > 0,
         this.configs.metadata
       );
       const formData = new FormData();
@@ -273,6 +276,7 @@ export class VirtualService {
         throw new Error("initAccessToken function is not implemented.");
       const cachedRunnerToken = await this.configs.initAccessToken(
         this.configs.virtualId ?? -1,
+        false,
         this.configs.metadata
       );
       const resp = await fetch(`${this.runnerUrl}/prompts/voice`, {
