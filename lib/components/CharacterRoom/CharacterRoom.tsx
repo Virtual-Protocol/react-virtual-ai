@@ -270,7 +270,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
 
   const sendPrompt = async (rawContent: string | Blob) => {
     if (
-      (configs?.ttsMode || !isLLMSupported) &&
+      (configs?.ttsMode || (!isLLMSupported && isTTSSupported)) &&
       typeof rawContent === "string"
     ) {
       try {
