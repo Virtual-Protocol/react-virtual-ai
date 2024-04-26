@@ -89,6 +89,16 @@ export class VirtualService {
     const runnerUrl = getVirtualRunnerUrl(cachedRunnerToken);
     if (!runnerUrl) throw new Error("Runner URL not found");
     this.runnerUrl = runnerUrl;
+    const coresResp = await fetch(`${runnerUrl}/cores`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cachedRunnerToken}`,
+      },
+    });
+    if (coresResp.status !== 200) throw new Error("Fetch cores failed");
+    const coresRespJson = await coresResp.json();
+    this.cores = coresRespJson?.data ?? [];
     try {
       // initialize model url
       const modelResp = await fetch(`${runnerUrl}/model`, {
@@ -104,22 +114,7 @@ export class VirtualService {
     } catch (err: any) {
       this.modelUrl = "";
     }
-    try {
-      // initialize model url
-      const coresResp = await fetch(`${runnerUrl}/cores`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cachedRunnerToken}`,
-        },
-      });
-      if (coresResp.status !== 200) throw new Error("Fetch cores failed");
-      const coresRespJson = await coresResp.json();
-      this.cores = coresRespJson?.data ?? [];
-      this.initComplete();
-    } catch (err: any) {
-      this.cores = [];
-    }
+    this.initComplete();
   }
 
   /**
