@@ -13,6 +13,7 @@ import VRMIKHandler from "../utils/vendors/models/vrm-ik-handler";
 import VRMModelNoise from "../utils/vendors/models/vrm-model-noise";
 // @ts-ignore
 import idleUrl from "../assets/idle.vmd";
+import { convert } from "../utils/vendors/models/loaders/bvhtovrmbinding";
 
 /**
  * VrmService configurations
@@ -197,6 +198,9 @@ export class VrmService {
     let clip: THREE.AnimationClip;
     if (url.includes(".fbx")) {
       clip = await loadAnimation(url, this.currentVrm);
+    } else if (url.includes(".bvh")) {
+      const resp = await fetch(url);
+      clip = convert(await resp.arrayBuffer(), this.currentVrm);
     } else {
       const data = await fetch(url);
       clip = bindVMD2VRM(
