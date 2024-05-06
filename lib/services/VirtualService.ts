@@ -196,13 +196,20 @@ export class VirtualService {
         formData.append("skipTTS", configs?.skipTTS ? "true" : "false");
         formData.append("userName", this.configs.userName ?? "");
         formData.append("botName", this.configs.virtualName ?? "");
-
-        if (configs?.overrides) {
-          Object.keys(configs.overrides).forEach((key) => {
-            formData.append(key, configs.overrides[key]);
-          });
-        }
       }
+      const jsonBody: { [id: string]: any } = {
+        text: content,
+        skipTTS: configs?.skipTTS,
+        userName: this.configs.userName,
+        botName: this.configs.virtualName,
+      };
+      if (!!configs?.overrides) {
+        Object.keys(configs.overrides).forEach((key) => {
+          formData.append(key, configs.overrides?.[key] ?? "");
+          jsonBody[key] = configs.overrides?.[key] ?? "";
+        });
+      }
+
       const resp = await fetch(`${this.runnerUrl}/prompts`, {
         method: "POST",
         headers:
@@ -214,15 +221,7 @@ export class VirtualService {
             : {
                 Authorization: `Bearer ${cachedRunnerToken}`,
               },
-        body:
-          typeof content === "string"
-            ? JSON.stringify({
-                text: content,
-                skipTTS: configs?.skipTTS,
-                userName: this.configs.userName,
-                botName: this.configs.virtualName,
-              })
-            : formData,
+        body: typeof content === "string" ? JSON.stringify(jsonBody) : formData,
       });
       // if encountered error, retry after init access token
       if (resp.status !== 200 && (retry ?? 0) < 3) {

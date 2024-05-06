@@ -97,7 +97,13 @@ function App() {
           userName: "User",
           env: "development",
         }}
-        configs={{ skipTTS: true, speakOnResponse: false }}
+        configs={{
+          skipTTS: true,
+          speakOnResponse: false,
+          overrides: {
+            abc: true,
+          },
+        }}
         zoom={2}
       ></CharacterRoom>
       <div
