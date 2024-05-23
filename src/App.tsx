@@ -34,7 +34,7 @@ function App() {
   }, [messages, thinking]);
 
   return (
-    <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-white">
+    <div className="virtual-flex virtual-flex-col virtual-w-screen virtual-flex-1 virtual-h-screen virtual-relative virtual-overflow-y-hidden virtual-bg-black">
       <CharacterRoom
         initAccessToken={UNSAFE_initAccessToken}
         userName="User"
@@ -46,10 +46,12 @@ function App() {
         sceneConfigs={{
           linear: false,
           flat: true,
-          shadows: true,
-          enableZoom: true,
+          shadows: false,
+          enableZoom: false,
         }}
-        overrideModelUrl="/models/wolfvtuber.vrm"
+        intensity={1.5}
+        // overrideModelUrl="/models/test.vrm"
+        overrideModelUrl="/models/vampirechan.vrm"
         onUserMessageCreated={async (content) => {
           const newMessage = {
             uid: crypto.randomUUID(),

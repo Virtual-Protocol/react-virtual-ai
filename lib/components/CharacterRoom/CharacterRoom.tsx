@@ -179,6 +179,7 @@ type Props = {
   renderLoadingComponent?: (progress: number) => ReactNode;
   speakerStyle?: CSSProperties;
   speakerContainerStyle?: CSSProperties;
+  intensity?: number;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -218,6 +219,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   Input,
   speakerStyle,
   speakerContainerStyle,
+  intensity,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(idleUrl);
@@ -469,6 +471,7 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       )}
       <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
+          intensity={intensity}
           sceneConfigs={sceneConfigs}
           scale={scale}
           renderLoadingComponent={renderLoadingComponent}

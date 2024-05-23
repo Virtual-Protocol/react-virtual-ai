@@ -47,6 +47,7 @@ type AICharacterType = {
     shadows: boolean;
     enableZoom: boolean;
   };
+  intensity?: number;
 };
 
 export const AICharacter: React.FC<AICharacterType> = ({
@@ -65,6 +66,7 @@ export const AICharacter: React.FC<AICharacterType> = ({
   zoom,
   scale,
   sceneConfigs,
+  intensity,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
   const [progress, setProgress] = useState(0);
@@ -90,13 +92,14 @@ export const AICharacter: React.FC<AICharacterType> = ({
         conf[e.bone.name] = {
           stiffness: 5,
           dragForce: 0.2,
-          hitRadius: 1,
+          hitRadius: 0.5,
         };
         return;
       }
       conf[e.bone.name] = {
         stiffness: 6,
         dragForce: 0.2,
+        hitRadius: 0.5,
         // hitRadius: 0.5,
       };
     });
@@ -274,11 +277,17 @@ export const AICharacter: React.FC<AICharacterType> = ({
       )}
       <directionalLight
         color="#FFFFFF"
-        intensity={1.5294117647058822}
+        intensity={intensity ?? 1.5}
         position={new THREE.Vector3(2, 10, 3)}
         castShadow
       />
-      <ambientLight intensity={1.6666666666666665} color="#FFF" />
+      <directionalLight
+        color="#FFFFFF"
+        intensity={intensity ?? 1.5}
+        position={new THREE.Vector3(-2, -10, -3)}
+        castShadow
+      />
+      <ambientLight intensity={intensity ?? 1.5} color="#FFF" />
     </PresentationControls>
   );
 };

@@ -46,6 +46,7 @@ type CharacterSceneType = {
     enableZoom: boolean;
   };
   renderLoadingComponent?: (progress: number) => ReactNode;
+  intensity?: number;
 };
 
 export const CharacterScene: React.FC<CharacterSceneType> = ({
@@ -66,6 +67,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   scale,
   sceneConfigs,
   renderLoadingComponent,
+  intensity,
 }) => {
   const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
@@ -138,6 +140,7 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
               setCurrentVrm={!!setCurrentVrm ? setCurrentVrm : setLocalVrm}
               onLoadError={onLoadError}
               scale={scale}
+              intensity={intensity}
             />
           )}
         </Canvas>
