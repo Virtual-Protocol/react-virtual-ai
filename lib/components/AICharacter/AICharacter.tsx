@@ -92,15 +92,14 @@ export const AICharacter: React.FC<AICharacterType> = ({
         conf[e.bone.name] = {
           stiffness: 5,
           dragForce: 0.2,
-          hitRadius: 0.5,
+          hitRadius: 1,
         };
         return;
       }
       conf[e.bone.name] = {
         stiffness: 6,
         dragForce: 0.2,
-        hitRadius: 0.5,
-        // hitRadius: 0.5,
+        hitRadius: 1,
       };
     });
     return conf;
@@ -277,17 +276,35 @@ export const AICharacter: React.FC<AICharacterType> = ({
       )}
       <directionalLight
         color="#FFFFFF"
-        intensity={intensity ?? 1.5}
+        intensity={intensity ?? 0.25}
         position={new THREE.Vector3(2, 10, 3)}
         castShadow
       />
       <directionalLight
         color="#FFFFFF"
-        intensity={intensity ?? 1.5}
+        intensity={intensity ?? 0.25}
+        position={new THREE.Vector3(-2, 10, 3)}
+        castShadow
+      />
+      <directionalLight
+        color="#FFFFFF"
+        intensity={intensity ?? 0.25}
+        position={new THREE.Vector3(2, -10, 3)}
+        castShadow
+      />
+      <directionalLight
+        color="#FFFFFF"
+        intensity={intensity ?? 0.25}
+        position={new THREE.Vector3(-2, -10, 3)}
+        castShadow
+      />
+      <directionalLight
+        color="#FFFFFF"
+        intensity={intensity ?? 0.25}
         position={new THREE.Vector3(-2, -10, -3)}
         castShadow
       />
-      <ambientLight intensity={intensity ?? 1.5} color="#FFF" />
+      <ambientLight intensity={intensity ?? 0.25} color="#FFF" />
     </PresentationControls>
   );
 };

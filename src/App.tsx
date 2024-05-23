@@ -45,13 +45,14 @@ function App() {
         }}
         sceneConfigs={{
           linear: false,
-          flat: true,
+          flat: false,
           shadows: false,
           enableZoom: false,
         }}
-        intensity={1.5}
+        position={[0, -12, 0]}
+        intensity={0.25}
         // overrideModelUrl="/models/test.vrm"
-        overrideModelUrl="/models/vampirechan.vrm"
+        overrideModelUrl="/models/rin.vrm"
         onUserMessageCreated={async (content) => {
           const newMessage = {
             uid: crypto.randomUUID(),
