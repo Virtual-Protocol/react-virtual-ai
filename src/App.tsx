@@ -49,10 +49,10 @@ function App() {
           shadows: false,
           enableZoom: false,
         }}
-        position={[0, -12, 0]}
+        position={[0, -13, 0]}
         intensity={0.25}
         // overrideModelUrl="/models/test.vrm"
-        overrideModelUrl="/models/rin.vrm"
+        overrideModelUrl="/models/wolfvtuber.vrm"
         onUserMessageCreated={async (content) => {
           const newMessage = {
             uid: crypto.randomUUID(),

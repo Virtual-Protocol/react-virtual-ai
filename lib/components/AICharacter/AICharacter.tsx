@@ -90,16 +90,16 @@ export const AICharacter: React.FC<AICharacterType> = ({
     currentVrm.springBoneManager.joints.forEach((e) => {
       if (e.bone.name.includes("Skirt")) {
         conf[e.bone.name] = {
-          stiffness: 5,
-          dragForce: 0.2,
-          hitRadius: 1,
+          stiffness: 2,
+          dragForce: 0.35,
+          hitRadius: 0.25,
         };
         return;
       }
       conf[e.bone.name] = {
-        stiffness: 6,
-        dragForce: 0.2,
-        hitRadius: 1,
+        stiffness: 2,
+        dragForce: 0.35,
+        hitRadius: 0.5,
       };
     });
     return conf;
