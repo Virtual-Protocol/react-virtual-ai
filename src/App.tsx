@@ -49,6 +49,7 @@ function App() {
           shadows: false,
           enableZoom: false,
         }}
+        stiffness={10}
         position={[0, -13, 0]}
         intensity={0.25}
         // overrideModelUrl="/models/test.vrm"

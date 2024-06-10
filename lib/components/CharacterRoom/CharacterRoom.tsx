@@ -180,6 +180,9 @@ type Props = {
   speakerStyle?: CSSProperties;
   speakerContainerStyle?: CSSProperties;
   intensity?: number;
+  stiffness?: number;
+  dragForce?: number;
+  hitRadius?: number;
 };
 
 export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
@@ -220,6 +223,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
   speakerStyle,
   speakerContainerStyle,
   intensity,
+  stiffness,
+  dragForce,
+  hitRadius,
 }) => {
   const [inputText, setInputText] = useState("");
   const [anim, setAnim] = useState(idleUrl);
@@ -471,6 +477,9 @@ export const CharacterRoom: React.FC<PropsWithChildren<Props>> = ({
       )}
       <div className="virtual-w-full virtual-h-full virtual-relative">
         <CharacterScene
+          stiffness={stiffness}
+          dragForce={dragForce}
+          hitRadius={hitRadius}
           intensity={intensity}
           sceneConfigs={sceneConfigs}
           scale={scale}

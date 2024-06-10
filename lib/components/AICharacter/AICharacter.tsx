@@ -48,6 +48,9 @@ type AICharacterType = {
     enableZoom: boolean;
   };
   intensity?: number;
+  stiffness?: number;
+  dragForce?: number;
+  hitRadius?: number;
 };
 
 export const AICharacter: React.FC<AICharacterType> = ({
@@ -67,6 +70,9 @@ export const AICharacter: React.FC<AICharacterType> = ({
   scale,
   sceneConfigs,
   intensity,
+  stiffness,
+  dragForce,
+  hitRadius,
 }) => {
   const [camera, setCamera] = useState<THREE.Camera>();
   const [progress, setProgress] = useState(0);
@@ -90,20 +96,20 @@ export const AICharacter: React.FC<AICharacterType> = ({
     currentVrm.springBoneManager.joints.forEach((e) => {
       if (e.bone.name.includes("Skirt")) {
         conf[e.bone.name] = {
-          stiffness: 2,
-          dragForce: 0.35,
-          hitRadius: 0.25,
+          stiffness: stiffness ?? 2,
+          dragForce: dragForce ?? 0.35,
+          hitRadius: hitRadius ?? 0.25,
         };
         return;
       }
       conf[e.bone.name] = {
-        stiffness: 2,
-        dragForce: 0.35,
-        hitRadius: 0.5,
+        stiffness: stiffness ?? 2,
+        dragForce: dragForce ?? 0.35,
+        hitRadius: hitRadius ?? 0.5,
       };
     });
     return conf;
-  }, [currentVrm?.springBoneManager?.joints]);
+  }, [currentVrm?.springBoneManager?.joints, stiffness, dragForce, hitRadius]);
 
   useThree(({ camera: c }) => {
     if (!camera) setCamera(c);

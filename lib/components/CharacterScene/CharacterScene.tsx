@@ -34,6 +34,9 @@ type CharacterSceneType = {
       hitRadius?: number;
     };
   };
+  stiffness?: number;
+  dragForce?: number;
+  hitRadius?: number;
   currentVrm?: VRM;
   setCurrentVrm?: (v?: VRM) => void;
   onProgressChange?: (v: number) => void;
@@ -68,6 +71,9 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
   sceneConfigs,
   renderLoadingComponent,
   intensity,
+  stiffness,
+  hitRadius,
+  dragForce,
 }) => {
   const [progress, setProgress] = useState(0);
   const [localVrm, setLocalVrm] = useState<VRM | undefined>();
@@ -141,6 +147,9 @@ export const CharacterScene: React.FC<CharacterSceneType> = ({
               onLoadError={onLoadError}
               scale={scale}
               intensity={intensity}
+              stiffness={stiffness}
+              dragForce={dragForce}
+              hitRadius={hitRadius}
             />
           )}
         </Canvas>
